@@ -72,15 +72,15 @@ function generateDescription(player, vehicle)
     local skillLevel = player:getPerkLevel(Perks.Mechanics)
     msg = msg .. "<RGB:1,1,1><LINE>Current Mechanics Level: " .. tostring(skillLevel) .. " <LINE>"
     if skillLevel < 2 then
-        msg = msg .. " <RED> -> Parts will likely break! <LINE>"
-        msg = msg .. " <RED> -> Use disposable vehicles! <LINE>"
-        msg = msg .. " <RED> -> (Parts with success chance <10% will be skipped) <LINE>"
+        msg = msg .. " <RED> - Parts will likely break! <LINE>"
+        msg = msg .. " <RED> - Use disposable vehicles! <LINE>"
+        msg = msg .. " <RED> - (Parts with success chance <10% will be skipped) <LINE>"
     elseif skillLevel < 7 then
-        msg = msg .. " <ORANGE> -> Some parts might break <LINE>"
-        msg = msg .. " <ORANGE> -> Use disposable vehicles <LINE>"
+        msg = msg .. " <ORANGE> - Some parts might break <LINE>"
+        msg = msg .. " <ORANGE> - Use disposable vehicles <LINE>"
     else
-        msg = msg .. " <GREEN> -> No parts will be damaged <LINE>"
-        msg = msg .. " <GREEN> -> Safe on any vehicle <LINE>"
+        msg = msg .. " <GREEN> - No parts will be damaged <LINE>"
+        msg = msg .. " <GREEN> - Safe on any vehicle <LINE>"
     end
 
     -- Recipe requirements

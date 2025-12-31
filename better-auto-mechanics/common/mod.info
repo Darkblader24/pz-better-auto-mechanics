@@ -1,7 +1,7 @@
 name=Better Auto Mechanics
 id=better-auto-mechanics
 author=Hotox
-description=<RGB:1,0.4,0.8>Better Auto Mechanics improves the auto mechanics system by adding new features and options to enhance your gameplay experience.
+description=<RGB:1,0.4,0.8>A complete, lightweight rework of the AutoMechanics mod. Features smart training resumption, XP exhaustion checks, and safety logic to prevent game-breaking bugs.
 version=1.0.0
 versionMin=42.13.0
 poster=poster.png
