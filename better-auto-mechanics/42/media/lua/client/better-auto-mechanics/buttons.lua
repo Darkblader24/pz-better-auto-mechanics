@@ -104,7 +104,7 @@ function generateDescription(player, vehicle)
     end
 
     -- Notes
-    msg = msg .. "<RGB:1,1,1><LINE>Make sure all car seats are empty."
+    msg = msg .. "<RGB:1,1,1><LINE>To work on seats make sure they are empty."
 
 
     return msg

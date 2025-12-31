@@ -35,12 +35,12 @@ function getNextUninstallablePart(player, vehicle)
             local perksTable = VehicleUtils.getPerksTableForChr(perks, player)
             successChance, failureChance = VehicleUtils.calculateInstallationSuccess(perks, player, perksTable)
         end
-        print("Part " .. part:getId() .. " Success Chance: " .. tostring(successChance) .. "%, Failure Chance: " .. tostring(failureChance) .. "%")
 
         --print(part:getId() .. " - UNINSTALL: " .. tostring(canUninstallPart) .. " - UNINSTALL XP: " .. tostring(canGainUninstallXP))
 
         -- 3. If all checks pass, return the part. We require at least 10% success chance to avoid an infinite loop bug.
         if canUninstallPart and canGainUninstallXP and successChance > 10 then
+            print("Part " .. part:getId() .. " Success Chance: " .. tostring(successChance) .. "%, Failure Chance: " .. tostring(failureChance) .. "%")
             return part
         end
     end

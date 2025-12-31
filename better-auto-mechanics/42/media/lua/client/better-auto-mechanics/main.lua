@@ -21,7 +21,7 @@ function StopMechanicsTraining(player)
 
     -- Display a ingame notification to inform the player that training has finished
     if player then
-        HaloTextHelper.addText(player, "This car is !", "[br/]", 0, 255, 0)
+        HaloTextHelper.addText(player, "Whew! This car is done for today!", "[br/]", 0, 255, 0)
     end
 
     print("Finished mechanics training!")
@@ -40,7 +40,7 @@ function ISVehicleMechanics:workOnNextPart(player, vehicle)
     end
 
     if partInstall and partUninstall then
-        -- If we can install a tire, first check if we can uninstall brake/suspension first
+        -- If we can install a tire, first check if we can uninstall brake/suspension
         if string.find(partInstall:getId(), "Tire") then
             if string.find(partUninstall:getId(), "Brake") or string.find(partUninstall:getId(), "Suspension") then
                 UninstallPart(player, partUninstall)
@@ -48,7 +48,7 @@ function ISVehicleMechanics:workOnNextPart(player, vehicle)
             end
         end
 
-        -- If we can install a window or windshield, first check if we can uninstall door first
+        -- If we can install a window or windshield, first check if we can uninstall door
         if string.find(partInstall:getId(), "Window") or string.find(partInstall:getId(), "Windshield") then
             if string.find(partUninstall:getId(), "Door") then
                 UninstallPart(player, partUninstall)
