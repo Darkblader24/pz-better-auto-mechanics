@@ -1,0 +1,7 @@
+[ ALERT_CONFIG ]
+link1 = Workshop = https://steamcommunity.com/sharedfiles/filedetails/?id=3629468811
+[ ------ ]
+
+[ 1.0.0 ]
+- Initial release
+[ ------ ]
