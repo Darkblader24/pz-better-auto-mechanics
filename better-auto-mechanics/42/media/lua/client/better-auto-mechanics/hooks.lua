@@ -13,6 +13,8 @@ function ISUninstallVehiclePart:complete()
     print("Uninstall complete called, success: ", success)
 
     -- Then call workOnNextPart to continue the training on the next part
+    -- We can only use this check in SP, because in MP the "complete" function never gets called
+    -- In MP we use the OnMechanicActionDone event to continue training after uninstall/install
     if BAM.IsCurrentlyTraining and not isClient() then
         print("Continuing mechanics training after uninstall...")
         BAM:workOnNextPart(self.character, self.vehicle)
@@ -31,6 +33,8 @@ function ISInstallVehiclePart:complete()
     print("Uninstall complete called, success: ", success)
 
     -- Then call workOnNextPart to continue the training on the next part
+    -- We can only use this check in SP, because in MP the "complete" function never gets called
+    -- In MP we use the OnMechanicActionDone event to continue training after uninstall/install
     if BAM.IsCurrentlyTraining and not isClient() then
         print("Continuing mechanics training after install...")
         BAM:workOnNextPart(self.character, self.vehicle)
@@ -48,6 +52,8 @@ function ISUninstallVehiclePart:stop()
     print("ISUninstallVehiclePart:stop done, returned: ", success)
 
     -- Then stop the training
+    -- We can only use this check in SP, because in MP this gets fired after every action during training, unlike in SP
+    -- In MP we use the initParts hook below to stop training when opening the hood
     if BAM.IsCurrentlyTraining and not isClient() then
         print("Stopping mechanics training due to uninstall stop...")
         BAM:StopMechanicsTraining(nil)
@@ -65,8 +71,27 @@ function ISInstallVehiclePart:stop()
     print("ISInstallVehiclePart:stop done, returned: ", success)
 
     -- Then stop the training
+    -- We can only use this check in SP, because in MP this gets fired after every action during training, unlike in SP
+    -- In MP we use the initParts hook below to stop training when opening the hood
     if BAM.IsCurrentlyTraining and not isClient() then
         print("Stopping mechanics training due to install stop...")
+        BAM:StopMechanicsTraining(nil)
+    end
+
+    return success
+end
+
+
+-- Used to stop the mechanics training. Whenever you open a hood you are no longer training mechanics
+local original_ISVehicleMechanics_initParts = ISVehicleMechanics.initParts
+function ISVehicleMechanics:initParts()
+    print("ISVehicleMechanics:initParts called")
+    local success = original_ISVehicleMechanics_initParts(self);
+    print("ISVehicleMechanics:initParts done, returned: ", success)
+
+    -- Then stop the training
+    if BAM.IsCurrentlyTraining then
+        print("Stopping mechanics training due to vehicle mechanics init...")
         BAM:StopMechanicsTraining(nil)
     end
 
@@ -114,3 +139,4 @@ end
 --    print("ISUninstallVehiclePart:new done, returned: ", obj)
 --    return obj
 --end
+

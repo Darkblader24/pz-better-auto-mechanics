@@ -5,3 +5,9 @@ link1 = Workshop = https://steamcommunity.com/sharedfiles/filedetails/?id=362946
 [ 1.0.0 ]
 - Initial release
 [ ------ ]
+
+[ 1.1.0 ]
+- Added full multiplayer support
+- Broken parts now get dropped to the ground
+- Added small info to tooltip when the car is locked and the player doesn't have the key
+[ ------ ]

@@ -15,12 +15,12 @@ function ISVehicleMechanics:addMechanicsButtons()
     local trainTooltip = ISToolTip:new()
     trainTooltip:initialise()
     trainTooltip:setVisible(true)
-    trainTooltip.description = generateDescription(self.chr, self.vehicle)
+    trainTooltip.description = GenerateDescription(self.chr, self.vehicle)
     trainButton.toolTip = trainTooltip
 end
 
 
-function generateDescription(player, vehicle)
+function GenerateDescription(player, vehicle)
     local msg = "Training needs: <LINE>"
 
     -- Item requirements
@@ -106,11 +106,10 @@ function generateDescription(player, vehicle)
     end
 
     ---- Car Key check
-    --if playerHasCarAccess(player, vehicle) then
-    --    msg = msg .. "<RGB:1,1,1><LINE>You have access to this vehicle (key or hotwired). <LINE>"
-    --else
-    --    msg = msg .. "<RGB:1,1,1><LINE><RED>You don't have the keys for this vehicle! You may not be able to start it. <LINE>"
-    --end
+    if not PlayerHasCarAccess(player, vehicle) then
+        msg = msg .. "<RGB:1,1,1><LINE><ORANGE>Can't enter car and no key found for it. <LINE>"
+        msg = msg .. "Most parts are not accessible. <LINE>"
+    end
 
 
     -- Notes
@@ -121,30 +120,16 @@ function generateDescription(player, vehicle)
 end
 
 
-local function playerHasCarAccess(player, vehicle)
-    -- 1. Check if the car is "Carjacked" (Hotwired)
-    -- If it's hotwired, anyone can start it.
-    if vehicle:isHotwired() then
-        return true
+function PlayerHasCarAccess(player, vehicle)
+    local needsKey = false
+    for i = 0, vehicle:getPartCount() - 1 do
+        local part = vehicle:getPartByIndex(i)
+        if VehicleUtils.RequiredKeyNotFound(part, player) then
+            needsKey = true
+            break
+        end
     end
-
-    -- 2. Check if the key is already in the ignition
-    -- If the key is in the ignition, you don't need it in your inventory.
-    if vehicle:isKeysInIgnition() then
-        return true
-    end
-
-    -- 3. Check if the player has the key in their inventory
-    -- vehicle:getKeyId() returns the ID assigned to this specific car.
-    local keyId = vehicle:getKeyId()
-
-    -- If the car actually requires a key (ID is not -1) and the player has it
-    if keyId ~= -1 and player:getInventory():haveThisKeyId(keyId) then
-        return true
-    end
-
-    -- If none of the above, they have no access
-    return false
+    return not needsKey
 end
 
 
