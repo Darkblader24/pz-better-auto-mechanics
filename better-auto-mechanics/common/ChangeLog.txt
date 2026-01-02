@@ -1,5 +1,5 @@
 [ ALERT_CONFIG ]
-link1 = Workshop = https://steamcommunity.com/sharedfiles/filedetails/?id=3629468811
+link1 = Workshop = https://steamcommunity.com/sharedfiles/filedetails/?id=3635856965
 [ ------ ]
 
 [ 1.0.0 ]
