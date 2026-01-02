@@ -1,21 +1,30 @@
-require "Vehicles/ISUI/ISVehicleMechanics"
-require "Vehicles/TimedActions/ISUninstallVehiclePart"
-require "Vehicles/TimedActions/ISInstallVehiclePart"
-local Utils = require("better-auto-mechanics/utils")
+BAM = BAM or {}
+BAM.IsCurrentlyTraining = false
+BAM.Player = nil
+BAM.Vehicle = nil
+BAM.DelayTimer = 0
+BAM.LastWorkedPart = nil
+BAM.LastWorkedActionType = nil  -- 1 = uninstall, 2 = install
 
-local IsCurrentlyTraining = false
 
 
-function ISVehicleMechanics:StartMechanicsTraining(player, vehicle)
+function BAM:StartMechanicsTraining(player, vehicle)
     print("=================================")
-    print("Starting mechanics training!")
-    IsCurrentlyTraining = true
-    ISVehicleMechanics:workOnNextPart(player, vehicle)
+    print("Starting mechanics training for SP and MP!")
+    BAM.IsCurrentlyTraining = true
+    BAM.Player = player
+    BAM.Vehicle = vehicle
+    BAM:workOnNextPart(player, vehicle)
 end
 
 
-function StopMechanicsTraining(player)
-    IsCurrentlyTraining = false
+function BAM:StopMechanicsTraining(player)
+    BAM.IsCurrentlyTraining = false
+    BAM.Player = nil
+    BAM.Vehicle = nil
+    BAM.DelayTimer = 0
+    BAM.LastWorkedPart = nil
+    BAM.LastWorkedActionType = nil
     setGameSpeed(1)
     getGameTime():setMultiplier(1)
 
@@ -28,22 +37,28 @@ function StopMechanicsTraining(player)
     print("=================================")
 end
 
-function ISVehicleMechanics:workOnNextPart(player, vehicle)
+
+function BAM:workOnNextPart(player, vehicle)
+    print("Deciding on next part...")
     -- Gather info about next parts to install/uninstall
-    local partUninstall = Utils.getNextUninstallablePart(player, vehicle)
-    local partInstall, itemInstall = Utils.getNextInstallablePartAndItem(player, vehicle)
+    local partUninstall = BAM.GetNextUninstallablePart(player, vehicle)
+    local partInstall, itemInstall = BAM.GetNextInstallablePartAndItem(player, vehicle)
+    print("Next part to uninstall: " .. (partUninstall and partUninstall:getId() or "None"))
+    print("Next part to install: " .. (partInstall and partInstall:getId() or "None"))
 
     -- If no parts to install or uninstall, stop training
     if partUninstall == nil and partInstall == nil then
-        StopMechanicsTraining(player)
+        print("No more parts to work on.")
+        BAM:StopMechanicsTraining(player)
         return
     end
 
+    -- First check for parts that require other parts to be uninstalled first
     if partInstall and partUninstall then
         -- If we can install a tire, first check if we can uninstall brake/suspension
         if string.find(partInstall:getId(), "Tire") then
             if string.find(partUninstall:getId(), "Brake") or string.find(partUninstall:getId(), "Suspension") then
-                UninstallPart(player, partUninstall)
+                BAM:UninstallPart(player, partUninstall)
                 return
             end
         end
@@ -51,7 +66,7 @@ function ISVehicleMechanics:workOnNextPart(player, vehicle)
         -- If we can install a window or windshield, first check if we can uninstall door
         if string.find(partInstall:getId(), "Window") or string.find(partInstall:getId(), "Windshield") then
             if string.find(partUninstall:getId(), "Door") then
-                UninstallPart(player, partUninstall)
+                BAM:UninstallPart(player, partUninstall)
                 return
             end
         end
@@ -59,90 +74,36 @@ function ISVehicleMechanics:workOnNextPart(player, vehicle)
 
     -- If we can install any part, do it. We always prioritize installation over uninstallation (except for brakes/suspension above)
     if partInstall and itemInstall then
-        InstallPart(player, partInstall, itemInstall)
+        BAM:InstallPart(player, partInstall, itemInstall)
         return
     end
 
     -- Otherwise, uninstall the next part
     if partUninstall then
-        UninstallPart(player, partUninstall)
+        BAM:UninstallPart(player, partUninstall)
         return
     end
 
     -- If we reach here, something went wrong. Probably because we have a part to install but no item for it.
     print("Error: Unable to determine next part to work on.")
-    StopMechanicsTraining(player)
+    BAM:StopMechanicsTraining(player)
 end
 
 
-function InstallPart(player, part, item)
-    print("Installing item " .. item:getName() .. " into part: " .. part:getId())
+function BAM:InstallPart(player, part, item)
+    print("-> Installing item " .. item:getName() .. " into part: " .. part:getId())
+    BAM.LastWorkedPart = part
+    BAM.LastWorkedActionType = 2
+    BAM.DropBrokenItems(player)  -- Drop broken items before installing
     ISVehiclePartMenu.onInstallPart(player, part, item)  -- Start timed task
 end
 
 
-function UninstallPart(player, part)
-    print("Uninstalling part: " .. part:getId())
+function BAM:UninstallPart(player, part)
+    print("-> Uninstalling part: " .. part:getId())
+    BAM.LastWorkedPart = part
+    BAM.LastWorkedActionType = 1
+    BAM.DropBrokenItems(player)  -- Drop broken items before uninstalling
     ISVehiclePartMenu.onUninstallPart(player, part) -- Start timed task
-end
-
-
--- #####################
--- Hooking into vanilla functions to add our training logic
--- #####################
-
-local original_ISUninstallVehiclePart_complete = ISUninstallVehiclePart.complete
-function ISUninstallVehiclePart:complete()
-    -- First call the original complete function
-    local success = original_ISUninstallVehiclePart_complete(self);
-
-    -- Then call workOnNextPart to continue the training on the next part
-    if IsCurrentlyTraining then
-        ISVehicleMechanics:workOnNextPart(self.character, self.vehicle)
-    end
-
-    return success
-end
-
-
-local original_ISInstallVehiclePart_complete = ISInstallVehiclePart.complete
-function ISInstallVehiclePart:complete()
-    -- First call the original complete function
-    local success = original_ISInstallVehiclePart_complete(self);
-
-    -- Then call workOnNextPart to continue the training on the next part
-    if IsCurrentlyTraining then
-        ISVehicleMechanics:workOnNextPart(self.character, self.vehicle)
-    end
-
-    return success
-end
-
-
-local original_ISUninstallVehiclePart_stop = ISUninstallVehiclePart.stop
-function ISUninstallVehiclePart:stop()
-    -- First call the original stop function
-    local success = original_ISUninstallVehiclePart_stop(self);
-
-    -- Then stop the training
-    if IsCurrentlyTraining then
-        StopMechanicsTraining(nil)
-    end
-
-    return success
-end
-
-
-local original_ISInstallVehiclePart_stop = ISInstallVehiclePart.stop
-function ISInstallVehiclePart:stop()
-    -- First call the original stop function
-    local success = original_ISInstallVehiclePart_stop(self);
-
-    -- Then stop the training
-    if IsCurrentlyTraining then
-        StopMechanicsTraining(nil)
-    end
-
-    return success
 end
 

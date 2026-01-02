@@ -1,5 +1,11 @@
+-- Ensure we have access to the UI global for the floor container
+require "ISUI/ISInventoryPage"
 
-function getNextUninstallablePart(player, vehicle)
+BAM = BAM or {}
+
+
+function BAM.GetNextUninstallablePart(player, vehicle)
+    print("-> Searching for next uninstallable part...")
     -- Collect all installed car parts into a list for sorting
     local validParts = {}
     for i = 0, vehicle:getPartCount() - 1 do
@@ -11,7 +17,7 @@ function getNextUninstallablePart(player, vehicle)
         end
     end
 
-    local sortedParts = sortParts(validParts)
+    local sortedParts = BAM.SortParts(validParts)
 
     -- Check each part for uninstall possibility and XP eligibility
     for _, part in pairs(sortedParts) do
@@ -20,12 +26,7 @@ function getNextUninstallablePart(player, vehicle)
 
         -- 2. Check if the player is eligible for XP (Cooldown check)
         -- Key format: PartID + VehicleID + "1" (1 is for Uninstall)
-        local canGainUninstallXP = false
-        if part:getInventoryItem() then
-            local xpKey = part:getInventoryItem():getID() .. vehicle:getMechanicalID() .. "1"
-            lastWorkedOn = player:getMechanicsItem(xpKey)
-            canGainUninstallXP = lastWorkedOn == nil
-        end
+        local canGainUninstallXP = BAM.CanGainXP(player, vehicle, part, 1)
 
         -- 3. Get success chance and failure chance
         local successChance, failureChance = 0, 100
@@ -36,10 +37,10 @@ function getNextUninstallablePart(player, vehicle)
             successChance, failureChance = VehicleUtils.calculateInstallationSuccess(perks, player, perksTable)
         end
 
-        --print(part:getId() .. " - UNINSTALL: " .. tostring(canUninstallPart) .. " - UNINSTALL XP: " .. tostring(canGainUninstallXP))
+        print(part:getId() .. " - UNINSTALL: " .. tostring(canUninstallPart) .. " - UNINSTALL XP: " .. tostring(canGainUninstallXP))
 
         -- 3. If all checks pass, return the part. We require at least 10% success chance to avoid an infinite loop bug.
-        if canUninstallPart and canGainUninstallXP and successChance > 10 then
+        if canUninstallPart and canGainUninstallXP and successChance > 30 then
             print("Part " .. part:getId() .. " Success Chance: " .. tostring(successChance) .. "%, Failure Chance: " .. tostring(failureChance) .. "%")
             return part
         end
@@ -48,7 +49,8 @@ function getNextUninstallablePart(player, vehicle)
 end
 
 
-function getNextInstallablePartAndItem(player, vehicle)
+function BAM.GetNextInstallablePartAndItem(player, vehicle)
+    print("-> Searching for next installable part...")
     -- Collect all uninstalled car parts into a list for sorting
     local validParts = {}
     for i = 0, vehicle:getPartCount() - 1 do
@@ -60,15 +62,17 @@ function getNextInstallablePartAndItem(player, vehicle)
         end
     end
 
-    local sortedParts = sortParts(validParts)
+    local sortedParts = BAM.SortParts(validParts)
 
     for _, part in pairs(sortedParts) do
         -- 1. Check if the physical action is possible (tools, location, etc.)
         local canInstallPart = part:getVehicle():canInstallPart(player, part)
 
+        --print(part:getId() .. " - INSTALL: " .. tostring(canInstallPart))
+
         -- 2. Check if the player has the required part in inventory or on ground
         if canInstallPart then
-            local item = getAnyItemOnPlayerThatMatchesThatPart(player, part);
+            local item = BAM.GetAnyItemOnPlayerThatMatchesThatPart(player, part);
             if item then
                 return part, item
             end
@@ -78,7 +82,7 @@ function getNextInstallablePartAndItem(player, vehicle)
 end
 
 
-function sortParts(parts)
+function BAM.SortParts(parts)
     -- 1. Define the train order
     local orderList = {
         -- Front
@@ -86,8 +90,8 @@ function sortParts(parts)
         "Battery",
         "HeadlightLeft",
         "HeadlightRight",
-        "EngineDoor",  -- Hood
         "Windshield",
+        "EngineDoor",  -- Hood
 
         -- Front Left
         "SuspensionFrontLeft",
@@ -112,12 +116,12 @@ function sortParts(parts)
 
         -- Rear
         "GasTank",
-        "Muffler",
+        "WindshieldRear",
         "HeadlightRearLeft",
         "HeadlightRearRight",
+        "Muffler",
         "TrunkDoor", -- Trunk Lid
         "DoorRear",
-        "WindshieldRear",
 
         -- Rear Right
         "SuspensionRearRight",
@@ -145,6 +149,7 @@ function sortParts(parts)
         "Heater",
         "Engine",
         "TruckBed",  -- Trunk
+        "TruckBedOpen",  -- Trunk that's always open
         "PassengerCompartment",  -- ???
     }
 
@@ -177,8 +182,7 @@ function sortParts(parts)
 end
 
 
-
-function getAnyItemOnPlayerThatMatchesThatPart(player, part)
+function BAM.GetAnyItemOnPlayerThatMatchesThatPart(player, part)
     local typeToItem = VehicleUtils.getItems(player:getPlayerNum())
     -- among all possible items that can be installed on that part
     for i = 0, part:getItemType():size() - 1 do
@@ -196,11 +200,46 @@ function getAnyItemOnPlayerThatMatchesThatPart(player, part)
 end
 
 
-----------------------------------------------------------
--- Make the functions publicly accessible
-local Utils = {
-    getAnyItemOnPlayerThatMatchesThatPart = getAnyItemOnPlayerThatMatchesThatPart,
-    getNextUninstallablePart = getNextUninstallablePart,
-    getNextInstallablePartAndItem = getNextInstallablePartAndItem,
-}
-return Utils
+function BAM.DropBrokenItems(player)
+    local inventory = player:getInventory()
+    local items = inventory:getItems()
+    local itemsToDrop = {}
+
+    -- 1. Identify items to drop
+    for i = 0, items:size() - 1 do
+        local item = items:get(i)
+        if item:isBroken() and not item:isFavorite() and not item:isEquipped() then
+            table.insert(itemsToDrop, item)
+        end
+    end
+
+    if #itemsToDrop == 0 then
+        return
+    end
+
+    -- 2. Get the "Floor" Container
+    -- In Zomboid, the floor is a virtual container managed by ISInventoryPage
+    local playerNum = player:getPlayerNum()
+    local floorContainer = ISInventoryPage.floorContainer[playerNum + 1]
+
+    if not floorContainer then
+        print("Error: Could not find floor container!")
+        return
+    end
+
+    print("BAM: Dropping " .. #itemsToDrop .. " items to floor...")
+
+    -- 3. Queue the Transfer Actions
+    for _, item in ipairs(itemsToDrop) do
+        -- ISInventoryTransferAction:new(character, item, srcContainer, destContainer, time)
+        local action = ISInventoryTransferAction:new(
+            player,
+            item,
+            item:getContainer(),
+            floorContainer,
+            10 -- Time in ticks (10 is very fast)
+        )
+        ISTimedActionQueue.add(action)
+    end
+end
+

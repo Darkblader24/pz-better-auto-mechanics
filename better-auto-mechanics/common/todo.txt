@@ -1,0 +1,4 @@
+- When installing parts that are on the ground, check if the player has enough inventory space to pick it up. If not, display a warning message.
+- If not all tools are equipped, display a different DONE message
+- Check each area of the vehicle for the required tools and sort them by that to avoid switching tools too often
+
