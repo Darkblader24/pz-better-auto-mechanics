@@ -1,0 +1,28 @@
+UI_FR = {
+    -- #### Button ####
+    UI_BAM_button.title = "Entraîner la Mécanique",
+    UI_BAM_button_desc.needs = "Requis pour l'entraînement",
+
+    -- Skill Check
+    UI_BAM_button_desc.mechanics_level = "Niveau actuel en Mécanique",
+    UI_BAM_button_desc.parts_will_break = "Des pièces risquent de casser",
+    UI_BAM_button_desc.use_disposable_vehicles = "Utilisez des véhicules sacrifiables",
+    UI_BAM_button_desc.success_chance = "Les pièces avec <30% de chance de succès seront ignorées",
+    UI_BAM_button_desc.parts_might_break = "Certaines pièces pourraient casser",
+    UI_BAM_button_desc.parts_safe = "Aucune pièce ne sera endommagée",
+    UI_BAM_button_desc.vehicle_safe = "Sans danger pour tous les véhicules",
+
+    -- Recipe check
+    UI_BAM_button_desc.recipe_known = "Vous pouvez travailler sur toutes les pièces car vous connaissez cette recette",
+    UI_BAM_button_desc.recipe_unknown = "Lisez cette recette pour travailler sur toutes les pièces",
+
+    -- Car key check
+    UI_BAM_button_desc.no_car_access = "Le véhicule est verrouillé !",
+    UI_BAM_button_desc.parts_inaccessible = "La plupart des pièces sont inaccessibles.",
+
+    -- Notes
+    UI_BAM_button_desc.empty_seats = "Pour travailler sur les sièges, assurez-vous qu'ils soient vides.",
+
+    -- #### Other ####
+    UI_BAM_message.car_completed = "Ouf ! Cette voiture est finie pour aujourd'hui !",
+}

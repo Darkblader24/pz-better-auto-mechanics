@@ -17,3 +17,8 @@ link1 = Workshop = https://steamcommunity.com/sharedfiles/filedetails/?id=363585
 - Added translation files for English, German, Spanish, and Simplified and Traditional Chinese
 - More minor improvements
 [ ------ ]
+
+[ 1.3.0 ]
+- Added French and Japanese translations
+- Fixed error when doing any mechanics action without training first after login
+[ ------ ]
