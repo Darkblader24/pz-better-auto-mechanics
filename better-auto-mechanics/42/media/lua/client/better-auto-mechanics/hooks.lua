@@ -87,7 +87,7 @@ function ISVehicleMechanics:initParts()
     local success = original_ISVehicleMechanics_initParts(self);
     --print("ISVehicleMechanics:initParts done, returned: ", success)
 
-    -- Then stop the training
+    -- We we open another vehicle hood, then there should be no mechanics training going on
     if BAM.IsCurrentlyTraining then
         print("Stopping mechanics training due to vehicle mechanics init...")
         BAM:StopMechanicsTraining(nil)
@@ -104,6 +104,7 @@ function ISPathFindAction:start()
     local success = original_ISPathFindAction_start(self);
     print("ISPathFindAction:start done, returned: ", success)
 
+    -- If any pathfinding action fails during mechanics training, mark the part as inaccessible and continue training
     if BAM.IsCurrentlyTraining then
         self:setOnFail(OnPathFailed)
     end

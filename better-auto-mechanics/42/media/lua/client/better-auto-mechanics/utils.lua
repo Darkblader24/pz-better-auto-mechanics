@@ -166,7 +166,7 @@ function BAM.SortParts(parts)
         "Engine",
         "TruckBed",  -- Trunk
         "TruckBedOpen",  -- Trunk that's always open
-        "PassengerCompartment", -- ???sD
+        "PassengerCompartment", -- ???
         "TrailerAnimalFood",
         "TrailerAnimalEggs",
     }

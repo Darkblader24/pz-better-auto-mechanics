@@ -2,29 +2,30 @@ BAM = BAM or {}
 
 
 function BAM:OnMechanicActionDone(success)
-    -- This function is only ever called in multiplayer, but if its called in singleplayer, do nothing
-    print("-> Mechanic action done! Player: ", BAM.Player, " ", BAM.LastWorkedPart:getId(), " ", BAM.LastWorkedActionType, " Success: ", success)
-
-    -- Safety check: Ensure this is only run on the client side
+    -- This function is only ever called in multiplayer, but if its called in singleplayer, do nothing-- Safety check: Ensure this is only run on the client side
     if not isClient() then
         print("Error: OnMechanicActionDone called on server or singleplayer. Ignoring.")
         return
     end
 
-    -- Call workOnNextPart to continue the training on the next part
-    if BAM.IsCurrentlyTraining then
-
-        -- If the action was successful, save the XP data and sync to server
-        if success then
-            BAM.RecordXPAction(BAM.Player, BAM.Vehicle, BAM.LastWorkedPart, BAM.LastWorkedActionType)
-            print("BAM: XP Cooldown saved for part " .. BAM.LastWorkedPart:getId())
-        end
-
-        -- Start the countdown (10 ticks is approx 0.16 seconds)
-        -- This gives the server enough time to update the game state
-        print("Waiting ", BAM.DelayTimer, " ticks before working on next part...")
-        BAM.DelayTimer = 20
+    if not BAM.IsCurrentlyTraining then
+        print("OnMechanicActionDone called, but not currently training. Ignoring.")
+        return
     end
+
+    -- Call workOnNextPart to continue the training on the next part
+    print("-> Mechanic action done! Player: ", BAM.Player, " ", BAM.LastWorkedPart:getId(), " ", BAM.LastWorkedActionType, " Success: ", success)
+
+    -- If the action was successful, save the XP data and sync to server
+    if success then
+        BAM.RecordXPAction(BAM.Player, BAM.Vehicle, BAM.LastWorkedPart, BAM.LastWorkedActionType)
+        print("BAM: XP Cooldown saved for part " .. BAM.LastWorkedPart:getId())
+    end
+
+    -- Start the countdown (10 ticks is approx 0.16 seconds)
+    -- This gives the server enough time to update the game state
+    print("Waiting ", BAM.DelayTimer, " ticks before working on next part...")
+    BAM.DelayTimer = 20
 end
 
 
