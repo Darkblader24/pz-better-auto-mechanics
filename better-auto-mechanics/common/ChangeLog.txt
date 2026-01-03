@@ -11,3 +11,8 @@ link1 = Workshop = https://steamcommunity.com/sharedfiles/filedetails/?id=363585
 - Broken parts now get dropped to the ground
 - Added small info to tooltip when the car is locked and the player doesn't have the key
 [ ------ ]
+
+[ 1.2.0 ]
+- Stuck doors on crashed vehicles and physically unreachable parts no longer cause the training to be interrupted
+- Added translation files for English, German, Spanish and Chinese
+[ ------ ]
