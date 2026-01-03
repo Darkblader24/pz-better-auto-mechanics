@@ -7,10 +7,9 @@ BAM = BAM or {}
 local original_ISUninstallVehiclePart_complete = ISUninstallVehiclePart.complete
 function ISUninstallVehiclePart:complete()
     -- First call the original complete function
-    print("ISUninstallVehiclePart:complete called")
+    --print("ISUninstallVehiclePart:complete called")
     local success = original_ISUninstallVehiclePart_complete(self);
-    print("ISUninstallVehiclePart:complete done, returned: ", success)
-    print("Uninstall complete called, success: ", success)
+    --print("ISUninstallVehiclePart:complete done, returned: ", success)
 
     -- Then call workOnNextPart to continue the training on the next part
     -- We can only use this check in SP, because in MP the "complete" function never gets called
@@ -27,10 +26,9 @@ end
 local original_ISInstallVehiclePart_complete = ISInstallVehiclePart.complete
 function ISInstallVehiclePart:complete()
     -- First call the original complete function
-    print("ISInstallVehiclePart:complete called")
+    --print("ISInstallVehiclePart:complete called")
     local success = original_ISInstallVehiclePart_complete(self);
-    print("ISInstallVehiclePart:complete done, returned: ", success)
-    print("Uninstall complete called, success: ", success)
+    --print("ISInstallVehiclePart:complete done, returned: ", success)
 
     -- Then call workOnNextPart to continue the training on the next part
     -- We can only use this check in SP, because in MP the "complete" function never gets called
@@ -47,9 +45,9 @@ end
 local original_ISUninstallVehiclePart_stop = ISUninstallVehiclePart.stop
 function ISUninstallVehiclePart:stop()
     -- First call the original stop function
-    print("ISUninstallVehiclePart:stop called")
+    --print("ISUninstallVehiclePart:stop called")
     local success = original_ISUninstallVehiclePart_stop(self);
-    print("ISUninstallVehiclePart:stop done, returned: ", success)
+    --print("ISUninstallVehiclePart:stop done, returned: ", success)
 
     -- Then stop the training
     -- We can only use this check in SP, because in MP this gets fired after every action during training, unlike in SP
@@ -66,9 +64,9 @@ end
 local original_ISInstallVehiclePart_stop = ISInstallVehiclePart.stop
 function ISInstallVehiclePart:stop()
     -- First call the original stop function
-    print("ISInstallVehiclePart:stop called")
+    --print("ISInstallVehiclePart:stop called")
     local success = original_ISInstallVehiclePart_stop(self);
-    print("ISInstallVehiclePart:stop done, returned: ", success)
+    --print("ISInstallVehiclePart:stop done, returned: ", success)
 
     -- Then stop the training
     -- We can only use this check in SP, because in MP this gets fired after every action during training, unlike in SP
@@ -85,9 +83,9 @@ end
 -- Used to stop the mechanics training. Whenever you open a hood you are no longer training mechanics
 local original_ISVehicleMechanics_initParts = ISVehicleMechanics.initParts
 function ISVehicleMechanics:initParts()
-    print("ISVehicleMechanics:initParts called")
+    --print("ISVehicleMechanics:initParts called")
     local success = original_ISVehicleMechanics_initParts(self);
-    print("ISVehicleMechanics:initParts done, returned: ", success)
+    --print("ISVehicleMechanics:initParts done, returned: ", success)
 
     -- Then stop the training
     if BAM.IsCurrentlyTraining then
@@ -117,9 +115,6 @@ end
 function OnPathFailed()
     local part = BAM.LastWorkedPart
     print("Part ", part:getId(), " is inaccessible during mechanics training.")
-
-    --local displayName = getText("IGUI_VehiclePart" .. part:getId())
-    --BAM:StopMechanicsTraining(BAM.Player, "I can't reach " .. displayName, 255, 0, 0)
 
     BAM.InaccessibleParts[part:getId()] = true
     BAM:workOnNextPart(BAM.Player, BAM.Vehicle)

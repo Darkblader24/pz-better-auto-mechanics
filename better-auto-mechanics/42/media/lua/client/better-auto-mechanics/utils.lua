@@ -5,7 +5,7 @@ BAM = BAM or {}
 
 
 function BAM.GetNextUninstallablePart(player, vehicle)
-    print("-> Searching for next uninstallable part...")
+    --print("-> Searching for next uninstallable part...")
     -- Collect all installed car parts into a list for sorting
     local validParts = {}
     for i = 0, vehicle:getPartCount() - 1 do
@@ -41,9 +41,9 @@ function BAM.GetNextUninstallablePart(player, vehicle)
         -- Check for smashed cars, their front windows are inaccessible
         if part:getId():find("WindowFront") or part:getId():find("Seat") then
             local scriptName = vehicle:getScript():getName()
-            print("-> Vehicle script name: " .. scriptName)
+            --print("-> Vehicle script name: " .. scriptName)
             if string.find(scriptName, "Burnt") or string.find(scriptName, "Smashed") then
-                print("-> Vehicle is burnt or smashed, cannot uninstall " .. part:getId())
+                --print("-> Vehicle is burnt or smashed, cannot uninstall " .. part:getId())
                 canAccessPart = false
             end
 
@@ -55,7 +55,7 @@ function BAM.GetNextUninstallablePart(player, vehicle)
 
         -- 3. If all checks pass, return the part. We require at least 10% success chance to avoid an infinite loop bug.
         if canUninstallPart and canAccessPart and canGainUninstallXP and successChance > 30 then
-            print("Part " .. part:getId() .. " Success Chance: " .. tostring(successChance) .. "%, Failure Chance: " .. tostring(failureChance) .. "%")
+            --print("Part " .. part:getId() .. " Success Chance: " .. tostring(successChance) .. "%, Failure Chance: " .. tostring(failureChance) .. "%")
             return part
         end
     end
@@ -64,7 +64,7 @@ end
 
 
 function BAM.GetNextInstallablePartAndItem(player, vehicle)
-    print("-> Searching for next installable part...")
+    --print("-> Searching for next installable part...")
     -- Collect all uninstalled car parts into a list for sorting
     local validParts = {}
     for i = 0, vehicle:getPartCount() - 1 do
@@ -241,11 +241,11 @@ function BAM.DropBrokenItems(player)
     local floorContainer = ISInventoryPage.floorContainer[playerNum + 1]
 
     if not floorContainer then
-        print("Error: Could not find floor container!")
+        --print("Error: Could not find floor container!")
         return
     end
 
-    print("BAM: Dropping " .. #itemsToDrop .. " items to floor...")
+    --print("BAM: Dropping " .. #itemsToDrop .. " items to floor...")
 
     -- 3. Queue the Transfer Actions
     for _, item in ipairs(itemsToDrop) do

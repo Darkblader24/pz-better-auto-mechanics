@@ -8,7 +8,6 @@ BAM.LastWorkedActionType = nil -- 1 = uninstall, 2 = install
 BAM.InaccessibleParts = {}
 
 
-
 function BAM:StartMechanicsTraining(player, vehicle)
     print("=================================")
     print("Starting mechanics training for SP and MP!")
@@ -31,7 +30,7 @@ function BAM:StopMechanicsTraining(player, msgOverride, r, g, b)
     setGameSpeed(1)
     getGameTime():setMultiplier(1)
 
-    msg = msgOverride or getText("UI_BAM_message.car_completed")
+    local msg = msgOverride or getText("UI_BAM_message.car_completed")
     r = r or 0
     g = g or 255
     b = b or 0
@@ -47,8 +46,17 @@ end
 
 
 function BAM:workOnNextPart(player, vehicle)
-    print("Deciding on next part...")
+    -- First check if we are too far away from the vehicle
+    local distanceToCar = player:DistToSquared(vehicle)
+    --print("Player distance to vehicle squared: " .. distanceToCar)
+    if distanceToCar > 10 then
+        print("Player is too far from vehicle (" .. tostring(distanceToCar) .. " tiles). Stopping training.")
+        BAM:StopMechanicsTraining(nil)
+        return
+    end
+
     -- Gather info about next parts to install/uninstall
+    print("Deciding on next part...")
     local partUninstall = BAM.GetNextUninstallablePart(player, vehicle)
     local partInstall, itemInstall = BAM.GetNextInstallablePartAndItem(player, vehicle)
     print("Next part to uninstall: " .. (partUninstall and partUninstall:getId() or "None"))
