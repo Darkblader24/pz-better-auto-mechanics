@@ -1,0 +1,28 @@
+UI_CH = {
+    -- #### Button ####
+    UI_BAM_button.title = "訓練技工技能",
+    UI_BAM_button_desc.needs = "訓練需求",
+
+    -- Skill Check
+    UI_BAM_button_desc.mechanics_level = "當前技工等級",
+    UI_BAM_button_desc.parts_will_break = "零件很可能會損壞",
+    UI_BAM_button_desc.use_disposable_vehicles = "請使用廢棄車輛",
+    UI_BAM_button_desc.success_chance = "成功率低於30%的零件將被跳過",
+    UI_BAM_button_desc.parts_might_break = "部分零件可能會損壞",
+    UI_BAM_button_desc.parts_safe = "零件不會受損",
+    UI_BAM_button_desc.vehicle_safe = "適用於任何車輛",
+
+    -- Recipe check
+    UI_BAM_button_desc.recipe_known = "你已掌握此配方，可操作所有零件",
+    UI_BAM_button_desc.recipe_unknown = "閱讀此配方以解鎖所有零件操作",
+
+    -- Car key check
+    UI_BAM_button_desc.no_car_access = "車輛已上鎖！",
+    UI_BAM_button_desc.parts_inaccessible = "大部分零件無法接觸。",
+
+    -- Notes
+    UI_BAM_button_desc.empty_seats = "若要操作座椅，請確保其上無物。",
+
+    -- #### Other ####
+    UI_BAM_message.car_completed = "呼！這輛車今天的訓練已完成！",
+}
