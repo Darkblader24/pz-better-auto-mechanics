@@ -4,7 +4,8 @@ BAM.Player = nil
 BAM.Vehicle = nil
 BAM.DelayTimer = 0
 BAM.LastWorkedPart = nil
-BAM.LastWorkedActionType = nil  -- 1 = uninstall, 2 = install
+BAM.LastWorkedActionType = nil -- 1 = uninstall, 2 = install
+BAM.InaccessibleParts = {}
 
 
 
@@ -14,23 +15,30 @@ function BAM:StartMechanicsTraining(player, vehicle)
     BAM.IsCurrentlyTraining = true
     BAM.Player = player
     BAM.Vehicle = vehicle
+    BAM.InaccessibleParts = {}
     BAM:workOnNextPart(player, vehicle)
 end
 
 
-function BAM:StopMechanicsTraining(player)
+function BAM:StopMechanicsTraining(player, msgOverride, r, g, b)
     BAM.IsCurrentlyTraining = false
     BAM.Player = nil
     BAM.Vehicle = nil
     BAM.DelayTimer = 0
     BAM.LastWorkedPart = nil
     BAM.LastWorkedActionType = nil
+    BAM.InaccessibleParts = {}
     setGameSpeed(1)
     getGameTime():setMultiplier(1)
 
+    msg = msgOverride or "Whew! This car is done for today!"
+    r = r or 0
+    g = g or 255
+    b = b or 0
+
     -- Display a ingame notification to inform the player that training has finished
     if player then
-        HaloTextHelper.addText(player, "Whew! This car is done for today!", "[br/]", 0, 255, 0)
+        HaloTextHelper.addText(player, msg, "[br/]", r, g, b)
     end
 
     print("Finished mechanics training!")

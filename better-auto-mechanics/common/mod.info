@@ -1,8 +1,8 @@
-name=Better Auto Mechanics
-id=better-auto-mechanics
+name=Better Auto Mechanics Dev
+id=better-auto-mechanics-dev
 author=Hotox
 description=<RGB:1,0.4,0.8>A complete, lightweight rework of the AutoMechanics mod. Features smart training resumption, XP exhaustion checks, and safety logic to prevent game-breaking bugs.
-version=1.0.0
+version=1.2.0
 versionMin=42.13.0
 poster=poster.png
 icon=icon.png

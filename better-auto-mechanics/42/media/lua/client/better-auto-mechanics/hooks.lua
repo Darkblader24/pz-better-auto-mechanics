@@ -99,6 +99,33 @@ function ISVehicleMechanics:initParts()
 end
 
 
+local original_ISPathFindAction_start = ISPathFindAction.start
+function ISPathFindAction:start()
+    -- First call the original start function
+    print("ISPathFindAction:start called")
+    local success = original_ISPathFindAction_start(self);
+    print("ISPathFindAction:start done, returned: ", success)
+
+    if BAM.IsCurrentlyTraining then
+        self:setOnFail(OnPathFailed)
+    end
+
+    return success
+end
+
+
+function OnPathFailed()
+    local part = BAM.LastWorkedPart
+    print("Part ", part:getId(), " is inaccessible during mechanics training.")
+
+    --local displayName = getText("IGUI_VehiclePart" .. part:getId())
+    --BAM:StopMechanicsTraining(BAM.Player, "I can't reach " .. displayName, 255, 0, 0)
+
+    BAM.InaccessibleParts[part:getId()] = true
+    BAM:workOnNextPart(BAM.Player, BAM.Vehicle)
+end
+
+
 --local original_ISUninstallVehiclePart_perform = ISUninstallVehiclePart.perform
 --function ISUninstallVehiclePart:perform()
 --    -- First call the original perform function

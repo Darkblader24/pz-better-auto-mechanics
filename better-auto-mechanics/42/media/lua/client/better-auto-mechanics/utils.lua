@@ -23,6 +23,7 @@ function BAM.GetNextUninstallablePart(player, vehicle)
     for _, part in pairs(sortedParts) do
         -- 1. Check if the physical action is possible (tools, location, etc.)
         local canUninstallPart = part:getVehicle():canUninstallPart(player, part)
+        local canAccessPart = not BAM.InaccessibleParts[part:getId()]
 
         -- 2. Check if the player is eligible for XP (Cooldown check)
         -- Key format: PartID + VehicleID + "1" (1 is for Uninstall)
@@ -31,16 +32,29 @@ function BAM.GetNextUninstallablePart(player, vehicle)
         -- 3. Get success chance and failure chance
         local successChance, failureChance = 0, 100
         local keyvalues = part:getTable("install")
-    	if keyvalues then
+        if keyvalues then
             local perks = keyvalues.skills;
             local perksTable = VehicleUtils.getPerksTableForChr(perks, player)
             successChance, failureChance = VehicleUtils.calculateInstallationSuccess(perks, player, perksTable)
         end
 
-        print(part:getId() .. " - UNINSTALL: " .. tostring(canUninstallPart) .. " - UNINSTALL XP: " .. tostring(canGainUninstallXP))
+        -- Check for smashed cars, their front windows are inaccessible
+        if part:getId():find("WindowFront") or part:getId():find("Seat") then
+            local scriptName = vehicle:getScript():getName()
+            print("-> Vehicle script name: " .. scriptName)
+            if string.find(scriptName, "Burnt") or string.find(scriptName, "Smashed") then
+                print("-> Vehicle is burnt or smashed, cannot uninstall " .. part:getId())
+                canAccessPart = false
+            end
+
+        end
+
+
+        --print(part:getId() .. " - UNINSTALL ACCESS: " .. tostring(canAccessPart))
+        --print(part:getId() .. " - UNINSTALL: " .. tostring(canUninstallPart) .. " - UNINSTALL XP: " .. tostring(canGainUninstallXP) .. " - ACCESS: " .. tostring(canAccessPart))
 
         -- 3. If all checks pass, return the part. We require at least 10% success chance to avoid an infinite loop bug.
-        if canUninstallPart and canGainUninstallXP and successChance > 30 then
+        if canUninstallPart and canAccessPart and canGainUninstallXP and successChance > 30 then
             print("Part " .. part:getId() .. " Success Chance: " .. tostring(successChance) .. "%, Failure Chance: " .. tostring(failureChance) .. "%")
             return part
         end
@@ -67,11 +81,12 @@ function BAM.GetNextInstallablePartAndItem(player, vehicle)
     for _, part in pairs(sortedParts) do
         -- 1. Check if the physical action is possible (tools, location, etc.)
         local canInstallPart = part:getVehicle():canInstallPart(player, part)
+        local canAccessPart = not BAM.InaccessibleParts[part:getId()]
 
         --print(part:getId() .. " - INSTALL: " .. tostring(canInstallPart))
 
         -- 2. Check if the player has the required part in inventory or on ground
-        if canInstallPart then
+        if canInstallPart and canAccessPart then
             local item = BAM.GetAnyItemOnPlayerThatMatchesThatPart(player, part);
             if item then
                 return part, item
@@ -84,6 +99,7 @@ end
 
 function BAM.SortParts(parts)
     -- 1. Define the train order
+    -- Grouped by location on vehicle, and then by required tool to minimize tool switching
     local orderList = {
         -- Front
         "Radio",
@@ -150,7 +166,9 @@ function BAM.SortParts(parts)
         "Engine",
         "TruckBed",  -- Trunk
         "TruckBedOpen",  -- Trunk that's always open
-        "PassengerCompartment",  -- ???
+        "PassengerCompartment", -- ???sD
+        "TrailerAnimalFood",
+        "TrailerAnimalEggs",
     }
 
     -- 2. Create a "Rank Map" for fast lookup
