@@ -11,7 +11,7 @@ end
 -- Create the Train Mechanics button and its tooltip
 function ISVehicleMechanics:addMechanicsButtons()
     -- Add Train Mechanics button
-    local trainButton = self.context:addOption("Train Mechanics", self, BAM.StartMechanicsTraining, self.chr, self.vehicle)
+    local trainButton = self.context:addOption(getText("UI_BAM_button.title"), self, BAM.StartMechanicsTraining, self.chr, self.vehicle)
     local trainTooltip = ISToolTip:new()
     trainTooltip:initialise()
     trainTooltip:setVisible(true)
@@ -21,9 +21,10 @@ end
 
 
 function GenerateDescription(player, vehicle)
-    local msg = "Training needs: <LINE>"
+    local newline = " <LINE>"
+    local msg = getText("UI_BAM_button_desc.needs") .. ":"
 
-    -- Item requirements
+    -- Tool check
     local hasScrewdriver = player:getInventory():getFirstTagRecurse(ItemTag.SCREWDRIVER)
     local hasWrench = player:getInventory():getFirstTagRecurse(ItemTag.WRENCH)
     local hasLugWrench = player:getInventory():getFirstTagRecurse(ItemTag.LUG_WRENCH)
@@ -38,85 +39,77 @@ function GenerateDescription(player, vehicle)
     local nameTireIron = getScriptManager():getItem("Base.TireIron"):getDisplayName()
     local nameJack = getScriptManager():getItem("Base.Jack"):getDisplayName()
 
-    if hasScrewdriver then
-        msg = msg .. " <GREEN> - "
-    else
-        msg = msg .. " <RED> - "
-    end
-    msg = msg .. nameScrewdriver .. " / " .. nameMultitool .. " / " .. nameHandiknife .. " <LINE>"
+    local color = hasScrewdriver and "<GREEN>" or "<RED>"
+    msg = msg .. newline .. color .. " - " .. nameScrewdriver .. " / " .. nameMultitool .. " / " .. nameHandiknife
 
-    if hasWrench then
-        msg = msg .. " <GREEN> - "
-    else
-        msg = msg .. " <RED> - "
-    end
-    msg = msg .. nameWrench .. " / " .. nameRatchetWrench .. " <LINE>"
+    color = hasWrench and "<GREEN>" or "<RED>"
+    msg = msg .. newline .. color .. " - " .. nameWrench .. " / " .. nameRatchetWrench
 
-    if hasLugWrench then
-        msg = msg .. " <GREEN> - "
-    else
-        msg = msg .. " <RED> - "
-    end
-    msg = msg .. nameLugWrench .. " / " .. nameTireIron .. " <LINE>"
+    color = hasLugWrench and "<GREEN>" or "<RED>"
+    msg = msg .. newline .. color .. " - " .. nameLugWrench .. " / " .. nameTireIron
 
-    if hasJack then
-        msg = msg .. " <GREEN> - "
-    else
-        msg = msg .. " <RED> - "
-    end
-    msg = msg .. nameJack .. " <LINE>"
+    color = hasJack and "<GREEN>" or "<RED>"
+    msg = msg .. newline .. color .. " - " .. nameJack
 
-    -- Skill requirements
+    -- Skill check
     local skillLevel = player:getPerkLevel(Perks.Mechanics)
-    msg = msg .. "<RGB:1,1,1><LINE>Current Mechanics Level: " .. tostring(skillLevel) .. " <LINE>"
+    msg = msg .. newline
+    msg = msg .. newline .. "<RGB:1,1,1>" .. getText("UI_BAM_button_desc.mechanics_level") .. ": " .. tostring(skillLevel)
     if skillLevel < 2 then
-        msg = msg .. " <RED> - Parts will likely break! <LINE>"
-        msg = msg .. " <RED> - Use disposable vehicles! <LINE>"
-        msg = msg .. " <RED> - (Parts with success chance <30% will be skipped) <LINE>"
+        msg = msg .. newline .. "<RED> - " .. getText("UI_BAM_button_desc.parts_will_break") .. "!"
+        msg = msg .. newline .. "<RED> - " .. getText("UI_BAM_button_desc.use_disposable_vehicles") .. "!"
+        msg = msg .. newline .. "<RED> - " .. "(" .. getText("UI_BAM_button_desc.success_chance") .. ")"
     elseif skillLevel < 7 then
-        msg = msg .. " <ORANGE> - Some parts might break <LINE>"
-        msg = msg .. " <ORANGE> - Use disposable vehicles <LINE>"
+        msg = msg .. newline .. "<ORANGE> - " .. getText("UI_BAM_button_desc.parts_might_break")
+        msg = msg .. newline .. "<ORANGE> - " .. getText("UI_BAM_button_desc.use_disposable_vehicles")
     else
-        msg = msg .. " <GREEN> - No parts will be damaged <LINE>"
-        msg = msg .. " <GREEN> - Safe on any vehicle <LINE>"
+        msg = msg .. newline .. "<GREEN> - " .. getText("UI_BAM_button_desc.parts_safe")
+        msg = msg .. newline .. "<GREEN> - " .. getText("UI_BAM_button_desc.vehicle_safe")
     end
 
-    -- Recipe requirements
-    local readRecipe = false
+    -- Recipe check
+    local recipe, knowsRecipe = PlayerKnowsRecipe(player, vehicle)
+    if recipe then
+        local recipeDisplayName = getText("Tooltip_vehicle_requireRecipe", getRecipeDisplayName(recipe))
+        if knowsRecipe then
+            msg = msg .. newline
+            msg = msg .. newline .. "<RGB:1,1,1>" .. getText("UI_BAM_button_desc.recipe_known") .. ":"
+            msg = msg .. newline .. "<GREEN> - " .. recipeDisplayName
+        else
+            msg = msg .. newline
+            msg = msg .. newline .. "<RGB:1,1,1>" .. getText("UI_BAM_button_desc.recipe_unknown") .. ":"
+            msg = msg .. newline .. "<RED> - " .. recipeDisplayName
+        end
+    end
+
+    ---- Car Key check
+    if not PlayerHasCarAccess(player, vehicle) then
+        msg = msg .. newline
+        msg = msg .. newline .. "<RGB:1,1,1>" .. getText("UI_BAM_button_desc.no_car_access")
+        msg = msg .. newline .. "<ORANGE> - " .. getText("UI_BAM_button_desc.parts_inaccessible")
+    end
+
+
+    -- Notes
+    msg = msg .. newline
+    msg = msg .. newline .. "<RGB:1,1,1>" .. getText("UI_BAM_button_desc.empty_seats")
+
+
+    return msg
+end
+
+
+function PlayerKnowsRecipe(player, vehicle)
     for i = 0, vehicle:getPartCount() - 1 do
         local part = vehicle:getPartByIndex(i)
         local keyvalues = part:getTable("uninstall")
         if keyvalues and keyvalues.recipes and keyvalues.recipes ~= "" then
             for _, recipe in ipairs(keyvalues.recipes:split(";")) do
-                if not player:isRecipeKnown(recipe) then
-                    msg = msg .. "<RGB:1,1,1><LINE>Read this recipe to work on all parts: <LINE>"
-                    msg = msg ..
-                        " <RED> - " ..
-                        getText("Tooltip_vehicle_requireRecipe", getRecipeDisplayName(recipe)) .. " <LINE>"
-                else
-                    msg = msg .. "<RGB:1,1,1><LINE>You can work on all parts because you know this recipe: <LINE>"
-                    msg = msg ..
-                        " <GREEN> - " ..
-                        getText("Tooltip_vehicle_requireRecipe", getRecipeDisplayName(recipe)) .. " <LINE>"
-                end
-                readRecipe = true
+                return recipe, player:isRecipeKnown(recipe)  -- Only return the first recipe found
             end
         end
-        if readRecipe then break end -- Only show the first recipe found
     end
-
-    ---- Car Key check
-    if not PlayerHasCarAccess(player, vehicle) then
-        msg = msg .. "<RGB:1,1,1><LINE><ORANGE>Can't enter car and no key found for it. <LINE>"
-        msg = msg .. "Most parts are not accessible. <LINE>"
-    end
-
-
-    -- Notes
-    msg = msg .. "<RGB:1,1,1><LINE>To work on seats make sure they are empty."
-
-
-    return msg
+    return nil, false
 end
 
 

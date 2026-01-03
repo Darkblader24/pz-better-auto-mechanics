@@ -31,7 +31,7 @@ function BAM:StopMechanicsTraining(player, msgOverride, r, g, b)
     setGameSpeed(1)
     getGameTime():setMultiplier(1)
 
-    msg = msgOverride or "Whew! This car is done for today!"
+    msg = msgOverride or getText("UI_BAM_message.car_completed")
     r = r or 0
     g = g or 255
     b = b or 0
