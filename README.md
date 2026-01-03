@@ -34,7 +34,8 @@ Rewritten from the ground up, **Better Auto Mechanics** is a comprehensive quali
 
 If you find this mod useful:
 * ⭐ Rate on Steam Workshop
-* 💬 Leave comments or feedback
+* 💬 Leave comments or [Feedback](https://steamcommunity.com/sharedfiles/filedetails/discussions/3635856965)
+* 🐛 Post bug reports in [Discussions](https://steamcommunity.com/sharedfiles/filedetails/discussions/3635856965) or on [Github](https://github.com/Darkblader24/pz-better-auto-mechanics/issues)
 * 🚀 Contribute to this mod on [Github](https://github.com/Darkblader24/pz-better-auto-mechanics)
 * ❤️ Buy me a [Ko-fi](https://ko-fi.com/hotox)
 
