@@ -15,4 +15,5 @@ link1 = Workshop = https://steamcommunity.com/sharedfiles/filedetails/?id=363585
 [ 1.2.0 ]
 - Stuck doors on crashed vehicles and physically unreachable parts should no longer cause the training to be interrupted
 - Added translation files for English, German, Spanish, and Simplified and Traditional Chinese
+- More minor improvements
 [ ------ ]
