@@ -22,3 +22,7 @@ link1 = Workshop = https://steamcommunity.com/sharedfiles/filedetails/?id=363585
 - Added French and Japanese translations
 - Fixed error when doing any mechanics action without training first after login
 [ ------ ]
+
+[ 1.4.0 ]
+-
+[ ------ ]
