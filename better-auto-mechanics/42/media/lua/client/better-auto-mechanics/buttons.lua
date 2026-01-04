@@ -61,7 +61,8 @@ function GenerateDescription(player, vehicle)
         if skillLevel < 2 then
             msg = msg .. newline .. "<RED> - " .. getText("UI_BAM_button_desc.parts_will_break") .. "!"
             msg = msg .. newline .. "<RED> - " .. getText("UI_BAM_button_desc.use_disposable_vehicles") .. "!"
-            msg = msg .. newline .. "<RED> - " .. "(" .. getText("UI_BAM_button_desc.success_chance", minSuccessChance) .. ")"
+            msg = msg ..
+            newline .. "<RED> - " .. "(" .. getText("UI_BAM_button_desc.success_chance", minSuccessChance) .. ")"
         elseif skillLevel < 7 then
             msg = msg .. newline .. "<ORANGE> - " .. getText("UI_BAM_button_desc.parts_might_break")
             msg = msg .. newline .. "<ORANGE> - " .. getText("UI_BAM_button_desc.use_disposable_vehicles")
@@ -71,6 +72,10 @@ function GenerateDescription(player, vehicle)
         end
     else
         msg = msg .. newline .. "<RGB:1,1,1> - " .. getText("UI_BAM_button_desc.success_chance", minSuccessChance)
+        if minSuccessChance == 100 then
+            msg = msg .. newline .. "<GREEN> - " .. getText("UI_BAM_button_desc.parts_safe")
+            msg = msg .. newline .. "<GREEN> - " .. getText("UI_BAM_button_desc.vehicle_safe")
+        end
     end
 
     -- Recipe check
