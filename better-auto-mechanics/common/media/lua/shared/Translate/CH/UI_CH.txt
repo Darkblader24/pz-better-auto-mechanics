@@ -7,7 +7,7 @@ UI_CH = {
     UI_BAM_button_desc.mechanics_level = "當前技工等級",
     UI_BAM_button_desc.parts_will_break = "零件很可能會損壞",
     UI_BAM_button_desc.use_disposable_vehicles = "請使用廢棄車輛",
-    UI_BAM_button_desc.success_chance = "成功率低於30%的零件將被跳過",
+    UI_BAM_button_desc.success_chance = "成功率低於%1%的零件將被跳過",
     UI_BAM_button_desc.parts_might_break = "部分零件可能會損壞",
     UI_BAM_button_desc.parts_safe = "零件不會受損",
     UI_BAM_button_desc.vehicle_safe = "適用於任何車輛",
@@ -25,4 +25,11 @@ UI_CH = {
 
     -- #### Other ####
     UI_BAM_message.car_completed = "呼！這輛車今天的訓練已完成！",
+
+    -- #### Options ####
+    UI_BAM_options_title.min_success_chance = "車輛部件最低成功率",
+    UI_BAM_options_desc.min_success_chance_1 = "訓練期間將跳過成功率低於此值的部件。",
+    UI_BAM_options_desc.min_success_chance_2 = "將操作所有部件。低技能等級下部件會損壞。",
+    UI_BAM_options_desc.min_success_chance_3 = "預設設置，平衡性良好。",
+    UI_BAM_options_desc.min_success_chance_4 = "僅操作保證成功的部件。全技能等級下完全安全。",
 }

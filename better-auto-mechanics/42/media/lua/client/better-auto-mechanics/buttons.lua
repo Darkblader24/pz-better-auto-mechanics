@@ -53,18 +53,24 @@ function GenerateDescription(player, vehicle)
 
     -- Skill check
     local skillLevel = player:getPerkLevel(Perks.Mechanics)
+    local minSuccessChance = BAM_Options_MinSuccessChance:getValue()
     msg = msg .. newline
-    msg = msg .. newline .. "<RGB:1,1,1>" .. getText("UI_BAM_button_desc.mechanics_level") .. ": " .. tostring(skillLevel)
-    if skillLevel < 2 then
-        msg = msg .. newline .. "<RED> - " .. getText("UI_BAM_button_desc.parts_will_break") .. "!"
-        msg = msg .. newline .. "<RED> - " .. getText("UI_BAM_button_desc.use_disposable_vehicles") .. "!"
-        msg = msg .. newline .. "<RED> - " .. "(" .. getText("UI_BAM_button_desc.success_chance") .. ")"
-    elseif skillLevel < 7 then
-        msg = msg .. newline .. "<ORANGE> - " .. getText("UI_BAM_button_desc.parts_might_break")
-        msg = msg .. newline .. "<ORANGE> - " .. getText("UI_BAM_button_desc.use_disposable_vehicles")
+    msg = msg ..
+    newline .. "<RGB:1,1,1>" .. getText("UI_BAM_button_desc.mechanics_level") .. ": " .. tostring(skillLevel)
+    if minSuccessChance == 30 then
+        if skillLevel < 2 then
+            msg = msg .. newline .. "<RED> - " .. getText("UI_BAM_button_desc.parts_will_break") .. "!"
+            msg = msg .. newline .. "<RED> - " .. getText("UI_BAM_button_desc.use_disposable_vehicles") .. "!"
+            msg = msg .. newline .. "<RED> - " .. "(" .. getText("UI_BAM_button_desc.success_chance", minSuccessChance) .. ")"
+        elseif skillLevel < 7 then
+            msg = msg .. newline .. "<ORANGE> - " .. getText("UI_BAM_button_desc.parts_might_break")
+            msg = msg .. newline .. "<ORANGE> - " .. getText("UI_BAM_button_desc.use_disposable_vehicles")
+        else
+            msg = msg .. newline .. "<GREEN> - " .. getText("UI_BAM_button_desc.parts_safe")
+            msg = msg .. newline .. "<GREEN> - " .. getText("UI_BAM_button_desc.vehicle_safe")
+        end
     else
-        msg = msg .. newline .. "<GREEN> - " .. getText("UI_BAM_button_desc.parts_safe")
-        msg = msg .. newline .. "<GREEN> - " .. getText("UI_BAM_button_desc.vehicle_safe")
+        msg = msg .. newline .. "<RGB:1,1,1> - " .. getText("UI_BAM_button_desc.success_chance", minSuccessChance)
     end
 
     -- Recipe check

@@ -24,5 +24,6 @@ link1 = Workshop = https://steamcommunity.com/sharedfiles/filedetails/?id=363585
 [ ------ ]
 
 [ 1.4.0 ]
--
+- Added option "Minimum Vehicle Part Success Chance" which prevents training on parts with a success chance below the set value
+- Added detailed description for this option with translations
 [ ------ ]

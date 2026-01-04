@@ -7,7 +7,7 @@ UI_ES = {
     UI_BAM_button_desc.mechanics_level = "Nivel actual de Mecánica",
     UI_BAM_button_desc.parts_will_break = "Es probable que se rompan piezas",
     UI_BAM_button_desc.use_disposable_vehicles = "Usa vehículos prescindibles",
-    UI_BAM_button_desc.success_chance = "Se omitirán piezas con probabilidad de éxito <30%",
+    UI_BAM_button_desc.success_chance = "Se omitirán piezas con probabilidad de éxito <%1%",
     UI_BAM_button_desc.parts_might_break = "Podrían romperse algunas piezas",
     UI_BAM_button_desc.parts_safe = "No se dañará ninguna pieza",
     UI_BAM_button_desc.vehicle_safe = "Seguro en cualquier vehículo",
@@ -25,4 +25,11 @@ UI_ES = {
 
     -- #### Other ####
     UI_BAM_message.car_completed = "¡Uf! ¡Este vehículo está listo por hoy!",
+
+    -- #### Options ####
+    UI_BAM_options_title.min_success_chance = "Probabilidad mínima de éxito de piezas de vehículo",
+    UI_BAM_options_desc.min_success_chance_1 = "Las piezas con una probabilidad de éxito inferior a este valor se omitirán durante el entrenamiento.",
+    UI_BAM_options_desc.min_success_chance_2 = "Se trabajará en todas las piezas. Las piezas se romperán en niveles de habilidad más bajos.",
+    UI_BAM_options_desc.min_success_chance_3 = "Configuración predeterminada para un buen equilibrio.",
+    UI_BAM_options_desc.min_success_chance_4 = "Solo se trabajará en piezas cuyo éxito esté garantizado. Completamente seguro en todos los niveles de habilidad.",
 }

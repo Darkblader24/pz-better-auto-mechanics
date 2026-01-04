@@ -29,14 +29,8 @@ function BAM.GetNextUninstallablePart(player, vehicle)
         -- Key format: PartID + VehicleID + "1" (1 is for Uninstall)
         local canGainUninstallXP = BAM.CanGainXP(player, vehicle, part, 1)
 
-        -- 3. Get success chance and failure chance
-        local successChance, failureChance = 0, 100
-        local keyvalues = part:getTable("install")
-        if keyvalues then
-            local perks = keyvalues.skills;
-            local perksTable = VehicleUtils.getPerksTableForChr(perks, player)
-            successChance, failureChance = VehicleUtils.calculateInstallationSuccess(perks, player, perksTable)
-        end
+        -- 3. Get part success chance
+        local successChance = BAM.GetPartSuccessChance(player, part, "uninstall")
 
         -- Check for smashed cars, their front windows are inaccessible
         if part:getId():find("WindowFront") or part:getId():find("Seat") then
@@ -46,15 +40,13 @@ function BAM.GetNextUninstallablePart(player, vehicle)
                 --print("-> Vehicle is burnt or smashed, cannot uninstall " .. part:getId())
                 canAccessPart = false
             end
-
         end
-
 
         --print(part:getId() .. " - UNINSTALL ACCESS: " .. tostring(canAccessPart))
         --print(part:getId() .. " - UNINSTALL: " .. tostring(canUninstallPart) .. " - UNINSTALL XP: " .. tostring(canGainUninstallXP) .. " - ACCESS: " .. tostring(canAccessPart))
 
-        -- 3. If all checks pass, return the part. We require at least 10% success chance to avoid an infinite loop bug.
-        if canUninstallPart and canAccessPart and canGainUninstallXP and successChance > 30 then
+        -- 3. If all checks pass, return the part
+        if canUninstallPart and canAccessPart and canGainUninstallXP and successChance >= BAM_Options_MinSuccessChance:getValue() then
             --print("Part " .. part:getId() .. " Success Chance: " .. tostring(successChance) .. "%, Failure Chance: " .. tostring(failureChance) .. "%")
             return part
         end
@@ -83,14 +75,16 @@ function BAM.GetNextInstallablePartAndItem(player, vehicle)
         local canInstallPart = part:getVehicle():canInstallPart(player, part)
         local canAccessPart = not BAM.InaccessibleParts[part:getId()]
 
+        -- 2. Get part success chance
+        local successChance = BAM.GetPartSuccessChance(player, part, "install")
+
+        -- 3. Check if the player has the required part in inventory or on ground
+        local item = BAM.GetAnyItemOnPlayerThatMatchesThatPart(player, part);
+
         --print(part:getId() .. " - INSTALL: " .. tostring(canInstallPart))
 
-        -- 2. Check if the player has the required part in inventory or on ground
-        if canInstallPart and canAccessPart then
-            local item = BAM.GetAnyItemOnPlayerThatMatchesThatPart(player, part);
-            if item then
-                return part, item
-            end
+        if canInstallPart and canAccessPart and item and successChance >= BAM_Options_MinSuccessChance:getValue() then
+            return part, item
         end
     end
     return nil, nil
@@ -201,6 +195,9 @@ end
 
 
 function BAM.GetAnyItemOnPlayerThatMatchesThatPart(player, part)
+    if not part:getItemType() then
+        return nil
+    end
     local typeToItem = VehicleUtils.getItems(player:getPlayerNum())
     -- among all possible items that can be installed on that part
     for i = 0, part:getItemType():size() - 1 do
@@ -259,5 +256,17 @@ function BAM.DropBrokenItems(player)
         )
         ISTimedActionQueue.add(action)
     end
+end
+
+
+function BAM.GetPartSuccessChance(player, part, actionType)
+    local successChance = 0
+    local keyvalues = part:getTable(actionType)
+    if keyvalues then
+        local perks = keyvalues.skills;
+        local perksTable = VehicleUtils.getPerksTableForChr(perks, player)
+        successChance, _ = VehicleUtils.calculateInstallationSuccess(perks, player, perksTable)
+    end
+    return successChance
 end
 

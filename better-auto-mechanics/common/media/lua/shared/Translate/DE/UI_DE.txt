@@ -7,7 +7,7 @@ UI_DE = {
     UI_BAM_button_desc.mechanics_level = "Aktuelle Kfz-Mechanik Stufe",
     UI_BAM_button_desc.parts_will_break = "Teile werden wahrscheinlich beschädigt",
     UI_BAM_button_desc.use_disposable_vehicles = "Nutze entbehrliche Fahrzeuge",
-    UI_BAM_button_desc.success_chance = "Teile mit Erfolgschance <30% werden übersprungen",
+    UI_BAM_button_desc.success_chance = "Teile mit Erfolgschance <%1% werden übersprungen",
     UI_BAM_button_desc.parts_might_break = "Einige Teile könnten beschädigt werden",
     UI_BAM_button_desc.parts_safe = "Keine Teile werden beschädigt",
     UI_BAM_button_desc.vehicle_safe = "Sicher an jedem Fahrzeug",
@@ -25,4 +25,11 @@ UI_DE = {
 
     -- #### Other ####
     UI_BAM_message.car_completed = "Puh! Dieses Auto ist für heute fertig!",
+
+    -- #### Options ####
+    UI_BAM_options_title.min_success_chance = "Minimale Erfolgschance für Fahrzeugteile",
+    UI_BAM_options_desc.min_success_chance_1 = "Teile mit einer Erfolgschance unter diesem Wert werden beim Training übersprungen.",
+    UI_BAM_options_desc.min_success_chance_2 = "Es wird an allen Teilen gearbeitet. Teile werden auf niedrigen Stufen beschädigt.",
+    UI_BAM_options_desc.min_success_chance_3 = "Standardeinstellung für eine gute Balance.",
+    UI_BAM_options_desc.min_success_chance_4 = "Es wird nur an Teilen gearbeitet, bei denen ein Erfolg garantiert ist. Vollkommen sicher auf allen Stufen.",
 }
