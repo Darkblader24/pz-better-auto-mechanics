@@ -57,7 +57,7 @@ function GenerateDescription(player, vehicle)
     msg = msg .. newline
     msg = msg ..
     newline .. "<RGB:1,1,1>" .. getText("UI_BAM_button_desc.mechanics_level") .. ": " .. tostring(skillLevel)
-    if minSuccessChance == 30 then
+    if minSuccessChance == 30 then  -- This is the default value, so show more detailed info
         if skillLevel < 2 then
             msg = msg .. newline .. "<RED> - " .. getText("UI_BAM_button_desc.parts_will_break") .. "!"
             msg = msg .. newline .. "<RED> - " .. getText("UI_BAM_button_desc.use_disposable_vehicles") .. "!"
@@ -70,7 +70,7 @@ function GenerateDescription(player, vehicle)
             msg = msg .. newline .. "<GREEN> - " .. getText("UI_BAM_button_desc.parts_safe")
             msg = msg .. newline .. "<GREEN> - " .. getText("UI_BAM_button_desc.vehicle_safe")
         end
-    else
+    else  -- Otherwise just show the minimum success chance and some edge case details
         msg = msg .. newline .. "<RGB:1,1,1> - " .. getText("UI_BAM_button_desc.success_chance", minSuccessChance)
         if minSuccessChance == 100 then
             msg = msg .. newline .. "<GREEN> - " .. getText("UI_BAM_button_desc.parts_safe")

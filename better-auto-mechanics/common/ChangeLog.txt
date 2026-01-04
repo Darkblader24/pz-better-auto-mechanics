@@ -28,3 +28,7 @@ link1 = Workshop = https://steamcommunity.com/sharedfiles/filedetails/?id=363585
 - Added detailed description for this option with translations
 - Added success chance check when installing parts. Installing parts will no longer ignore the success chance minimum
 [ ------ ]
+
+[ 1.5.0 ]
+-
+[ ------ ]
