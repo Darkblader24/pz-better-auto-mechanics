@@ -2,35 +2,39 @@
 link1 = Workshop = https://steamcommunity.com/sharedfiles/filedetails/?id=3635856965
 [ ------ ]
 
-[ 1.0.0 ]
+[ 1.0 ]
 - Initial release
 [ ------ ]
 
-[ 1.1.0 ]
+[ 1.1 ]
 - Added full multiplayer support
 - Broken parts now get dropped to the ground
 - Added small info to tooltip when the car is locked and the player doesn't have the key
 [ ------ ]
 
-[ 1.2.0 ]
+[ 1.2 ]
 - Stuck doors on crashed vehicles and physically unreachable parts should no longer cause the training to be interrupted
 - Added translation files for English, German, Spanish, and Simplified and Traditional Chinese
 - More minor improvements
 [ ------ ]
 
-[ 1.3.0 ]
+[ 1.3 ]
 - Added French and Japanese translations
 - Fixed error when doing any mechanics action without training first after login
 [ ------ ]
 
-[ 1.4.0 ]
+[ 1.4 ]
 - Added option "Minimum Vehicle Part Success Chance" which prevents training on parts with a success chance below the set value
 - Added detailed description for this option with translations
 - Added success chance check when installing parts. Installing parts will no longer ignore the success chance minimum
 [ ------ ]
 
-[ 1.5.0 ]
-- If a part on the ground would be too heavy for the players inventory, it will be skipped instead of stopping the training
+[ 1.5 ]
+- If a vehicle part on the ground is too heavy to pick up, it will now be skipped instead of stopping the training
 - Added sandbox option for servers to enforce a specific "Minimum Vehicle Part Success Chance". This server-overwrite is disabled by default.
 - Added Russian translation (credits to Kavinsky!)
+[ ------ ]
+
+[ 1.6 ]
+-
 [ ------ ]
