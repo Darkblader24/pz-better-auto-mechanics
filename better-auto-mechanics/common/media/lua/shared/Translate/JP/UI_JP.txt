@@ -22,6 +22,7 @@ UI_JP = {
 
     -- Notes
     UI_BAM_button_desc.empty_seats = "座席の作業をするには、座席が空であることを確認してください。",
+    UI_BAM_button_desc.server_enforce = "サーバー強制:",
 
     -- #### Other ####
     UI_BAM_message.car_completed = "ふぅ！この車は今日はこれで終わり！",

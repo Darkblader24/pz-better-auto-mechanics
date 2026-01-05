@@ -46,7 +46,7 @@ function BAM.GetNextUninstallablePart(player, vehicle)
         --print(part:getId() .. " - UNINSTALL: " .. tostring(canUninstallPart) .. " - UNINSTALL XP: " .. tostring(canGainUninstallXP) .. " - ACCESS: " .. tostring(canAccessPart))
 
         -- 3. If all checks pass, return the part
-        if canUninstallPart and canAccessPart and canGainUninstallXP and successChance >= BAM_Options_MinSuccessChance:getValue() then
+        if canUninstallPart and canAccessPart and canGainUninstallXP and successChance >= BAM.GetOptionMinPartSuccessChance() then
             --print("Part " .. part:getId() .. " Success Chance: " .. tostring(successChance) .. "%, Failure Chance: " .. tostring(failureChance) .. "%")
             return part
         end
@@ -86,7 +86,7 @@ function BAM.GetNextInstallablePartAndItem(player, vehicle)
 
         --print(part:getId() .. " - INSTALL WOULD EXCEED WEIGHT: " .. tostring(wouldExceedWeightLimit))
 
-        if canInstallPart and canAccessPart and item and not wouldExceedWeightLimit and successChance >= BAM_Options_MinSuccessChance:getValue() then
+        if canInstallPart and canAccessPart and item and not wouldExceedWeightLimit and successChance >= BAM.GetOptionMinPartSuccessChance() then
             return part, item
         end
     end

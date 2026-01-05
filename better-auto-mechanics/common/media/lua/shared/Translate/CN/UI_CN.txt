@@ -22,6 +22,7 @@ UI_CN = {
 
     -- Notes
     UI_BAM_button_desc.empty_seats = "若要操作座椅，请确保其上无物。",
+    UI_BAM_button_desc.server_enforce = "服务器强制：",
 
     -- #### Other ####
     UI_BAM_message.car_completed = "呼！这辆车今天的训练已完成！",

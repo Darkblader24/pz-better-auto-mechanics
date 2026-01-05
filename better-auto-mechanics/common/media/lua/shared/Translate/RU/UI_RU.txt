@@ -22,6 +22,7 @@ UI_RU = {
 
     -- Notes
     UI_BAM_button_desc.empty_seats = "Чтобы работать с сиденьями, убедитесь, что они пусты.",
+    UI_BAM_button_desc.server_enforce = "Сервер принудительно задает:",
 
     -- #### Other ####
     UI_BAM_message.car_completed = "Фух! На сегодня с этой машиной покончено!",

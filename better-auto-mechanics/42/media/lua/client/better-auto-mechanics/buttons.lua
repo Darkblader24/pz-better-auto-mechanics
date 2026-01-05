@@ -53,7 +53,7 @@ function GenerateDescription(player, vehicle)
 
     -- Skill check
     local skillLevel = player:getPerkLevel(Perks.Mechanics)
-    local minSuccessChance = BAM_Options_MinSuccessChance:getValue()
+    local minSuccessChance = BAM.GetOptionMinPartSuccessChance()
     msg = msg .. newline
     msg = msg ..
     newline .. "<RGB:1,1,1>" .. getText("UI_BAM_button_desc.mechanics_level") .. ": " .. tostring(skillLevel)
@@ -104,6 +104,12 @@ function GenerateDescription(player, vehicle)
     -- Notes
     msg = msg .. newline
     msg = msg .. newline .. "<RGB:1,1,1>" .. getText("UI_BAM_button_desc.empty_seats")
+
+    if BAM.IsServerOverwritingOptionMinPartSuccessChance() then
+        msg = msg .. newline
+        msg = msg .. newline .. "<RGB:0.5,0.5,0.5>" .. getText("UI_BAM_button_desc.server_enforce")
+        msg = msg .. newline .. "<RGB:0.5,0.5,0.5>" .. "  - " .. getText("UI_BAM_options_title.min_success_chance") .. ": " .. BAM.GetOptionMinPartSuccessChance() .. "%"
+    end
 
 
     return msg

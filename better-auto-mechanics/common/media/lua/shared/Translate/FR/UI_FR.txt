@@ -22,6 +22,7 @@ UI_FR = {
 
     -- Notes
     UI_BAM_button_desc.empty_seats = "Pour travailler sur les sièges, assurez-vous qu'ils soient vides.",
+    UI_BAM_button_desc.server_enforce = "Le serveur impose:",
 
     -- #### Other ####
     UI_BAM_message.car_completed = "Ouf ! Cette voiture est finie pour aujourd'hui !",
