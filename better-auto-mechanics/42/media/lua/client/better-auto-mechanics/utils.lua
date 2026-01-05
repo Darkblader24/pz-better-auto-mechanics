@@ -81,9 +81,12 @@ function BAM.GetNextInstallablePartAndItem(player, vehicle)
         -- 3. Check if the player has the required part in inventory or on ground
         local item = BAM.GetAnyItemOnPlayerThatMatchesThatPart(player, part);
 
-        --print(part:getId() .. " - INSTALL: " .. tostring(canInstallPart))
+        -- 4. Check if the item would fit into the players inventory if its not on the player
+        local wouldExceedWeightLimit = BAM.WouldExceedWeightLimit(player, item)
 
-        if canInstallPart and canAccessPart and item and successChance >= BAM_Options_MinSuccessChance:getValue() then
+        --print(part:getId() .. " - INSTALL WOULD EXCEED WEIGHT: " .. tostring(wouldExceedWeightLimit))
+
+        if canInstallPart and canAccessPart and item and not wouldExceedWeightLimit and successChance >= BAM_Options_MinSuccessChance:getValue() then
             return part, item
         end
     end
@@ -207,7 +210,7 @@ function BAM.GetAnyItemOnPlayerThatMatchesThatPart(player, part)
         --if any type is owned by the player
         if typeToItem[part:getItemType():get(i)] then
             for j, v in ipairs(typeToItem[part:getItemType():get(i)]) do
-                return v; --return first valid item met
+                return v;  --return first valid item met
             end
         end
     end
@@ -268,5 +271,35 @@ function BAM.GetPartSuccessChance(player, part, actionType)
         successChance, _ = VehicleUtils.calculateInstallationSuccess(perks, player, perksTable)
     end
     return successChance
+end
+
+
+--- Checks if adding an item would exceed the player's hard carry limit.
+-- @param player The IsoPlayer object (e.g., getPlayer())
+-- @param item The IsoWorldInventoryObject to check
+-- @return boolean true if it would exceed the limit, false otherwise
+function BAM.WouldExceedWeightLimit(player, item)
+    if not player or not item then return false end
+
+    --print("Checking if adding item ", item:getName(), " would exceed weight limit...")
+    -- 1. Get the actual item weight
+    local inventory = player:getInventory()
+    local itemWeight = item:getActualWeight()
+    --print("Item weight: " .. tostring(itemWeight))
+
+    -- 2. Check if the item is currently in the players inventory
+    -- If it is already in the main inventory, we return false because it won't add any weight
+    if inventory:contains(item) then
+        --print("Item is already in inventory, so it will fit.")
+        return false
+    end
+
+    -- 3. Calculate weight after adding the item
+    local currentWeight = inventory:getCapacityWeight() -- Current weight in main inventory
+    local limitWeight = inventory:getCapacity()
+    --print("Current inventory weight:  " .. tostring(currentWeight) .. " / " .. tostring(limitWeight))
+    --print("Expected inventory weight: " .. tostring(currentWeight + itemWeight) .. " / " .. tostring(limitWeight))
+
+    return (currentWeight + itemWeight) > limitWeight
 end
 

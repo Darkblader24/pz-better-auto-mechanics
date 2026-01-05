@@ -30,5 +30,5 @@ link1 = Workshop = https://steamcommunity.com/sharedfiles/filedetails/?id=363585
 [ ------ ]
 
 [ 1.5.0 ]
--
+- If a part on the ground would be too heavy for the players inventory, it will be skipped instead of stopping the training
 [ ------ ]

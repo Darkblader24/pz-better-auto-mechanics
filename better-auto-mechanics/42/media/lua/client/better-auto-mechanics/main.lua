@@ -79,8 +79,8 @@ function BAM:workOnNextPart(player, vehicle)
             end
         end
 
-        -- If we can install a window or windshield, first check if we can uninstall door
-        if string.find(partInstall:getId(), "Window") or string.find(partInstall:getId(), "Windshield") then
+        -- If we can install a window or the rear windshield, first check if we can uninstall door
+        if string.find(partInstall:getId(), "Window") or string.find(partInstall:getId(), "WindshieldRear") then
             if string.find(partUninstall:getId(), "Door") then
                 BAM:UninstallPart(player, partUninstall)
                 return
@@ -120,6 +120,6 @@ function BAM:UninstallPart(player, part)
     BAM.LastWorkedPart = part
     BAM.LastWorkedActionType = 1
     BAM.DropBrokenItems(player)  -- Drop broken items before uninstalling
-    ISVehiclePartMenu.onUninstallPart(player, part) -- Start timed task
+    ISVehiclePartMenu.onUninstallPart(player, part)  -- Start timed task
 end
 

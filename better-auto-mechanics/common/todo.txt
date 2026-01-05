@@ -1,4 +1,2 @@
-- When installing parts that are on the ground, check if the player has enough inventory space to pick it up. If not, display a warning message.
 - If not all tools are equipped, display a different DONE message
-- Check each area of the vehicle for the required tools and sort them by that to avoid switching tools too often
-- If the server restarted, remove all this mods mod options. Maybe only when a player joins it checks if the server was restarted? Is would only exist to avoid mod options cluttering
+- If the server restarted, remove all mod data from this mod. Maybe only when a player joins it checks if the server was restarted? Is would only exist to avoid mod data cluttering
