@@ -100,9 +100,9 @@ end
 local original_ISPathFindAction_start = ISPathFindAction.start
 function ISPathFindAction:start()
     -- First call the original start function
-    print("ISPathFindAction:start called")
+    --print("ISPathFindAction:start called")
     local success = original_ISPathFindAction_start(self);
-    print("ISPathFindAction:start done, returned: ", success)
+    --print("ISPathFindAction:start done, returned: ", success)
 
     -- If any pathfinding action fails during mechanics training, mark the part as inaccessible and continue training
     if BAM.IsCurrentlyTraining then

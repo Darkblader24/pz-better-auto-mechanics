@@ -29,12 +29,12 @@ function BAM.GetOptionMinPartSuccessChance()
 
     if BAM.IsServerOverwritingOptionMinPartSuccessChance() then
         successChance = SandboxVars.BAM_Server_MinSuccessChance
-        print("Getting server option part success chance: " .. tostring(successChance) .. "%")
+        --print("Getting server option part success chance: " .. tostring(successChance) .. "%")
         return successChance
     end
 
     successChance = BAM_Options_MinSuccessChance:getValue()
-    print("Getting local option part success chance: " .. tostring(successChance) .. "%")
+    --print("Getting local option part success cashance: " .. tostring(successChance) .. "%")
     return successChance
 end
 

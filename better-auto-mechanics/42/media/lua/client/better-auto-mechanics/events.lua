@@ -4,12 +4,12 @@ BAM = BAM or {}
 function BAM:OnMechanicActionDone(success)
     -- This function is only ever called in multiplayer, but if its called in singleplayer, do nothing-- Safety check: Ensure this is only run on the client side
     if not isClient() then
-        print("Error: OnMechanicActionDone called on server or singleplayer. Ignoring.")
+        --print("Error: OnMechanicActionDone called on server or singleplayer. Ignoring.")
         return
     end
 
     if not BAM.IsCurrentlyTraining then
-        print("OnMechanicActionDone called, but not currently training. Ignoring.")
+        --print("OnMechanicActionDone called, but not currently training. Ignoring.")
         return
     end
 
@@ -19,7 +19,7 @@ function BAM:OnMechanicActionDone(success)
     -- If the action was successful, save the XP data and sync to server
     if success then
         BAM.RecordXPAction(BAM.Player, BAM.Vehicle, BAM.LastWorkedPart, BAM.LastWorkedActionType)
-        print("BAM: XP Cooldown saved for part " .. BAM.LastWorkedPart:getId())
+        --print("BAM: XP Cooldown saved for part " .. BAM.LastWorkedPart:getId())
     end
 
     -- Start the countdown (10 ticks is approx 0.16 seconds)
@@ -38,7 +38,7 @@ function BAM.OnTick()
         -- When the timer hits exactly 0, execute the delayed action
         if BAM.DelayTimer == 0 then
             if BAM.IsCurrentlyTraining then
-                print("Delay finished: executing workOnNextPart...")
+                --print("Delay finished: executing workOnNextPart...")
                 BAM:workOnNextPart(BAM.Player, BAM.Vehicle)
             end
         end

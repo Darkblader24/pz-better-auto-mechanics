@@ -65,7 +65,7 @@ end
 
 -- RECORD: Mark this part as "Done" for the next 24 hours
 function BAM.RecordXPAction(player, vehicle, part, actionType)
-    print("Recording XP action type " .. tostring(actionType) .. " for part " .. part:getId() .. " for player " .. tostring(player) .. " on vehicle " .. vehicle:getMechanicalID())
+    --print("Recording XP action type " .. tostring(actionType) .. " for part " .. part:getId() .. " for player " .. tostring(player) .. " on vehicle " .. vehicle:getMechanicalID())
     local modData = player:getModData()
 
     if not modData.BAM_History then
