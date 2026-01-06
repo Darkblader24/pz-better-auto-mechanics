@@ -39,3 +39,7 @@ link1 = Workshop = https://steamcommunity.com/sharedfiles/filedetails/?id=363585
 - Fixed potential error after each training action
 - Hopefully fixed "Train Mechanics" button not appearing
 [ ------ ]
+
+[ 1.7 ]
+-
+[ ------ ]
