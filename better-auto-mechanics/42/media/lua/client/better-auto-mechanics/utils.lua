@@ -198,19 +198,18 @@ end
 
 
 function BAM.GetAnyItemOnPlayerThatMatchesThatPart(player, part)
-    if not part:getItemType() then
-        return nil
-    end
-    local typeToItem = VehicleUtils.getItems(player:getPlayerNum())
-    -- among all possible items that can be installed on that part
+    if not part:getItemType() or part:getItemType():isEmpty() then return nil end
+
+    local playerItems = VehicleUtils.getItems(player:getPlayerNum())
+
+    -- Get all possible items on and around the player that can be installed
     for i = 0, part:getItemType():size() - 1 do
-        local name = part:getItemType():get(i);
-        local item = instanceItem(name);
-        if item then name = item:getName(); end
-        --if any type is owned by the player
-        if typeToItem[part:getItemType():get(i)] then
-            for j, v in ipairs(typeToItem[part:getItemType():get(i)]) do
-                return v;  --return first valid item met
+        local requiredItemType = part:getItemType():get(i)
+        local matchingPlayerItems = playerItems[requiredItemType]
+
+        if matchingPlayerItems and #matchingPlayerItems > 0 then
+            for i, item in ipairs(matchingPlayerItems) do
+                return item  -- Return the first matching item
             end
         end
     end
