@@ -29,7 +29,7 @@ UI_EN = {
 
     -- #### Options ####
     UI_BAM_options_title.min_success_chance = "Minimum Vehicle Part Success Chance",
-    UI_BAM_options_desc.min_success_chance_1 = "Parts with a success chance below this value will be skipped during training.",
+    UI_BAM_options_desc.min_success_chance_1 = "This value is about the chance to install/uninstall any given vehicle part. Parts with a success chance below this value will be skipped during training.",
     UI_BAM_options_desc.min_success_chance_2 = "All parts will be worked on. Parts will break at lower skill levels.",
     UI_BAM_options_desc.min_success_chance_3 = "Default setting for a good balance.",
     UI_BAM_options_desc.min_success_chance_4 = "Only parts that are guaranteed to succeed will be worked on. Completely safe at all skill levels.",
