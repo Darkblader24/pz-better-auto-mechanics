@@ -94,96 +94,64 @@ function BAM.GetNextInstallablePartAndItem(player, vehicle)
 end
 
 
-function BAM.SortParts(parts)
-    -- 1. Define the train order
+----------------------------------------
+-- CACHED SORTING DATA
+----------------------------------------
+local cachedRankLookup = nil
+local function buildRankLookup()
+    -- Define the train order
     -- Grouped by location on vehicle, and then by required tool to minimize tool switching
     local orderList = {
         -- Front
-        "Radio",
-        "Battery",
-        "HeadlightLeft",
-        "HeadlightRight",
-        "Windshield",
-        "EngineDoor",  -- Hood
-
+        "Radio", "Battery", "HeadlightLeft", "HeadlightRight", "Windshield", "EngineDoor",
         -- Front Left
-        "SuspensionFrontLeft",
-        "BrakeFrontLeft",
-        "TireFrontLeft",
-
+        "SuspensionFrontLeft", "BrakeFrontLeft", "TireFrontLeft",
         -- Doors Left
-        "SeatFrontLeft",
-        "DoorFrontLeft",
-        "WindowFrontLeft",
-        "SeatMiddleLeft",
-        "DoorMiddleLeft",
-        "WindowMiddleLeft",
-        "SeatRearLeft",
-        "DoorRearLeft",
-        "WindowRearLeft",
-
+        "SeatFrontLeft", "DoorFrontLeft", "WindowFrontLeft",
+        "SeatMiddleLeft", "DoorMiddleLeft", "WindowMiddleLeft",
+        "SeatRearLeft", "DoorRearLeft", "WindowRearLeft",
         -- Rear Left
-        "SuspensionRearLeft",
-        "BrakeRearLeft",
-        "TireRearLeft",
-
+        "SuspensionRearLeft", "BrakeRearLeft", "TireRearLeft",
         -- Rear
-        "GasTank",
-        "WindshieldRear",
-        "HeadlightRearLeft",
-        "HeadlightRearRight",
-        "Muffler",
-        "TrunkDoor", -- Trunk Lid
-        "DoorRear",
-
+        "GasTank", "WindshieldRear", "HeadlightRearLeft", "HeadlightRearRight", "Muffler", "TrunkDoor", "DoorRear",
         -- Rear Right
-        "SuspensionRearRight",
-        "BrakeRearRight",
-        "TireRearRight",
-
+        "SuspensionRearRight", "BrakeRearRight", "TireRearRight",
         -- Doors Right
-        "SeatRearRight",
-        "DoorRearRight",
-        "WindowRearRight",
-        "SeatMiddleRight",
-        "DoorMiddleRight",
-        "WindowMiddleRight",
-        "SeatFrontRight",
-        "DoorFrontRight",
-        "WindowFrontRight",
-
+        "SeatRearRight", "DoorRearRight", "WindowRearRight",
+        "SeatMiddleRight", "DoorMiddleRight", "WindowMiddleRight",
+        "SeatFrontRight", "DoorFrontRight", "WindowFrontRight",
         -- Front Right
-        "SuspensionFrontRight",
-        "BrakeFrontRight",
-        "TireFrontRight",
-
+        "SuspensionFrontRight", "BrakeFrontRight", "TireFrontRight",
         -- Impossible ones:
-        "GloveBox",
-        "Heater",
-        "Engine",
-        "TruckBed",  -- Trunk
-        "TruckBedOpen",  -- Trunk that's always open
-        "PassengerCompartment", -- ???
-        "TrailerAnimalFood",
-        "TrailerAnimalEggs",
+        "GloveBox", "Heater", "Engine", "TruckBed", "TruckBedOpen", "PassengerCompartment",
+        "TrailerAnimalFood", "TrailerAnimalEggs",
     }
 
-    -- 2. Create a "Rank Map" for fast lookup
+    -- Create a "Rank Map" for fast lookup
     -- This turns the list into: { ["Radio"] = 1, ["Battery"] = 2, ... }
-    local rankLookup = {}
+    local lookup = {}
     for index, id in ipairs(orderList) do
-        rankLookup[id] = index
+        lookup[id] = index
+    end
+    return lookup
+end
+
+
+function BAM.SortParts(parts)
+    -- Build cache only once
+    if not cachedRankLookup then
+        cachedRankLookup = buildRankLookup()
     end
 
-    -- 3. Sort the actual 'parts' table using the Rank Map
+    -- Sort the actual 'parts' table using the Rank Map
     table.sort(parts, function(a, b)
         local idA = a:getId()
         local idB = b:getId()
 
         -- Get the rank from our table.
         -- If an ID isn't in your list, we give it rank 999 (puts it at the very bottom)
-        local rankA = rankLookup[idA] or 999
-        local rankB = rankLookup[idB] or 999
+        local rankA = cachedRankLookup[idA] or 999
+        local rankB = cachedRankLookup[idB] or 999
 
         return rankA < rankB
     end)

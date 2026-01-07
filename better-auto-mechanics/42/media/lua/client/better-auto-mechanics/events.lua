@@ -31,6 +31,9 @@ end
 
 -- The Tick Handler: Runs every single frame (approx 60 times/sec)
 function BAM.OnTick()
+    -- Fail fast. If not training, do nothing immediately.
+    if not BAM.IsCurrentlyTraining then return end
+
     -- Only run logic if the timer is active (greater than 0)
     if BAM.DelayTimer > 0 then
         BAM.DelayTimer = BAM.DelayTimer - 1
