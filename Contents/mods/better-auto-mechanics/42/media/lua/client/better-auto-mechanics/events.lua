@@ -9,23 +9,23 @@ function BAM:OnMechanicActionDone(success)
     end
 
     if not BAM.IsCurrentlyTraining then
-        --print("OnMechanicActionDone called, but not currently training. Ignoring.")
         return
     end
 
-    -- Call workOnNextPart to continue the training on the next part
-    print("-> Mechanic action done! Player: ", BAM.Player, " ", BAM.LastWorkedPart:getId(), " ", BAM.LastWorkedActionType, " Success: ", success)
+    local player = self
+    print("-> Mechanic action done! Player: ", player, " ", BAM.LastWorkedPart:getId(), " ", BAM.LastWorkedActionType, " Success: ", success)
 
     -- If the action was successful, save the XP data and sync to server
+    -- TODO: This should be done even without training, but we don't have access to the currently worked on part in that case
     if success then
-        BAM.RecordXPAction(BAM.Player, BAM.Vehicle, BAM.LastWorkedPart, BAM.LastWorkedActionType)
+        BAM.RecordXPAction(player, BAM.Vehicle, BAM.LastWorkedPart, BAM.LastWorkedActionType)
         --print("BAM: XP Cooldown saved for part " .. BAM.LastWorkedPart:getId())
     end
 
-    -- Start the countdown (10 ticks is approx 0.16 seconds)
+    -- Start a tick countdown, after which 'workOnNextPart' is called to continue the training
     -- This gives the server enough time to update the game state
+    BAM.DelayTimer = 20  -- 10 ticks is approx 0.16 seconds
     print("Waiting ", BAM.DelayTimer, " ticks before working on next part...")
-    BAM.DelayTimer = 20
 end
 
 

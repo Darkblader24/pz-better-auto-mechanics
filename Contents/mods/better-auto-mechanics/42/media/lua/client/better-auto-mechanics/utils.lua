@@ -272,7 +272,8 @@ end
 
 
 function BAM.GetGameVersion()
-    local ver_str = getCore():getVersion() -- Outputs string like: "42.13.1 1267173a2044ba62aa3d0a0e9899b15e9057de5c 2025-12-18 10:34:47 (ZB)"
+    -- getCore():getGameVersion()) doesn't return the path, so we extract it from the full version string
+    local ver_str = getCore():getVersion() -- Returns string like: "42.13.1 1267173a2044ba62aa3d0a0e9899b15e9057de5c 2025-12-18 10:34:47 (ZB)"
     local major, minor, patch = ver_str:match("^(%d+)%.(%d+)%.(%d+)")  -- Extract major, minor, patch numbers, here "42", "13", "1"
     major = tonumber(major)
     minor = tonumber(minor)

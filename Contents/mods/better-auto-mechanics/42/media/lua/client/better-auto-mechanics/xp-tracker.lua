@@ -65,17 +65,35 @@ end
 
 -- RECORD: Mark this part as "Done" for the next 24 hours
 function BAM.RecordXPAction(player, vehicle, part, actionType)
-    --print("Recording XP action type " .. tostring(actionType) .. " for part " .. part:getId() .. " for player " .. tostring(player) .. " on vehicle " .. vehicle:getMechanicalID())
+    -- actionType: 1 = Uninstall, 2 = Install
+    -- We only track uninstall actions for XP cooldowns, since we always install regardless of XP gain
+    -- This is to prevent good parts from laying on the floor
+    if actionType == 2 then
+        return
+    end
+
     local modData = player:getModData()
 
     if not modData.BAM_History then
         modData.BAM_History = {}
     end
 
-    local key = getXPKey(vehicle, part, actionType)
+    -- Loop over all mod data entries and remove any that are older than 24 hours to remove outdated entries
+    local currentHours = getGameTime():getWorldAgeHours()
+    for key, lastWorkedOn in pairs(modData.BAM_History) do
+        if currentHours - lastWorkedOn >= 24 then
+            modData.BAM_History[key] = nil
+            --print("-> Removed old history entry for key " .. key)
+        end
+    end
 
-    -- Save the exact hour we finished
-    modData.BAM_History[key] = getGameTime():getWorldAgeHours()
+    -- Save the exact hour we finished, but only if no mod data entry for this part exists
+    local key = getXPKey(vehicle, part, actionType)
+    local lastWorkedOn = modData.BAM_History[key]
+    if not lastWorkedOn then
+        --print("Recorded XP action type " .. tostring(actionType) .. " for part " .. part:getId() .. " for player " .. tostring(player) .. " on vehicle " .. vehicle:getMechanicalID())
+        modData.BAM_History[key] = getGameTime():getWorldAgeHours()
+    end
 
     -- Force the game to sync this change to the server immediately
     player:transmitModData()

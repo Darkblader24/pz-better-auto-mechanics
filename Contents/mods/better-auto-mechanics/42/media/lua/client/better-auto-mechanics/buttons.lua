@@ -4,13 +4,13 @@ BAM = BAM or {}
 -- Add Train Mechanics button to vehicle part context menu
 local original_doPartContextMenu = ISVehicleMechanics.doPartContextMenu
 function ISVehicleMechanics:doPartContextMenu(part, x, y, v1, v2, v3, v4)  -- Added a few more variables, in case any mod uses more
-    print("BAM: Adding Better Auto Mechanics button!")
-    print("BAM: ISVehicleMechanics:doPartContextMenu called")
+    --print("BAM: Adding Better Auto Mechanics button!")
+    --print("BAM: ISVehicleMechanics:doPartContextMenu called")
     local success = original_doPartContextMenu(self, part, x, y, v1, v2, v3, v4);
-    print("BAM: ISVehicleMechanics:doPartContextMenu done, returned: ", success)
+    --print("BAM: ISVehicleMechanics:doPartContextMenu done, returned: ", success)
 
     self:addMechanicsButtons()
-    print("BAM: Added Better Auto Mechanics button!")
+    --print("BAM: Added Better Auto Mechanics button!")
     return success
 end
 

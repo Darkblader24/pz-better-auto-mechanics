@@ -10,7 +10,7 @@ BAM.InaccessibleParts = {}
 
 function BAM:StartMechanicsTraining(player, vehicle)
     print("=================================")
-    print("Starting mechanics training for SP and MP!")
+    print("Starting mechanics training!")
     BAM.IsCurrentlyTraining = true
     BAM.Player = player
     BAM.Vehicle = vehicle
@@ -21,7 +21,6 @@ end
 
 function BAM:StopMechanicsTraining(player, msgOverride, r, g, b)
     BAM.IsCurrentlyTraining = false
-    BAM.Player = nil
     BAM.Vehicle = nil
     BAM.DelayTimer = 0
     BAM.LastWorkedPart = nil
