@@ -1,5 +1,7 @@
 [ ALERT_CONFIG ]
 link1 = Workshop = https://steamcommunity.com/sharedfiles/filedetails/?id=3635856965
+link2 = Hotox's Kofi = https://steamcommunity.com/linkfilter/?u=https://ko-fi.com/hotox,
+link3 = Github = https://steamcommunity.com/linkfilter/?u=https://github.com/Darkblader24/pz-better-auto-mechanics,
 [ ------ ]
 
 [ 1.0 ]

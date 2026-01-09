@@ -43,3 +43,14 @@ If you find this mod useful:
 
 **Workshop ID:** `3635856965`
 **Mod ID:** `better-auto-mechanics`
+
+---
+
+### Dev notes:
+- To test this mod locally, create two symbolic links:
+  - link `pz-better-auto-mechanics` into `%USERPROFILE%\Zomboid\Workshop`
+  - link `better-auto-mechanics` into `%USERPROFILE%\Zomboid\mods`
+- To release a new version:
+  - !⚠️! Remove "Dev" from the mod name and id in `mod.info`
+  - Update the version number in `mod.info`
+  - Add the changelog to `ChangeLog.txt`
