@@ -73,16 +73,19 @@ function BAM.RecordXPAction(player, vehicle, part, actionType)
     end
 
     local modData = player:getModData()
+    local dataChanged = false  -- Track if we actually change anything
 
     if not modData.BAM_History then
         modData.BAM_History = {}
+        dataChanged = true
     end
 
-    -- Loop over all mod data entries and remove any that are older than 24 hours to remove outdated entries
+    -- Loop over all mod data entries and remove any that are older than 24 hours
     local currentHours = getGameTime():getWorldAgeHours()
     for key, lastWorkedOn in pairs(modData.BAM_History) do
         if currentHours - lastWorkedOn >= 24 then
             modData.BAM_History[key] = nil
+            dataChanged = true
             --print("-> Removed old history entry for key " .. key)
         end
     end
@@ -93,10 +96,13 @@ function BAM.RecordXPAction(player, vehicle, part, actionType)
     if not lastWorkedOn then
         --print("Recorded XP action type " .. tostring(actionType) .. " for part " .. part:getId() .. " for player " .. tostring(player) .. " on vehicle " .. vehicle:getMechanicalID())
         modData.BAM_History[key] = getGameTime():getWorldAgeHours()
+        dataChanged = true
     end
 
-    -- Force the game to sync this change to the server immediately
-    player:transmitModData()
+    -- Force the game to sync this change to the server immediately, but only sync if we actually touched the table
+    if dataChanged then
+        player:transmitModData()
+    end
 end
 
 
