@@ -118,7 +118,7 @@ function OnPathFailed()
     print("Part ", part:getId(), " is inaccessible during mechanics training.")
 
     BAM.InaccessibleParts[part:getId()] = true
-    BAM:workOnNextPart(BAM.Player, BAM.Vehicle)
+    BAM.WorkDelayTimer = 10  -- Call workOnNextPart after a short delay instead of instantly after pathfinding failed, to avoid pathfinding issues
 end
 
 

@@ -43,5 +43,7 @@ link3 = Github = https://steamcommunity.com/linkfilter/?u=https://github.com/Dar
 [ ------ ]
 
 [ 1.7 ]
+- Added support for all earlier B42 versions (not B41)
 - Improved multiplayer XP tracking
+- Improved pathfinding randomly stopping training
 [ ------ ]

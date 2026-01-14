@@ -31,9 +31,18 @@ function GenerateDescription(player, vehicle)
     local msg = getText("UI_BAM_button_desc.needs") .. ":"
 
     -- Tool check
-    local hasScrewdriver = player:getInventory():getFirstTagRecurse(ItemTag.SCREWDRIVER)
-    local hasWrench = player:getInventory():getFirstTagRecurse(ItemTag.WRENCH)
-    local hasLugWrench = player:getInventory():getFirstTagRecurse(ItemTag.LUG_WRENCH)
+    local hasScrewdriver = false
+    local hasWrench = false
+    local hasLugWrench = false
+    if BAM.GameVersionNewerThanOrEqual(42, 13, 0) then
+        hasScrewdriver = player:getInventory():getFirstTagRecurse(ItemTag.SCREWDRIVER)
+        hasWrench = player:getInventory():getFirstTagRecurse(ItemTag.WRENCH)
+        hasLugWrench = player:getInventory():getFirstTagRecurse(ItemTag.LUG_WRENCH)
+    else
+        hasScrewdriver = player:getInventory():getFirstTagRecurse("Screwdriver")
+        hasWrench = player:getInventory():getFirstTagRecurse("Wrench")
+        hasLugWrench = player:getInventory():getFirstTagRecurse("LugWrench")
+    end
     local hasJack = player:getInventory():getFirstTypeRecurse("Jack")
 
     local nameScrewdriver = getScriptManager():getItem("Base.Screwdriver"):getDisplayName()

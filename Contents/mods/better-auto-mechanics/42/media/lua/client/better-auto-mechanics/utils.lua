@@ -105,23 +105,23 @@ local function buildRankLookup()
         -- Front
         "Radio", "Battery", "HeadlightLeft", "HeadlightRight", "Windshield", "EngineDoor",
         -- Front Left
-        "SuspensionFrontLeft", "BrakeFrontLeft", "TireFrontLeft",
+        "BrakeFrontLeft", "SuspensionFrontLeft", "TireFrontLeft",
         -- Doors Left
         "SeatFrontLeft", "DoorFrontLeft", "WindowFrontLeft",
         "SeatMiddleLeft", "DoorMiddleLeft", "WindowMiddleLeft",
         "SeatRearLeft", "DoorRearLeft", "WindowRearLeft",
         -- Rear Left
-        "SuspensionRearLeft", "BrakeRearLeft", "TireRearLeft",
+        "BrakeRearLeft", "SuspensionRearLeft", "TireRearLeft",
         -- Rear
         "GasTank", "WindshieldRear", "HeadlightRearLeft", "HeadlightRearRight", "Muffler", "TrunkDoor", "DoorRear",
         -- Rear Right
-        "SuspensionRearRight", "BrakeRearRight", "TireRearRight",
+        "BrakeRearRight", "SuspensionRearRight", "TireRearRight",
         -- Doors Right
         "SeatRearRight", "DoorRearRight", "WindowRearRight",
         "SeatMiddleRight", "DoorMiddleRight", "WindowMiddleRight",
         "SeatFrontRight", "DoorFrontRight", "WindowFrontRight",
         -- Front Right
-        "SuspensionFrontRight", "BrakeFrontRight", "TireFrontRight",
+        "BrakeFrontRight", "SuspensionFrontRight", "TireFrontRight",
         -- Impossible ones:
         "GloveBox", "Heater", "Engine", "TruckBed", "TruckBedOpen", "PassengerCompartment",
         "TrailerAnimalFood", "TrailerAnimalEggs",
@@ -273,13 +273,30 @@ end
 
 function BAM.GetGameVersion()
     -- getCore():getGameVersion()) doesn't return the path, so we extract it from the full version string
-    local ver_str = getCore():getVersion() -- Returns string like: "42.13.1 1267173a2044ba62aa3d0a0e9899b15e9057de5c 2025-12-18 10:34:47 (ZB)"
-    local major, minor, patch = ver_str:match("^(%d+)%.(%d+)%.(%d+)")  -- Extract major, minor, patch numbers, here "42", "13", "1"
+    local ver_str = getCore():getVersion()                            -- Returns string like: "42.13.1 1267173a2044ba62aa3d0a0e9899b15e9057de5c 2025-12-18 10:34:47 (ZB)"
+    local major, minor, patch = ver_str:match("^(%d+)%.(%d+)%.(%d+)") -- Extract major, minor, patch numbers, here "42", "13", "1"
     major = tonumber(major)
     minor = tonumber(minor)
     patch = tonumber(patch)
-    print("Detected game version: ", major, ".", minor, ".", patch)
+    --print("Detected game version: ", major, ".", minor, ".", patch)
 
     return major, minor, patch
+end
+
+
+function BAM.GameVersionNewerThanOrEqual(majorReq, minorReq, patchReq)
+    local major, minor, patch = BAM.GetGameVersion()
+
+    if major > majorReq then
+        return true
+    elseif major == majorReq then
+        if minor > minorReq then
+            return true
+        elseif minor == minorReq then
+            return patch >= patchReq
+        end
+    end
+
+    return false
 end
 

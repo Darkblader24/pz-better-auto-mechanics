@@ -2,7 +2,7 @@ BAM = BAM or {}
 BAM.IsCurrentlyTraining = false
 BAM.Player = nil
 BAM.Vehicle = nil
-BAM.DelayTimer = 0
+BAM.WorkDelayTimer = 0
 BAM.LastWorkedPart = nil
 BAM.LastWorkedActionType = nil -- 1 = uninstall, 2 = install
 BAM.InaccessibleParts = {}
@@ -22,7 +22,7 @@ end
 function BAM:StopMechanicsTraining(player, msgOverride, r, g, b)
     BAM.IsCurrentlyTraining = false
     BAM.Vehicle = nil
-    BAM.DelayTimer = 0
+    BAM.WorkDelayTimer = 0
     BAM.LastWorkedPart = nil
     BAM.LastWorkedActionType = nil
     BAM.InaccessibleParts = {}
