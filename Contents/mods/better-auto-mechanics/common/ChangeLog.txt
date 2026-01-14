@@ -47,3 +47,7 @@ link3 = Github = https://steamcommunity.com/linkfilter/?u=https://github.com/Dar
 - Improved multiplayer XP tracking
 - Improved pathfinding randomly stopping training
 [ ------ ]
+
+[ 1.8 ]
+-
+[ ------ ]
