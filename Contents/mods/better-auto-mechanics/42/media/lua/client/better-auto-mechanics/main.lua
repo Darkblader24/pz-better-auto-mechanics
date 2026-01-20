@@ -9,8 +9,8 @@ BAM.InaccessibleParts = {}
 
 
 function BAM:StartMechanicsTraining(player, vehicle)
-    print("=================================")
-    print("Starting mechanics training!")
+    DebugLog.log("=================================")
+    DebugLog.log("Starting mechanics training!")
     BAM.IsCurrentlyTraining = true
     BAM.Player = player
     BAM.Vehicle = vehicle
@@ -39,31 +39,31 @@ function BAM:StopMechanicsTraining(player, msgOverride, r, g, b)
         HaloTextHelper.addText(player, msg, "[br/]", r, g, b)
     end
 
-    print("Finished mechanics training!")
-    print("=================================")
+    DebugLog.log("Finished mechanics training!")
+    DebugLog.log("=================================")
 end
 
 
 function BAM:workOnNextPart(player, vehicle)
     -- First check if we are too far away from the vehicle
     local distanceToCar = player:DistToSquared(vehicle)
-    --print("Player distance to vehicle squared: " .. distanceToCar)
+    --DebugLog.log("Player distance to vehicle squared: " .. distanceToCar)
     if distanceToCar > 10 then
-        print("Player is too far from vehicle (" .. tostring(distanceToCar) .. " tiles). Stopping training.")
+        DebugLog.log("Player is too far from vehicle (" .. tostring(distanceToCar) .. " tiles). Stopping training.")
         BAM:StopMechanicsTraining(nil)
         return
     end
 
     -- Gather info about next parts to install/uninstall
-    print("Deciding on next part...")
+    DebugLog.log("Deciding on next part...")
     local partUninstall = BAM.GetNextUninstallablePart(player, vehicle)
     local partInstall, itemInstall = BAM.GetNextInstallablePartAndItem(player, vehicle)
-    print("Next part to uninstall: " .. (partUninstall and partUninstall:getId() or "None"))
-    print("Next part to install: " .. (partInstall and partInstall:getId() or "None"))
+    DebugLog.log("Next part to uninstall: " .. (partUninstall and partUninstall:getId() or "None"))
+    DebugLog.log("Next part to install: " .. (partInstall and partInstall:getId() or "None"))
 
     -- If no parts to install or uninstall, stop training
     if partUninstall == nil and partInstall == nil then
-        print("No more parts to work on.")
+        DebugLog.log("No more parts to work on.")
         BAM:StopMechanicsTraining(player)
         return
     end
@@ -100,13 +100,13 @@ function BAM:workOnNextPart(player, vehicle)
     end
 
     -- If we reach here, something went wrong. Probably because we have a part to install but no item for it.
-    print("Error: Unable to determine next part to work on.")
+    DebugLog.log("Error: Unable to determine next part to work on.")
     BAM:StopMechanicsTraining(player)
 end
 
 
 function BAM:InstallPart(player, part, item)
-    print("-> Installing item " .. item:getName() .. " into part: " .. part:getId())
+    DebugLog.log("-> Installing item " .. item:getName() .. " into part: " .. part:getId())
     BAM.LastWorkedPart = part
     BAM.LastWorkedActionType = 2
     BAM.DropBrokenItems(player)  -- Drop broken items before installing
@@ -115,7 +115,7 @@ end
 
 
 function BAM:UninstallPart(player, part)
-    print("-> Uninstalling part: " .. part:getId())
+    DebugLog.log("-> Uninstalling part: " .. part:getId())
     BAM.LastWorkedPart = part
     BAM.LastWorkedActionType = 1
     BAM.DropBrokenItems(player)  -- Drop broken items before uninstalling

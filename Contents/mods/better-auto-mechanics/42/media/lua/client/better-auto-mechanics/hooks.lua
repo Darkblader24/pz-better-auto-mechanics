@@ -7,15 +7,15 @@ BAM = BAM or {}
 local original_ISUninstallVehiclePart_complete = ISUninstallVehiclePart.complete
 function ISUninstallVehiclePart:complete()
     -- First call the original complete function
-    --print("ISUninstallVehiclePart:complete called")
+    --DebugLog.log("ISUninstallVehiclePart:complete called")
     local success = original_ISUninstallVehiclePart_complete(self);
-    --print("ISUninstallVehiclePart:complete done, returned: ", success)
+    --DebugLog.log("ISUninstallVehiclePart:complete done, returned: ", success)
 
     -- Then call workOnNextPart to continue the training on the next part
     -- We can only use this check in SP, because in MP the "complete" function never gets called
     -- In MP we use the OnMechanicActionDone event to continue training after uninstall/install
     if BAM.IsCurrentlyTraining and not isClient() then
-        print("Continuing mechanics training after uninstall...")
+        DebugLog.log("Continuing mechanics training after uninstall...")
         BAM:workOnNextPart(self.character, self.vehicle)
     end
 
@@ -26,15 +26,15 @@ end
 local original_ISInstallVehiclePart_complete = ISInstallVehiclePart.complete
 function ISInstallVehiclePart:complete()
     -- First call the original complete function
-    --print("ISInstallVehiclePart:complete called")
+    --DebugLog.log("ISInstallVehiclePart:complete called")
     local success = original_ISInstallVehiclePart_complete(self);
-    --print("ISInstallVehiclePart:complete done, returned: ", success)
+    --DebugLog.log("ISInstallVehiclePart:complete done, returned: ", success)
 
     -- Then call workOnNextPart to continue the training on the next part
     -- We can only use this check in SP, because in MP the "complete" function never gets called
     -- In MP we use the OnMechanicActionDone event to continue training after uninstall/install
     if BAM.IsCurrentlyTraining and not isClient() then
-        print("Continuing mechanics training after install...")
+        DebugLog.log("Continuing mechanics training after install...")
         BAM:workOnNextPart(self.character, self.vehicle)
     end
 
@@ -45,15 +45,15 @@ end
 local original_ISUninstallVehiclePart_stop = ISUninstallVehiclePart.stop
 function ISUninstallVehiclePart:stop()
     -- First call the original stop function
-    --print("ISUninstallVehiclePart:stop called")
+    --DebugLog.log("ISUninstallVehiclePart:stop called")
     local success = original_ISUninstallVehiclePart_stop(self);
-    --print("ISUninstallVehiclePart:stop done, returned: ", success)
+    --DebugLog.log("ISUninstallVehiclePart:stop done, returned: ", success)
 
     -- Then stop the training
     -- We can only use this check in SP, because in MP this gets fired after every action during training, unlike in SP
     -- In MP we use the initParts hook below to stop training when opening the hood
     if BAM.IsCurrentlyTraining and not isClient() then
-        print("Stopping mechanics training due to uninstall stop...")
+        DebugLog.log("Stopping mechanics training due to uninstall stop...")
         BAM:StopMechanicsTraining(nil)
     end
 
@@ -64,15 +64,15 @@ end
 local original_ISInstallVehiclePart_stop = ISInstallVehiclePart.stop
 function ISInstallVehiclePart:stop()
     -- First call the original stop function
-    --print("ISInstallVehiclePart:stop called")
+    --DebugLog.log("ISInstallVehiclePart:stop called")
     local success = original_ISInstallVehiclePart_stop(self);
-    --print("ISInstallVehiclePart:stop done, returned: ", success)
+    --DebugLog.log("ISInstallVehiclePart:stop done, returned: ", success)
 
     -- Then stop the training
     -- We can only use this check in SP, because in MP this gets fired after every action during training, unlike in SP
     -- In MP we use the initParts hook below to stop training when opening the hood
     if BAM.IsCurrentlyTraining and not isClient() then
-        print("Stopping mechanics training due to install stop...")
+        DebugLog.log("Stopping mechanics training due to install stop...")
         BAM:StopMechanicsTraining(nil)
     end
 
@@ -83,13 +83,13 @@ end
 -- Used to stop the mechanics training. Whenever you open a hood you are no longer training mechanics
 local original_ISVehicleMechanics_initParts = ISVehicleMechanics.initParts
 function ISVehicleMechanics:initParts()
-    --print("ISVehicleMechanics:initParts called")
+    --DebugLog.log("ISVehicleMechanics:initParts called")
     local success = original_ISVehicleMechanics_initParts(self);
-    --print("ISVehicleMechanics:initParts done, returned: ", success)
+    --DebugLog.log("ISVehicleMechanics:initParts done, returned: ", success)
 
     -- We we open another vehicle hood, then there should be no mechanics training going on
     if BAM.IsCurrentlyTraining then
-        print("Stopping mechanics training due to vehicle mechanics init...")
+        DebugLog.log("Stopping mechanics training due to vehicle mechanics init...")
         BAM:StopMechanicsTraining(nil)
     end
 
@@ -100,9 +100,9 @@ end
 local original_ISPathFindAction_start = ISPathFindAction.start
 function ISPathFindAction:start()
     -- First call the original start function
-    --print("ISPathFindAction:start called")
+    --DebugLog.log("ISPathFindAction:start called")
     local success = original_ISPathFindAction_start(self);
-    --print("ISPathFindAction:start done, returned: ", success)
+    --DebugLog.log("ISPathFindAction:start done, returned: ", success)
 
     -- If any pathfinding action fails during mechanics training, mark the part as inaccessible and continue training
     if BAM.IsCurrentlyTraining then
@@ -115,7 +115,7 @@ end
 
 function OnPathFailed()
     local part = BAM.LastWorkedPart
-    print("Part ", part:getId(), " is inaccessible during mechanics training.")
+    DebugLog.log("Part ", part:getId(), " is inaccessible during mechanics training.")
 
     BAM.InaccessibleParts[part:getId()] = true
     BAM.WorkDelayTimer = 10  -- Call workOnNextPart after a short delay instead of instantly after pathfinding failed, to avoid pathfinding issues
@@ -125,9 +125,9 @@ end
 --local original_ISUninstallVehiclePart_perform = ISUninstallVehiclePart.perform
 --function ISUninstallVehiclePart:perform()
 --    -- First call the original perform function
---    print("ISUninstallVehiclePart:perform called")
+--    DebugLog.log("ISUninstallVehiclePart:perform called")
 --    local success = original_ISUninstallVehiclePart_perform(self);
---    print("ISUninstallVehiclePart:perform done, returned: ", success)
+--    DebugLog.log("ISUninstallVehiclePart:perform done, returned: ", success)
 --
 --    return success
 --end
@@ -136,9 +136,9 @@ end
 --local original_ISUninstallVehiclePart_update = ISUninstallVehiclePart.update
 --function ISUninstallVehiclePart:update()
 --    -- First call the original update function
---    print("ISUninstallVehiclePart:update called")
+--    DebugLog.log("ISUninstallVehiclePart:update called")
 --    local success = original_ISUninstallVehiclePart_update(self);
---    print("ISUninstallVehiclePart:update done, returned: ", success)
+--    DebugLog.log("ISUninstallVehiclePart:update done, returned: ", success)
 --
 --    return success
 --end
@@ -147,9 +147,9 @@ end
 --local original_ISUninstallVehiclePart_start = ISUninstallVehiclePart.start
 --function ISUninstallVehiclePart:start()
 --    -- First call the original start function
---    print("ISUninstallVehiclePart:start called")
+--    DebugLog.log("ISUninstallVehiclePart:start called")
 --    local success = original_ISUninstallVehiclePart_start(self);
---    print("ISUninstallVehiclePart:start done, returned: ", success)
+--    DebugLog.log("ISUninstallVehiclePart:start done, returned: ", success)
 --
 --    return success
 --end
@@ -157,9 +157,9 @@ end
 --
 --local original_ISUninstallVehiclePart_new = ISUninstallVehiclePart.new
 --function ISUninstallVehiclePart:new(character, part, time)
---    print("ISUninstallVehiclePart:new called")
+--    DebugLog.log("ISUninstallVehiclePart:new called")
 --    local obj = original_ISUninstallVehiclePart_new(self, character, part, time);
---    print("ISUninstallVehiclePart:new done, returned: ", obj)
+--    DebugLog.log("ISUninstallVehiclePart:new done, returned: ", obj)
 --    return obj
 --end
 

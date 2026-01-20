@@ -18,7 +18,7 @@ function BAM.CanGainXP(player, vehicle, part, actionType)
         return false
     end
 
-    --print("Checking if player " .. tostring(player) .. " can gain XP for action type " .. tostring(actionType) .. " on part " .. part:getId() .. " on vehicle " .. vehicle:getMechanicalID())
+    --DebugLog.log("Checking if player " .. tostring(player) .. " can gain XP for action type " .. tostring(actionType) .. " on part " .. part:getId() .. " on vehicle " .. vehicle:getMechanicalID())
     local key = getXPKey(vehicle, part, actionType)
 
     -- In singleplayer we use the build-in XP check
@@ -39,7 +39,7 @@ function BAM.CanGainXP(player, vehicle, part, actionType)
     -- If key doesn't exist, they have never worked on it -> YES
     local lastWorkedOn = modData.BAM_History[key]
     if not lastWorkedOn then
-        --print("-> No history found for key " .. key .. ". Player can gain XP.")
+        --DebugLog.log("-> No history found for key " .. key .. ". Player can gain XP.")
         return true
     end
 
@@ -49,17 +49,17 @@ function BAM.CanGainXP(player, vehicle, part, actionType)
     -- Handle edge case: If WorldAge resets (server wipe/admin reset), reset our history
     if currentHours < lastWorkedOn then
         modData.BAM_History[key] = nil
-        --print("-> World age reset detected. Clearing history for key " .. key .. ". Player can gain XP.")
+        --DebugLog.log("-> World age reset detected. Clearing history for key " .. key .. ". Player can gain XP.")
         return true
     end
 
     -- Check if 24 hours have passed
     if (currentHours - lastWorkedOn) >= 24 then
-        --print("-> More than 24 hours have passed since last work on key " .. key .. ". Player can gain XP.")
+        --DebugLog.log("-> More than 24 hours have passed since last work on key " .. key .. ". Player can gain XP.")
         return true
     end
 
-    --print("-> Less than 24 hours since last work on key " .. key .. ". Player cannot gain XP.")
+    --DebugLog.log("-> Less than 24 hours since last work on key " .. key .. ". Player cannot gain XP.")
     return false
 end
 
@@ -86,7 +86,7 @@ function BAM.RecordXPAction(player, vehicle, part, actionType)
         if currentHours - lastWorkedOn >= 24 then
             modData.BAM_History[key] = nil
             dataChanged = true
-            --print("-> Removed old history entry for key " .. key)
+            --DebugLog.log("-> Removed old history entry for key " .. key)
         end
     end
 
@@ -94,7 +94,7 @@ function BAM.RecordXPAction(player, vehicle, part, actionType)
     local key = getXPKey(vehicle, part, actionType)
     local lastWorkedOn = modData.BAM_History[key]
     if not lastWorkedOn then
-        --print("Recorded XP action type " .. tostring(actionType) .. " for part " .. part:getId() .. " for player " .. tostring(player) .. " on vehicle " .. vehicle:getMechanicalID())
+        --DebugLog.log("Recorded XP action type " .. tostring(actionType) .. " for part " .. part:getId() .. " for player " .. tostring(player) .. " on vehicle " .. vehicle:getMechanicalID())
         modData.BAM_History[key] = getGameTime():getWorldAgeHours()
         dataChanged = true
     end
@@ -110,12 +110,12 @@ function BAM.PrintDebugHistory()
     local player = getPlayer()
     local history = player:getModData().BAM_History
     if history then
-        print("=== BAM XP HISTORY ===")
+        DebugLog.log("=== BAM XP HISTORY ===")
         for key, time in pairs(history) do
-            print(key .. " : " .. time)
+            DebugLog.log(key .. " : " .. time)
         end
     else
-        print("=== NO HISTORY FOUND ===")
+        DebugLog.log("=== NO HISTORY FOUND ===")
     end
 end
 

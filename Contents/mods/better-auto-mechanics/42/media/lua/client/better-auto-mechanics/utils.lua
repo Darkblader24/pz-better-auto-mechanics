@@ -5,7 +5,7 @@ BAM = BAM or {}
 
 
 function BAM.GetNextUninstallablePart(player, vehicle)
-    --print("-> Searching for next uninstallable part...")
+    --DebugLog.log("-> Searching for next uninstallable part...")
     -- Collect all installed car parts into a list for sorting
     local validParts = {}
     for i = 0, vehicle:getPartCount() - 1 do
@@ -35,19 +35,19 @@ function BAM.GetNextUninstallablePart(player, vehicle)
         -- Check for smashed cars, their front windows are inaccessible
         if part:getId():find("WindowFront") or part:getId():find("Seat") then
             local scriptName = vehicle:getScript():getName()
-            --print("-> Vehicle script name: " .. scriptName)
+            --DebugLog.log("-> Vehicle script name: " .. scriptName)
             if string.find(scriptName, "Burnt") or string.find(scriptName, "Smashed") then
-                --print("-> Vehicle is burnt or smashed, cannot uninstall " .. part:getId())
+                --DebugLog.log("-> Vehicle is burnt or smashed, cannot uninstall " .. part:getId())
                 canAccessPart = false
             end
         end
 
-        --print(part:getId() .. " - UNINSTALL ACCESS: " .. tostring(canAccessPart))
-        --print(part:getId() .. " - UNINSTALL: " .. tostring(canUninstallPart) .. " - UNINSTALL XP: " .. tostring(canGainUninstallXP) .. " - ACCESS: " .. tostring(canAccessPart))
+        --DebugLog.log(part:getId() .. " - UNINSTALL ACCESS: " .. tostring(canAccessPart))
+        --DebugLog.log(part:getId() .. " - UNINSTALL: " .. tostring(canUninstallPart) .. " - UNINSTALL XP: " .. tostring(canGainUninstallXP) .. " - ACCESS: " .. tostring(canAccessPart))
 
         -- 3. If all checks pass, return the part
         if canUninstallPart and canAccessPart and canGainUninstallXP and successChance >= BAM.GetOptionMinPartSuccessChance() then
-            --print("Part " .. part:getId() .. " Success Chance: " .. tostring(successChance) .. "%, Failure Chance: " .. tostring(failureChance) .. "%")
+            --DebugLog.log("Part " .. part:getId() .. " Success Chance: " .. tostring(successChance) .. "%, Failure Chance: " .. tostring(failureChance) .. "%")
             return part
         end
     end
@@ -56,7 +56,7 @@ end
 
 
 function BAM.GetNextInstallablePartAndItem(player, vehicle)
-    --print("-> Searching for next installable part...")
+    --DebugLog.log("-> Searching for next installable part...")
     -- Collect all uninstalled car parts into a list for sorting
     local validParts = {}
     for i = 0, vehicle:getPartCount() - 1 do
@@ -84,7 +84,7 @@ function BAM.GetNextInstallablePartAndItem(player, vehicle)
         -- 4. Check if the item would fit into the players inventory if its not on the player
         local wouldExceedWeightLimit = BAM.WouldExceedWeightLimit(player, item)
 
-        --print(part:getId() .. " - INSTALL WOULD EXCEED WEIGHT: " .. tostring(wouldExceedWeightLimit))
+        --DebugLog.log(part:getId() .. " - INSTALL WOULD EXCEED WEIGHT: " .. tostring(wouldExceedWeightLimit))
 
         if canInstallPart and canAccessPart and item and not wouldExceedWeightLimit and successChance >= BAM.GetOptionMinPartSuccessChance() then
             return part, item
@@ -156,9 +156,9 @@ function BAM.SortParts(parts)
         return rankA < rankB
     end)
 
-    --print("Sorted parts order:")
+    --DebugLog.log("Sorted parts order:")
     --for i, part in ipairs(parts) do
-    --    print(i .. " - " .. part:getId())
+    --    DebugLog.log(i .. " - " .. part:getId())
     --end
 
     return parts
@@ -208,11 +208,11 @@ function BAM.DropBrokenItems(player)
     local floorContainer = ISInventoryPage.floorContainer[playerNum + 1]
 
     if not floorContainer then
-        --print("Error: Could not find floor container!")
+        --DebugLog.log("Error: Could not find floor container!")
         return
     end
 
-    --print("BAM: Dropping " .. #itemsToDrop .. " items to floor...")
+    --DebugLog.log("BAM: Dropping " .. #itemsToDrop .. " items to floor...")
 
     -- 3. Queue the Transfer Actions
     for _, item in ipairs(itemsToDrop) do
@@ -248,24 +248,24 @@ end
 function BAM.WouldExceedWeightLimit(player, item)
     if not player or not item then return false end
 
-    --print("Checking if adding item ", item:getName(), " would exceed weight limit...")
+    --DebugLog.log("Checking if adding item ", item:getName(), " would exceed weight limit...")
     -- 1. Get the actual item weight
     local inventory = player:getInventory()
     local itemWeight = item:getActualWeight()
-    --print("Item weight: " .. tostring(itemWeight))
+    --DebugLog.log("Item weight: " .. tostring(itemWeight))
 
     -- 2. Check if the item is currently in the players inventory
     -- If it is already in the main inventory, we return false because it won't add any weight
     if inventory:contains(item) then
-        --print("Item is already in inventory, so it will fit.")
+        --DebugLog.log("Item is already in inventory, so it will fit.")
         return false
     end
 
     -- 3. Calculate weight after adding the item
     local currentWeight = inventory:getCapacityWeight() -- Current weight in main inventory
     local limitWeight = inventory:getCapacity()
-    --print("Current inventory weight:  " .. tostring(currentWeight) .. " / " .. tostring(limitWeight))
-    --print("Expected inventory weight: " .. tostring(currentWeight + itemWeight) .. " / " .. tostring(limitWeight))
+    --DebugLog.log("Current inventory weight:  " .. tostring(currentWeight) .. " / " .. tostring(limitWeight))
+    --DebugLog.log("Expected inventory weight: " .. tostring(currentWeight + itemWeight) .. " / " .. tostring(limitWeight))
 
     return (currentWeight + itemWeight) > limitWeight
 end
@@ -278,7 +278,7 @@ function BAM.GetGameVersion()
     major = tonumber(major)
     minor = tonumber(minor)
     patch = tonumber(patch)
-    --print("Detected game version: ", major, ".", minor, ".", patch)
+    --DebugLog.log("Detected game version: ", major, ".", minor, ".", patch)
 
     return major, minor, patch
 end
