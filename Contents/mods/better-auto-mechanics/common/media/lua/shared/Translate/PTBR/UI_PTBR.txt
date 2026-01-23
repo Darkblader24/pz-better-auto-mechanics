@@ -1,36 +1,36 @@
 UI_PTBR = {
     -- #### Button ####
-    UI_BAM_button.title = "Treinar Mecanica",
-    UI_BAM_button_desc.needs = "Necessidades de treinamento",
+    UI_BAM_button.title = "Treinar Mecânica",
+    UI_BAM_button_desc.needs = "Necessidades do treinamento",
 
     -- Skill Check
-    UI_BAM_button_desc.mechanics_level = "Nivel atual de Mecanica",
-    UI_BAM_button_desc.parts_will_break = "Pecas provavelmente irao quebrar",
-    UI_BAM_button_desc.use_disposable_vehicles = "Use veiculos descartaveis",
-    UI_BAM_button_desc.success_chance = "Pecas com chance de sucesso <%1% serao ignoradas",
-    UI_BAM_button_desc.parts_might_break = "Algumas pecas podem quebrar",
-    UI_BAM_button_desc.parts_safe = "Nenhuma peca sera danificada",
-    UI_BAM_button_desc.vehicle_safe = "Seguro em qualquer veiculo",
+    UI_BAM_button_desc.mechanics_level = "Nível atual de Mecânica",
+    UI_BAM_button_desc.parts_will_break = "Peças provavelmente irão quebrar",
+    UI_BAM_button_desc.use_disposable_vehicles = "Use veículos descartáveis",
+    UI_BAM_button_desc.success_chance = "Peças com chance de sucesso <%1% serão ignoradas",
+    UI_BAM_button_desc.parts_might_break = "Algumas peças podem quebrar",
+    UI_BAM_button_desc.parts_safe = "Nenhuma peça será danificada",
+    UI_BAM_button_desc.vehicle_safe = "Seguro em qualquer veículo",
 
     -- Recipe check
-    UI_BAM_button_desc.recipe_known = "Voce pode trabalhar em todas as pecas porque conhece esta receita",
-    UI_BAM_button_desc.recipe_unknown = "Leia esta receita para trabalhar em todas as pecas",
+    UI_BAM_button_desc.recipe_known = "Você pode trabalhar em todas as peças porque conhece esta receita",
+    UI_BAM_button_desc.recipe_unknown = "Leia esta receita para trabalhar em todas as peças",
 
     -- Car key check
-    UI_BAM_button_desc.no_car_access = "O carro esta trancado!",
-    UI_BAM_button_desc.parts_inaccessible = "A maioria das pecas esta inacessivel.",
+    UI_BAM_button_desc.no_car_access = "O veículo está trancado!",
+    UI_BAM_button_desc.parts_inaccessible = "A maioria das peças está inacessível.",
 
     -- Notes
-    UI_BAM_button_desc.empty_seats = "Para trabalhar nos bancos, certifique-se de que estao vazios.",
-    UI_BAM_button_desc.server_enforce = "O servidor aplica:",
+    UI_BAM_button_desc.empty_seats = "Para trabalhar nos bancos, certifique-se de que estão vazios.",
+    UI_BAM_button_desc.server_enforce = "O servidor impõe:",
 
     -- #### Other ####
-    UI_BAM_message.car_completed = "Ufa! Este carro esta pronto por hoje!",
+    UI_BAM_message.car_completed = "Ufa! Este carro está pronto por hoje!",
 
     -- #### Options ####
-    UI_BAM_options_title.min_success_chance = "Chance minima de sucesso da peca do veiculo",
-    UI_BAM_options_desc.min_success_chance_1 = "Este valor se refere a chance de instalar ou remover qualquer peca do veiculo. Pecas com chance de sucesso abaixo deste valor serao ignoradas durante o treinamento.",
-    UI_BAM_options_desc.min_success_chance_2 = "Todas as pecas serao trabalhadas. Pecas podem quebrar em niveis baixos de habilidade.",
-    UI_BAM_options_desc.min_success_chance_3 = "Configuracao padrao para um bom equilibrio.",
-    UI_BAM_options_desc.min_success_chance_4 = "Apenas pecas com sucesso garantido serao trabalhadas. Totalmente seguro em todos os niveis de habilidade.",
+    UI_BAM_options_title.min_success_chance = "Chance Mínima de Sucesso da Peça do veiculo",
+    UI_BAM_options_desc.min_success_chance_1 = "Este valor refere-se à chance de instalar/remover qualquer peca do veiculo. Peças com chance de sucesso abaixo deste valor serão ignoradas durante o treinamento.",
+    UI_BAM_options_desc.min_success_chance_2 = "Todas as peças serão trabalhadas. Peças podem quebrar em níveis baixos de habilidade.",
+    UI_BAM_options_desc.min_success_chance_3 = "Configuração padrão para um bom equilíbrio.",
+    UI_BAM_options_desc.min_success_chance_4 = "Apenas peças com sucesso garantido serão trabalhadas. Totalmente seguro em todos os níveis de habilidade.",
 }
