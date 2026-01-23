@@ -1,10 +1,10 @@
-Sandbox_EN = {
-    Sandbox_BAM = "Better Auto Mechanics",
-    Sandbox_BAM.min_success_chance = "Enforce: Minimum Vehicle Part Success Chance",
-    Sandbox_BAM.min_success_chance_tooltip = "Parts with a success chance below this value will be skipped during training." ..
-                                            " <LINE> At '-1' this setting is not enforced, any value over '-1' is enforced server-wide." ..
-                                            " <LINE> " ..
-                                            " <LINE> 0% -> All parts will be worked on. Parts will break at lower skill levels." ..
-                                            " <LINE> 30% -> Default setting for a good balance." ..
-                                            " <LINE> 100% -> Only parts that are guaranteed to succeed will be worked on. Completely safe at all skill levels.",
+Sandbox_PTBR = {
+    Sandbox_BAM = "Mecanica Automotiva Melhorada",
+    Sandbox_BAM.min_success_chance = "Aplicar: Chance Minima de Sucesso da Peca do Veiculo",
+    Sandbox_BAM.min_success_chance_tooltip = "Pecas com chance de sucesso abaixo deste valor serao ignoradas durante o treinamento." ..
+                                             " <LINE> Em '-1' esta configuracao nao e aplicada, qualquer valor acima de '-1' e aplicado em todo o servidor." ..
+                                             " <LINE> " ..
+                                             " <LINE> 0% -> Todas as pecas serao trabalhadas. Pecas podem quebrar em niveis baixos de habilidade." ..
+                                             " <LINE> 30% -> Configuracao padrao para um bom equilibrio." ..
+                                             " <LINE> 100% -> Apenas pecas com sucesso garantido serao trabalhadas. Totalmente seguro em todos os niveis de habilidade.",
 }
