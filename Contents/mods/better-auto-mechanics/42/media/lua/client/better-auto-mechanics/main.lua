@@ -58,8 +58,8 @@ function BAM:workOnNextPart(player, vehicle)
     DebugLog.log("Deciding on next part...")
     local partUninstall = BAM.GetNextUninstallablePart(player, vehicle)
     local partInstall, itemInstall = BAM.GetNextInstallablePartAndItem(player, vehicle)
-    DebugLog.log("Next part to uninstall: " .. (partUninstall and partUninstall:getId() or "None"))
-    DebugLog.log("Next part to install: " .. (partInstall and partInstall:getId() or "None"))
+    --DebugLog.log("Next part to uninstall: " .. (partUninstall and partUninstall:getId() or "None"))
+    --DebugLog.log("Next part to install: " .. (partInstall and partInstall:getId() or "None"))
 
     -- If no parts to install or uninstall, stop training
     if partUninstall == nil and partInstall == nil then
