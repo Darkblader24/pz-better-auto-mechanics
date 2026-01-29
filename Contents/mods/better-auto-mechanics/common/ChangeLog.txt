@@ -50,4 +50,9 @@ link3 = Github = https://steamcommunity.com/linkfilter/?u=https://github.com/Dar
 
 [ 1.8 ]
 - Added Portuguese (Brazil) translations (credits to Rasido!)
+- Some minor optimizations
+[ ------ ]
+
+[ 1.9 ]
+-
 [ ------ ]

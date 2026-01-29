@@ -1,12 +1,12 @@
 version=1
 id=3635856965
-title=Better Auto Mechanics [B42.13.1 MP+SP]
+title=Better Auto Mechanics [B42.13 MP+SP]
 description=[h1]Better Auto Mechanics[/h1]
 description=[b]Train mechanics with a single click. Smarter, more intuitive, and lightweight. In Multiplayer and Singleplayer.[/b]
 description=
 description=Rewritten from the ground up, [b]Better Auto Mechanics[/b] is a comprehensive quality-of-life upgrade for the mechanic skill. Inspired by the original mod "[url=https://steamcommunity.com/sharedfiles/filedetails/?id=3387539308]AutoMechanics[/url]", it improves on several key features while still allowing you to train mechanics on vehicles with a single button. And it actually works in multiplayer!
 description=
-description=[b]⚠️ B42.13+ only! ⚠️ For B42.12 and below use the original "[url=https://steamcommunity.com/sharedfiles/filedetails/?id=3387539308]AutoMechanics[/url]" Mod![/b]
+description=Compatible with all B42 versions!
 description=
 description=[hr][/hr]
 description=
@@ -26,12 +26,10 @@ description=[*] Right-click any part.
 description=[*] Select [b]"Train Mechanics"[/b].
 description=[*] Watch the levels go up!
 description=[/olist]
-description=
-description=[quote][b]Note:[/b] Pathfinding can sometimes impact the training session. Please ensure your character has some walking space around the car. Also very rarely pathfinding breaks anyways and just stops the training. In that case just move a little bit and restart the training. [/quote]
+description=[quote][b]Note:[/b] Pathfinding can sometimes impact the training session. Please ensure your character has some walking space around the car.[/quote]
 description=
 description=[h2]⚙️ Mod Settings[/h2]
 description=You can customize the [b]"Minimum Vehicle Part Success Chance"[/b] in the options. This value determines the safety threshold for installing/uninstalling parts; any part with a success chance below this value will be skipped during training.
-description=
 description=[list]
 description=[*] [b]0 (Risky):[/b] All parts will be worked on. Be careful—parts [i]will[/i] break or lose condition at lower skill levels.
 description=[*] [b]30 (Default):[/b] A good balance. Parts with a very low success chance are skipped to prevent excessive damage, while still allowing for decent XP gain.
@@ -45,7 +43,7 @@ description=[*] [b]-1 (Default):[/b] The setting is [b]not enforced[/b]. Players
 description=[*] [b]0 to 100:[/b] The setting is [b]enforced server-wide[/b]. Any value greater than -1 will override individual player choices. The value set by the server will be visible in the button tooltip.
 description=[/list]
 description=
-description=[h2]⚠️ Compatibility & Save Info[/h2]
+description=[h2]✅ Compatibility & Save Info[/h2]
 description=[list]
 description=[*] [b]Safe to add and remove mid-save.[/b]
 description=[*] [b]Incompatible[/b] with the original "[url=https://steamcommunity.com/sharedfiles/filedetails/?id=3387539308]AutoMechanics[/url]" mod.
