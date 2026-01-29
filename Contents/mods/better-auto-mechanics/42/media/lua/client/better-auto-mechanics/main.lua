@@ -5,6 +5,8 @@ BAM.Vehicle = nil
 BAM.WorkDelayTimer = 0
 BAM.LastWorkedPart = nil
 BAM.LastWorkedActionType = nil -- 1 = uninstall, 2 = install
+BAM.LastGameSpeed = 1
+BAM.LastGameTimeMulti = 1
 BAM.InaccessibleParts = {}
 
 
@@ -45,6 +47,9 @@ end
 
 
 function BAM:workOnNextPart(player, vehicle)
+    DebugLog.log("GAMESPEED END: " .. getGameSpeed())
+    DebugLog.log("GAMEMULTI END: " .. getGameTime():getMultiplier())
+    DebugLog.log("GAMEMULTI END: " .. getGameTime():getTrueMultiplier())
     -- First check if we are too far away from the vehicle
     local distanceToCar = player:DistToSquared(vehicle)
     --DebugLog.log("Player distance to vehicle squared: " .. distanceToCar)
@@ -111,6 +116,9 @@ function BAM:InstallPart(player, part, item)
     BAM.LastWorkedActionType = 2
     BAM.DropBrokenItems(player)  -- Drop broken items before installing
     ISVehiclePartMenu.onInstallPart(player, part, item)  -- Start timed task
+    DebugLog.log("GAMESPEED START: " .. getGameSpeed())
+    DebugLog.log("GAMEMULTI1 START: " .. getGameTime():getMultiplier())
+    DebugLog.log("GAMEMULTI2 START: " .. getGameTime():getTrueMultiplier())
 end
 
 
@@ -120,5 +128,8 @@ function BAM:UninstallPart(player, part)
     BAM.LastWorkedActionType = 1
     BAM.DropBrokenItems(player)  -- Drop broken items before uninstalling
     ISVehiclePartMenu.onUninstallPart(player, part)  -- Start timed task
+    DebugLog.log("GAMESPEED START: " .. getGameSpeed())
+    DebugLog.log("GAMEMULTI1 START: " .. getGameTime():getMultiplier())
+    DebugLog.log("GAMEMULTI2 START: " .. getGameTime():getTrueMultiplier())
 end
 
