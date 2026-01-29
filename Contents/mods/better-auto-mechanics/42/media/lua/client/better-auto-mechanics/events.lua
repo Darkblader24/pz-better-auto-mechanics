@@ -13,7 +13,7 @@ function BAM:OnMechanicActionDone(success)
     end
 
     local player = self
-    DebugLog.log("-> Mechanic action done! Player: ", player, " ", BAM.LastWorkedPart:getId(), " ", BAM.LastWorkedActionType, " Success: ", success)
+    --DebugLog.log("-> Mechanic action done! Player: " .. tostring(player) .. " " .. BAM.LastWorkedPart:getId() .. " " .. BAM.LastWorkedActionType .. " Success: " .. tostring(success))
 
     -- If the action was successful, save the XP data and sync to server
     -- TODO: This should be done even without training, but we don't have access to the currently worked on part in that case
@@ -25,7 +25,7 @@ function BAM:OnMechanicActionDone(success)
     -- Start a tick countdown, after which 'workOnNextPart' is called to continue the training
     -- This gives the server enough time to update the game state
     BAM.WorkDelayTimer = 20  -- 10 ticks is approx 0.16 seconds
-    DebugLog.log("Waiting ", BAM.WorkDelayTimer, " ticks before working on next part...")
+    --DebugLog.log("Waiting " .. BAM.WorkDelayTimer .. " ticks before working on next part...")
 end
 
 

@@ -248,7 +248,7 @@ end
 function BAM.WouldExceedWeightLimit(player, item)
     if not player or not item then return false end
 
-    --DebugLog.log("Checking if adding item ", item:getName(), " would exceed weight limit...")
+    --DebugLog.log("Checking if adding item " .. item:getName() .. " would exceed weight limit...")
     -- 1. Get the actual item weight
     local inventory = player:getInventory()
     local itemWeight = item:getActualWeight()
@@ -278,7 +278,7 @@ function BAM.GetGameVersion()
     major = tonumber(major)
     minor = tonumber(minor)
     patch = tonumber(patch)
-    --DebugLog.log("Detected game version: ", major, ".", minor, ".", patch)
+    --DebugLog.log("Detected game version: " .. major .. "." .. minor .. "." .. patch)
 
     return major, minor, patch
 end

@@ -7,7 +7,7 @@ function ISVehicleMechanics:doPartContextMenu(part, x, y, v1, v2, v3, v4)  -- Ad
     --DebugLog.log("BAM: Adding Better Auto Mechanics button!")
     --DebugLog.log("BAM: ISVehicleMechanics:doPartContextMenu called")
     local success = original_doPartContextMenu(self, part, x, y, v1, v2, v3, v4);
-    --DebugLog.log("BAM: ISVehicleMechanics:doPartContextMenu done, returned: ", success)
+    --DebugLog.log("BAM: ISVehicleMechanics:doPartContextMenu done, returned: " .. success)
 
     self:addMechanicsButtons()
     --DebugLog.log("BAM: Added Better Auto Mechanics button!")
