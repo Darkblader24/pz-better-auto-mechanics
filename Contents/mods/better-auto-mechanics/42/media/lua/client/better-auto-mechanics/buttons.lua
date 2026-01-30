@@ -16,7 +16,10 @@ end
 
 -- Create the Train Mechanics button and its tooltip
 function ISVehicleMechanics:addMechanicsButtons()
-    -- Add Train Mechanics button
+    -- self.context can be nil, so check if it is
+    if not self.context then
+        return
+    end
     local trainButton = self.context:addOption(getText("UI_BAM_button.title"), self, BAM.StartMechanicsTraining, self.chr, self.vehicle)
     local trainTooltip = ISToolTip:new()
     trainTooltip:initialise()
