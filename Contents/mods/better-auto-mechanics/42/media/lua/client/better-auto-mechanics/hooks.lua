@@ -115,7 +115,7 @@ end
 
 function OnPathFailed()
     local part = BAM.LastWorkedPart
-    DebugLog.log("Part ", part:getId(), " is inaccessible during mechanics training.")
+    DebugLog.log("Part " .. part:getId() .. " is inaccessible during mechanics training.")
 
     BAM.InaccessibleParts[part:getId()] = true
     BAM.WorkDelayTimer = 10  -- Call workOnNextPart after a short delay instead of instantly after pathfinding failed, to avoid pathfinding issues

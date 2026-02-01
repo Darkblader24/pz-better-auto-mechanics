@@ -56,3 +56,7 @@ link3 = Github = https://steamcommunity.com/linkfilter/?u=https://github.com/Dar
 [ 1.9 ]
 - Fixed the "Train Mechanics" button causing errors in rare situations
 [ ------ ]
+
+[ 1.10 ]
+- Fixed timed actions randomly getting canceled after mechanics training
+[ ------ ]
