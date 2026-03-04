@@ -1,0 +1,36 @@
+UI_PL = {
+    -- #### Button ####
+    UI_BAM_button.title = "Trenuj mechanikę",
+    UI_BAM_button_desc.needs = "Wymagania treningu",
+
+    -- Skill Check
+    UI_BAM_button_desc.mechanics_level = "Aktualny poziom mechaniki",
+    UI_BAM_button_desc.parts_will_break = "Części prawdopodobnie się uszkodzą",
+    UI_BAM_button_desc.use_disposable_vehicles = "Używaj pojazdów jednorazowych",
+    UI_BAM_button_desc.success_chance = "Części z szansą powodzenia <%1% zostaną pominięte",
+    UI_BAM_button_desc.parts_might_break = "Niektóre części mogą się uszkodzić",
+    UI_BAM_button_desc.parts_safe = "Żadne części nie zostaną uszkodzone",
+    UI_BAM_button_desc.vehicle_safe = "Bezpieczne dla każdego pojazdu",
+
+    -- Recipe check
+    UI_BAM_button_desc.recipe_known = "Możesz pracować na wszystkich częściach, ponieważ znasz tę recepturę",
+    UI_BAM_button_desc.recipe_unknown = "Przeczytaj ten przepis, aby móc pracować nad wszystkimi częściami",
+
+    -- Car key check
+    UI_BAM_button_desc.no_car_access = "Samochód jest zamknięty!",
+    UI_BAM_button_desc.parts_inaccessible = "Większość części jest niedostępna.",
+
+    -- Notes
+    UI_BAM_button_desc.empty_seats = "Aby pracować przy siedzeniach, upewnij się, że są puste.",
+    UI_BAM_button_desc.server_enforce = "Serwer wymusza:",
+
+    -- #### Other ####
+    UI_BAM_message.car_completed = "Uff! Na dziś ten samochód jest już zrobiony!",
+
+    -- #### Options ####
+    UI_BAM_options_title.min_success_chance = "Minimalna szansa powodzenia części pojazdu",
+    UI_BAM_options_desc.min_success_chance_1 = "Ta wartość określa szansę montażu/demontażu dowolnej części pojazdu. Części z szansą powodzenia poniżej tej wartości będą pomijane podczas treningu.",
+    UI_BAM_options_desc.min_success_chance_2 = "Wszystkie części zostaną poddane pracom. Części mogą się psuć przy niższych poziomach umiejętności.",
+    UI_BAM_options_desc.min_success_chance_3 = "Ustawienie domyślne, zapewniające dobry balans.",
+    UI_BAM_options_desc.min_success_chance_4 = "Naprawiane będą wyłącznie części z gwarantowanym powodzeniem. Całkowicie bezpieczne na wszystkich poziomach umiejętności.",
+}
