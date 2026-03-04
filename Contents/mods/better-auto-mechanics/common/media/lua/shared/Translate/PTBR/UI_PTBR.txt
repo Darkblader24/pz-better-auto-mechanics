@@ -13,8 +13,7 @@ UI_PTBR = {
     UI_BAM_button_desc.vehicle_safe = "Seguro em qualquer veículo",
 
     -- Recipe check
-    UI_BAM_button_desc.recipe_known = "Você pode trabalhar em todas as peças porque conhece esta receita",
-    UI_BAM_button_desc.recipe_unknown = "Leia esta receita para trabalhar em todas as peças",
+    UI_BAM_button_desc.recipes_required = "Receitas necessárias para trabalhar em todas as peças",
 
     -- Car key check
     UI_BAM_button_desc.no_car_access = "O veículo está trancado!",

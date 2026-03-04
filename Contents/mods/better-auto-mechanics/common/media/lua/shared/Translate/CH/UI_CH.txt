@@ -13,8 +13,7 @@ UI_CH = {
     UI_BAM_button_desc.vehicle_safe = "適用於任何車輛",
 
     -- Recipe check
-    UI_BAM_button_desc.recipe_known = "你已掌握此配方，可操作所有零件",
-    UI_BAM_button_desc.recipe_unknown = "閱讀此配方以解鎖所有零件操作",
+    UI_BAM_button_desc.recipes_required = "操作所有零件所需配方",
 
     -- Car key check
     UI_BAM_button_desc.no_car_access = "車輛已上鎖！",

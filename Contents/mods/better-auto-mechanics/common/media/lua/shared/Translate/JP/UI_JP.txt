@@ -13,8 +13,7 @@ UI_JP = {
     UI_BAM_button_desc.vehicle_safe = "どの車両でも安全に行えます",
 
     -- Recipe check
-    UI_BAM_button_desc.recipe_known = "レシピを習得しているため、すべての部品を作業できます",
-    UI_BAM_button_desc.recipe_unknown = "すべての部品を作業するには、このレシピを読んでください",
+    UI_BAM_button_desc.recipes_required = "すべての部品を作業するために必要なレシピ",
 
     -- Car key check
     UI_BAM_button_desc.no_car_access = "車両はロックされています！",

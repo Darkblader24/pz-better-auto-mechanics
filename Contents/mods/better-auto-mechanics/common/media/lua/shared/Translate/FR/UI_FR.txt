@@ -13,8 +13,7 @@ UI_FR = {
     UI_BAM_button_desc.vehicle_safe = "Sans danger pour tous les véhicules",
 
     -- Recipe check
-    UI_BAM_button_desc.recipe_known = "Vous pouvez travailler sur toutes les pièces car vous connaissez cette recette",
-    UI_BAM_button_desc.recipe_unknown = "Lisez cette recette pour travailler sur toutes les pièces",
+    UI_BAM_button_desc.recipes_required = "Recettes requises pour travailler sur toutes les pièces",
 
     -- Car key check
     UI_BAM_button_desc.no_car_access = "Le véhicule est verrouillé !",
