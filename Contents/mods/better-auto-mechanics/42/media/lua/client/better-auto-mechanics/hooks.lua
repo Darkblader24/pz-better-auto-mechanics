@@ -219,29 +219,28 @@ end
 --end
 
 
---local original_ISPathFindAction_perform = ISPathFindAction.perform
---function ISPathFindAction:perform(...)
---    DebugLog.log("ISPathFindAction_perform 1: GAMESPEED: " .. getGameSpeed() .. " - " .. getGameTime():getMultiplier() .. " - " .. getGameTime():getTrueMultiplier())
---
---
---    -- If the game speed or time multiplier got reset for some reason during mechanics training, set it back to the previous value
---    if BAM.IsCurrentlyTraining then
---        if getGameSpeed() < BAM.PrevGameSpeed then
---            DebugLog.log("GAME SPEED GOT RESET!!! DID restoring previous game speed: " .. BAM.PrevGameSpeed .. " +- " .. BAM.PrevTimeMultiplier .. " ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
---            setGameSpeed(BAM.PrevGameSpeed)
---            getGameTime():setMultiplier(BAM.PrevTimeMultiplier)
---            DebugLog.log("NEW GAMESPEED: " .. getGameSpeed() .. " - " .. getGameTime():getMultiplier() .. " - " .. getGameTime():getTrueMultiplier())
---        end
---    end
---
---    -- First call the original perform function
---    --DebugLog.log("ISPathFindAction:perform called")
---    local success = original_ISPathFindAction_perform(self, ...)
---    --DebugLog.log("ISPathFindAction:perform done, returned: " .. success)
---    DebugLog.log("ISPathFindAction_perform 2: GAMESPEED: " .. getGameSpeed() .. " - " .. getGameTime():getMultiplier() .. " - " .. getGameTime():getTrueMultiplier())
---
---    return success
---end
+local original_ISPathFindAction_perform = ISPathFindAction.perform
+function ISPathFindAction:perform(...)
+    --DebugLog.log("ISPathFindAction_perform 1: GAMESPEED: " .. getGameSpeed() .. " - " .. getGameTime():getMultiplier() .. " - " .. getGameTime():getTrueMultiplier())
+
+    -- If the game speed or time multiplier got reset for some reason during mechanics training, set it back to the previous value
+    if BAM.IsCurrentlyTraining then
+        if getGameSpeed() < BAM.PrevGameSpeed then
+            DebugLog.log("Gamespeed got reset during perform! Restoring to previous game speed: " .. BAM.PrevGameSpeed .. " | " .. BAM.PrevTimeMultiplier)
+            setGameSpeed(BAM.PrevGameSpeed)
+            getGameTime():setMultiplier(BAM.PrevTimeMultiplier)
+            DebugLog.log("New gamespeed: " .. getGameSpeed() .. " | " .. getGameTime():getMultiplier() .. " | " .. getGameTime():getTrueMultiplier())
+        end
+    end
+
+    -- First call the original perform function
+    --DebugLog.log("ISPathFindAction:perform called")
+    local success = original_ISPathFindAction_perform(self, ...)
+    --DebugLog.log("ISPathFindAction:perform done, returned: " .. success)
+    --DebugLog.log("ISPathFindAction_perform 2: GAMESPEED: " .. getGameSpeed() .. " - " .. getGameTime():getMultiplier() .. " - " .. getGameTime():getTrueMultiplier())
+
+    return success
+end
 --
 --
 --local original_ISUninstallVehiclePart_new = ISUninstallVehiclePart.new
