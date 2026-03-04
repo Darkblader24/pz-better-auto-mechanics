@@ -69,6 +69,17 @@ function GenerateDescription(player, vehicle)
     color = hasJack and "<GREEN>" or "<RED>"
     msg = msg .. newline .. color .. " - " .. nameJack
 
+    -- Recipe check v2
+    local requiredRecipes = GetRequiredRecipes(vehicle)
+    msg = msg .. newline
+    msg = msg .. newline .. "<RGB:1,1,1>" .. getText("UI_BAM_button_desc.recipes_required") .. ":"
+    for recipe, _ in pairs(requiredRecipes) do
+        local recipeDisplayName = getText("Tooltip_vehicle_requireRecipe", getRecipeDisplayName(recipe))
+        local knowsRecipe = player:isRecipeKnown(recipe, true)
+        color = knowsRecipe and "<GREEN>" or "<RED>"
+        msg = msg .. newline .. color .. " - " .. recipeDisplayName
+    end
+
     -- Skill check
     local skillLevel = player:getPerkLevel(Perks.Mechanics)
     local minSuccessChance = BAM.GetOptionMinPartSuccessChance()
@@ -96,21 +107,6 @@ function GenerateDescription(player, vehicle)
         end
     end
 
-    -- Recipe check
-    local recipe, knowsRecipe = PlayerKnowsRecipe(player, vehicle)
-    if recipe then
-        local recipeDisplayName = getText("Tooltip_vehicle_requireRecipe", getRecipeDisplayName(recipe))
-        if knowsRecipe then
-            msg = msg .. newline
-            msg = msg .. newline .. "<RGB:1,1,1>" .. getText("UI_BAM_button_desc.recipe_known") .. ":"
-            msg = msg .. newline .. "<GREEN> - " .. recipeDisplayName
-        else
-            msg = msg .. newline
-            msg = msg .. newline .. "<RGB:1,1,1>" .. getText("UI_BAM_button_desc.recipe_unknown") .. ":"
-            msg = msg .. newline .. "<RED> - " .. recipeDisplayName
-        end
-    end
-
     ---- Car Key check
     if not PlayerHasCarAccess(player, vehicle) then
         msg = msg .. newline
@@ -129,22 +125,32 @@ function GenerateDescription(player, vehicle)
         msg = msg .. newline .. "<RGB:0.5,0.5,0.5>" .. "  - " .. getText("UI_BAM_options_title.min_success_chance") .. ": " .. BAM.GetOptionMinPartSuccessChance() .. "%"
     end
 
-
     return msg
 end
 
 
-function PlayerKnowsRecipe(player, vehicle)
+function GetRequiredRecipes(vehicle)
+    local recipes = {}
+    recipes["Basic Mechanics"] = false
+    recipes["Intermediate Mechanics"] = false
+    recipes["Advanced Mechanics"] = false
+
     for i = 0, vehicle:getPartCount() - 1 do
         local part = vehicle:getPartByIndex(i)
         local keyvalues = part:getTable("uninstall")
         if keyvalues and keyvalues.recipes and keyvalues.recipes ~= "" then
             for _, recipe in ipairs(keyvalues.recipes:split(";")) do
-                return recipe, player:isRecipeKnown(recipe)  -- Only return the first recipe found
+                recipes[recipe] = true
             end
         end
     end
-    return nil, false
+
+    for recipe, required in pairs(recipes) do
+        if not required then
+            recipes[recipe] = nil
+        end
+    end
+    return recipes
 end
 
 

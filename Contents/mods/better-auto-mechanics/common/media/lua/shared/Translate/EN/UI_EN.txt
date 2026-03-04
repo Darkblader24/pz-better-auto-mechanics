@@ -13,8 +13,7 @@ UI_EN = {
     UI_BAM_button_desc.vehicle_safe = "Safe on any vehicle",
 
     -- Recipe check
-    UI_BAM_button_desc.recipe_known = "You can work on all parts because you know this recipe",
-    UI_BAM_button_desc.recipe_unknown = "Read this recipe to work on all parts",
+    UI_BAM_button_desc.recipes_required = "Required recipes to work on all parts",
 
     -- Car key check
     UI_BAM_button_desc.no_car_access = "Car is locked!",
