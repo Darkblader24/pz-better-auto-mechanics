@@ -10,44 +10,14 @@ function BAM.GetNextUninstallablePart(player, vehicle)
     local validParts = {}
     for i = 0, vehicle:getPartCount() - 1 do
         local part = vehicle:getPartByIndex(i)
-
-        -- Gather only parts that are currently installed
-        if part:getInventoryItem() ~= nil then
-            table.insert(validParts, part)
-        end
+        table.insert(validParts, part)
     end
 
     local sortedParts = BAM.SortParts(validParts)
 
-    -- Check each part for uninstall possibility and XP eligibility
+    -- Check each part for uninstall possibility and XP eligibility, return the first one found
     for _, part in pairs(sortedParts) do
-        -- 1. Check if the physical action is possible (tools, location, etc.)
-        local canUninstallPart = part:getVehicle():canUninstallPart(player, part)
-        local canAccessPart = not BAM.InaccessibleParts[part:getId()]
-
-        -- 2. Check if the player is eligible for XP (Cooldown check)
-        -- Key format: PartID + VehicleID + "1" (1 is for Uninstall)
-        local canGainUninstallXP = BAM.CanGainXP(player, vehicle, part, 1)
-
-        -- 3. Get part success chance
-        local successChance = BAM.GetPartSuccessChance(player, part, "uninstall")
-
-        -- Check for smashed cars, their front windows are inaccessible
-        if part:getId():find("WindowFront") or part:getId():find("Seat") then
-            local scriptName = vehicle:getScript():getName()
-            --DebugLog.log("-> Vehicle script name: " .. scriptName)
-            if string.find(scriptName, "Burnt") or string.find(scriptName, "Smashed") then
-                --DebugLog.log("-> Vehicle is burnt or smashed, cannot uninstall " .. part:getId())
-                canAccessPart = false
-            end
-        end
-
-        --DebugLog.log(part:getId() .. " - UNINSTALL ACCESS: " .. tostring(canAccessPart))
-        --DebugLog.log(part:getId() .. " - UNINSTALL: " .. tostring(canUninstallPart) .. " - UNINSTALL XP: " .. tostring(canGainUninstallXP) .. " - ACCESS: " .. tostring(canAccessPart))
-
-        -- 3. If all checks pass, return the part
-        if canUninstallPart and canAccessPart and canGainUninstallXP and successChance >= BAM.GetOptionMinPartSuccessChance() then
-            --DebugLog.log("Part " .. part:getId() .. " Success Chance: " .. tostring(successChance) .. "%, Failure Chance: " .. tostring(failureChance) .. "%")
+        if BAM.PartCanBeUninstalled(player, vehicle, part) then
             return part
         end
     end
@@ -61,37 +31,103 @@ function BAM.GetNextInstallablePartAndItem(player, vehicle)
     local validParts = {}
     for i = 0, vehicle:getPartCount() - 1 do
         local part = vehicle:getPartByIndex(i)
-
-        -- Gather only parts that are currently not installed
-        if part:getInventoryItem() == nil then
-            table.insert(validParts, part)
-        end
+        table.insert(validParts, part)
     end
 
     local sortedParts = BAM.SortParts(validParts)
 
+    -- Check each part for install possibility, return the first one found
     for _, part in pairs(sortedParts) do
-        -- 1. Check if the physical action is possible (tools, location, etc.)
-        local canInstallPart = part:getVehicle():canInstallPart(player, part)
-        local canAccessPart = not BAM.InaccessibleParts[part:getId()]
-
-        -- 2. Get part success chance
-        local successChance = BAM.GetPartSuccessChance(player, part, "install")
-
-        -- 3. Check if the player has the required part in inventory or on ground
-        local item = BAM.GetAnyItemOnPlayerThatMatchesThatPart(player, part);
-
-        -- 4. Check if the item would fit into the players inventory if its not on the player
-        local wouldExceedWeightLimit = BAM.WouldExceedWeightLimit(player, item)
-
-        --DebugLog.log(part:getId() .. " - INSTALL WOULD EXCEED WEIGHT: " .. tostring(wouldExceedWeightLimit))
-
-        if canInstallPart and canAccessPart and item and not wouldExceedWeightLimit and successChance >= BAM.GetOptionMinPartSuccessChance() then
+        local item = BAM.PartCanBeInstalled(player, vehicle, part)
+        if item then
             return part, item
         end
     end
     return nil, nil
 end
+
+
+function BAM.PartCanBeUninstalled(player, vehicle, part)
+    -- 1. Check if the physical action is possible (tools, location, etc.)
+    if not part:getInventoryItem() then
+        --DebugLog.log("Part " .. part:getId() .. " has no item installed, cannot uninstall.")
+        return false
+    end
+    if not part:getVehicle():canUninstallPart(player, part) then
+        --DebugLog.log("Part " .. part:getId() .. " cannot be uninstalled due to physical constraints.")
+        return false
+    end
+    if BAM.InaccessibleParts[part:getId()] then
+        --DebugLog.log("Part " .. part:getId() .. " is marked as inaccessible, cannot uninstall.")
+        return false
+    end
+
+    -- 2. Get part success chance
+    local successChance = BAM.GetPartSuccessChance(player, part, "uninstall")
+    if successChance < BAM.GetOptionMinPartSuccessChance() then
+        --DebugLog.log("Part " .. part:getId() .. " has a success chance of " .. tostring(successChance) .. "%, which is below the minimum threshold.")
+        return false
+    end
+
+    -- 3. Check for smashed cars, their front windows are inaccessible
+    if part:getId():find("WindowFront") or part:getId():find("Seat") then
+        local scriptName = vehicle:getScript():getName()
+        --DebugLog.log("-> Vehicle script name: " .. scriptName)
+        if string.find(scriptName, "Burnt") or string.find(scriptName, "Smashed") then
+            --DebugLog.log("-> Vehicle is burnt or smashed, cannot uninstall " .. part:getId())
+            return false
+        end
+    end
+
+    -- 4. Check if the player is eligible for XP for this part (Cooldown check)
+    -- Key format: PartID + VehicleID + "1" (1 is for Uninstall)
+    if not BAM.CanGainXP(player, vehicle, part, 1) then
+        --DebugLog.log("Player cannot gain XP for uninstalling part " .. part:getId() .. " due to cooldown.")
+        return false
+    end
+
+    return true
+end
+
+
+function BAM.PartCanBeInstalled(player, vehicle, part)
+    -- 1. Check if the physical action is possible (tools, location, etc.)
+    if part:getInventoryItem() ~= nil then
+        --DebugLog.log("Part " .. part:getId() .. " already has an item installed, cannot install.")
+        return nil
+    end
+    if not part:getVehicle():canInstallPart(player, part) then
+        --DebugLog.log("Part " .. part:getId() .. " cannot be installed due to physical constraints.")
+        return nil
+    end
+    if BAM.InaccessibleParts[part:getId()] then
+        --DebugLog.log("Part " .. part:getId() .. " is marked as inaccessible, cannot install.")
+        return nil
+    end
+
+    -- 2. Get part success chance
+    local successChance = BAM.GetPartSuccessChance(player, part, "install")
+    if successChance < BAM.GetOptionMinPartSuccessChance() then
+        --DebugLog.log("Part " .. part:getId() .. " has a success chance of " .. tostring(successChance) .. "%, which is below the minimum threshold.")
+        return nil
+    end
+
+    -- 3. Check if the player has the required part in inventory or on ground
+    local item = BAM.GetAnyItemOnPlayerThatMatchesThatPart(player, part)
+    if not item then
+        --DebugLog.log("Player does not have required item for installing part " .. part:getId() .. ".")
+        return nil
+    end
+
+    -- 4. Check if the item would fit into the players inventory if its not on the player
+    if BAM.WouldExceedWeightLimit(player, item) then
+        --DebugLog.log("Item " .. item:getName() .. " would exceed weight limit if used to install part " .. part:getId() .. ".")
+        return nil
+    end
+
+    return item
+end
+
 
 
 ----------------------------------------
@@ -233,7 +269,7 @@ function BAM.GetPartSuccessChance(player, part, actionType)
     local successChance = 0
     local keyvalues = part:getTable(actionType)
     if keyvalues then
-        local perks = keyvalues.skills;
+        local perks = keyvalues.skills
         local perksTable = VehicleUtils.getPerksTableForChr(perks, player)
         successChance, _ = VehicleUtils.calculateInstallationSuccess(perks, player, perksTable)
     end

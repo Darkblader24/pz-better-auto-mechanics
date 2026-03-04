@@ -68,21 +68,19 @@ function BAM:workOnNextPart(player, vehicle)
         return
     end
 
-    -- First check for parts that require other parts to be uninstalled first
-    if partInstall and partUninstall then
-        -- If we can install a tire, first check if we can uninstall brake/suspension
-        if string.find(partInstall:getId(), "Tire") then
-            if string.find(partUninstall:getId(), "Brake") or string.find(partUninstall:getId(), "Suspension") then
-                BAM:UninstallPart(player, partUninstall)
-                return
-            end
-        end
-
-        -- If we can install a window or the rear windshield, first check if we can uninstall door
-        if string.find(partInstall:getId(), "Window") or string.find(partInstall:getId(), "WindshieldRear") then
-            if string.find(partUninstall:getId(), "Door") then
-                BAM:UninstallPart(player, partUninstall)
-                return
+    -- Before we install any part, check if it requires other parts to be installed first.
+    -- If yes, uninstall those parts first.
+    if partInstall then
+        local keyvalues = partInstall:getTable("install")
+        if keyvalues.requireInstalled then
+            local split = keyvalues.requireInstalled:split(";")
+            for i, partId in ipairs(split) do
+                DebugLog.log("Part " .. partInstall:getId() .. " requires part " .. partId .. " to be installed first.")
+                local requiredPart = vehicle:getPartById(partId)
+                if BAM.PartCanBeUninstalled(player, vehicle, requiredPart) then
+                    BAM:UninstallPart(player, requiredPart)
+                    return
+                end
             end
         end
     end

@@ -53,5 +53,5 @@ end
 Events.OnTick.Add(BAM.OnTick)
 if isClient() then
     -- Only register this event if we are running in multiplayer
-    Events.OnMechanicActionDone.Add(BAM.OnMechanicActionDone);
+    Events.OnMechanicActionDone.Add(BAM.OnMechanicActionDone)
 end
