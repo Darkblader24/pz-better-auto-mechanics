@@ -62,9 +62,13 @@ link3 = Github = https://steamcommunity.com/linkfilter/?u=https://github.com/Dar
 [ ------ ]
 
 [ 1.11 ]
-- Added fix for disappearing Train Mechanics button
+- Added fix for disappearing "Train Mechanics" button
 - Refactored install and uninstall logic to improve compatibility with other vehicle mods
 - Improved game speed handling during mechanics training
 - Improved recipe check to display all required recipes for the current vehicle
 - Added Polish translations (Thanks to Marcus Vallerdon!)
+[ ------ ]
+
+[ 1.12 ]
+-
 [ ------ ]
