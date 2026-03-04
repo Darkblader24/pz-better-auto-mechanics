@@ -3,10 +3,10 @@ BAM = BAM or {}
 
 -- Add Train Mechanics button to vehicle part context menu
 local original_doPartContextMenu = ISVehicleMechanics.doPartContextMenu
-function ISVehicleMechanics:doPartContextMenu(part, x, y, v1, v2, v3, v4)  -- Added a few more variables, in case any mod uses more
+function ISVehicleMechanics:doPartContextMenu(...)
     --DebugLog.log("BAM: Adding Better Auto Mechanics button!")
     --DebugLog.log("BAM: ISVehicleMechanics:doPartContextMenu called")
-    local success = original_doPartContextMenu(self, part, x, y, v1, v2, v3, v4);
+    local success = original_doPartContextMenu(self, ...);
     --DebugLog.log("BAM: ISVehicleMechanics:doPartContextMenu done, returned: " .. success)
 
     self:addMechanicsButtons()
@@ -159,5 +159,4 @@ function PlayerHasCarAccess(player, vehicle)
     end
     return not needsKey
 end
-
 
