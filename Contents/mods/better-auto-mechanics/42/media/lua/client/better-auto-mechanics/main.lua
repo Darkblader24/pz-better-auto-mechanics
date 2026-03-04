@@ -6,6 +6,8 @@ BAM.WorkDelayTimer = 0
 BAM.LastWorkedPart = nil
 BAM.LastWorkedActionType = nil -- 1 = uninstall, 2 = install
 BAM.InaccessibleParts = {}
+BAM.PrevGameSpeed = 1
+BAM.PrevTimeMultiplier = 1
 
 
 function BAM:StartMechanicsTraining(player, vehicle)
@@ -26,6 +28,8 @@ function BAM:StopMechanicsTraining(player, msgOverride, r, g, b)
     BAM.LastWorkedPart = nil
     BAM.LastWorkedActionType = nil
     BAM.InaccessibleParts = {}
+    BAM.PrevGameSpeed = 1
+    BAM.PrevTimeMultiplier = 1
     setGameSpeed(1)
     getGameTime():setMultiplier(1)
 

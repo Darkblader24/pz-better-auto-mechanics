@@ -6,6 +6,7 @@ BAM = BAM or {}
 
 local original_ISUninstallVehiclePart_complete = ISUninstallVehiclePart.complete
 function ISUninstallVehiclePart:complete(...)
+    --DebugLog.log("ISUninstallVehiclePart_complete: GAMESPEED: " .. getGameSpeed() .. " - " .. getGameTime():getMultiplier() .. " - " .. getGameTime():getTrueMultiplier())
     -- First call the original complete function
     --DebugLog.log("ISUninstallVehiclePart:complete called")
     local success = original_ISUninstallVehiclePart_complete(self, ...)
@@ -25,6 +26,7 @@ end
 
 local original_ISInstallVehiclePart_complete = ISInstallVehiclePart.complete
 function ISInstallVehiclePart:complete(...)
+    --DebugLog.log("ISInstallVehiclePart_complete: GAMESPEED: " .. getGameSpeed() .. " - " .. getGameTime():getMultiplier() .. " - " .. getGameTime():getTrueMultiplier())
     -- First call the original complete function
     --DebugLog.log("ISInstallVehiclePart:complete called")
     local success = original_ISInstallVehiclePart_complete(self, ...)
@@ -44,6 +46,7 @@ end
 
 local original_ISUninstallVehiclePart_stop = ISUninstallVehiclePart.stop
 function ISUninstallVehiclePart:stop(...)
+    --DebugLog.log("ISUninstallVehiclePart_stop: GAMESPEED: " .. getGameSpeed() .. " - " .. getGameTime():getMultiplier() .. " - " .. getGameTime():getTrueMultiplier())
     -- First call the original stop function
     --DebugLog.log("ISUninstallVehiclePart:stop called")
     local success = original_ISUninstallVehiclePart_stop(self, ...)
@@ -63,6 +66,7 @@ end
 
 local original_ISInstallVehiclePart_stop = ISInstallVehiclePart.stop
 function ISInstallVehiclePart:stop(...)
+    --DebugLog.log("ISUninstallVehiclePart_stop: GAMESPEED: " .. getGameSpeed() .. " - " .. getGameTime():getMultiplier() .. " - " .. getGameTime():getTrueMultiplier())
     -- First call the original stop function
     --DebugLog.log("ISInstallVehiclePart:stop called")
     local success = original_ISInstallVehiclePart_stop(self, ...)
@@ -99,14 +103,22 @@ end
 
 local original_ISPathFindAction_start = ISPathFindAction.start
 function ISPathFindAction:start(...)
+    --DebugLog.log("ISPathFindAction_start 1: GAMESPEED: " .. getGameSpeed() .. " - " .. getGameTime():getMultiplier() .. " - " .. getGameTime():getTrueMultiplier())
     -- First call the original start function
     --DebugLog.log("ISPathFindAction:start called")
     local success = original_ISPathFindAction_start(self, ...)
+    --DebugLog.log("ISPathFindAction_start 2: GAMESPEED: " .. getGameSpeed() .. " - " .. getGameTime():getMultiplier() .. " - " .. getGameTime():getTrueMultiplier())
     --DebugLog.log("ISPathFindAction:start done, returned: " .. success)
 
     -- If any pathfinding action fails during mechanics training, mark the part as inaccessible and continue training
     if BAM.IsCurrentlyTraining then
         self:setOnFail(OnPathFailed)
+        --self:setOnComplete(OnPathSucceed)
+
+        -- Save the current game speed, in order to restore it if it gets reset
+        BAM.PrevGameSpeed = getGameSpeed()
+        BAM.PrevTimeMultiplier = getGameTime():getTrueMultiplier()
+        --DebugLog.log("SAVED GAMESPEED: " .. BAM.PrevGameSpeed .. " - " .. BAM.PrevTimeMultiplier)
     end
 
     return success
@@ -114,12 +126,31 @@ end
 
 
 function OnPathFailed()
+    --DebugLog.log("ISPathFindAction_FAILED: GAMESPEED: " .. getGameSpeed() .. " - " .. getGameTime():getMultiplier() .. " - " .. getGameTime():getTrueMultiplier())
     local part = BAM.LastWorkedPart
     DebugLog.log("Part " .. part:getId() .. " is inaccessible during mechanics training.")
 
     BAM.InaccessibleParts[part:getId()] = true
     BAM.WorkDelayTimer = 10  -- Call workOnNextPart after a short delay instead of instantly after pathfinding failed, to avoid pathfinding issues
 end
+
+
+--function OnPathSucceed()
+--    DebugLog.log("ISPathFindAction_SUCCEED: GAMESPEED: " .. getGameSpeed() .. " - " .. getGameTime():getMultiplier() .. " - " .. getGameTime():getTrueMultiplier())
+--end
+
+
+
+--local original_ISPathFindAction_stop = ISPathFindAction.stop
+--function ISPathFindAction:stop(...)
+--    DebugLog.log("ISPathFindAction_stop: GAMESPEED: " .. getGameSpeed() .. " - " .. getGameTime():getMultiplier())
+--    -- First call the original stop function
+--    --DebugLog.log("ISPathFindAction:stop called")
+--    local success = original_ISPathFindAction_stop(self, ...)
+--    --DebugLog.log("ISPathFindAction:stop done, returned: " .. success)
+--
+--    return success
+--end
 
 
 -- For debugging, display some details about the currently selected vehicle part
@@ -130,6 +161,26 @@ function ISVehicleMechanics:renderPartDetail(part, ...)
         self:drawText("DBG: Part ID: " .. part:getId(), 10, 20, 1, 1, 1, 0.5)
         self:drawText("DBG: Can Gain Part XP: " .. tostring(BAM.CanGainXP(getPlayer(), part:getVehicle(), part, 1)), 10, 32, 1, 1, 1, 0.5)
 	end
+    return success
+end
+
+
+-- Only for restoring game speed if it got changed for some reason
+local original_ISInstallVehiclePart_start = ISInstallVehiclePart.start
+function ISInstallVehiclePart:start(...)
+    --DebugLog.log("ISInstallVehiclePart_start 1: GAMESPEED: " .. getGameSpeed() .. " - " .. getGameTime():getMultiplier() .. " - " .. getGameTime():getTrueMultiplier())
+    -- If the game speed or time multiplier got reset for some reason during mechanics training, set it back to the previous value
+    if BAM.IsCurrentlyTraining then
+        if getGameSpeed() < BAM.PrevGameSpeed then
+            DebugLog.log("Gamespeed got reset! Restoring to previous game speed: " .. BAM.PrevGameSpeed .. " | " .. BAM.PrevTimeMultiplier)
+            setGameSpeed(BAM.PrevGameSpeed)
+            getGameTime():setMultiplier(BAM.PrevTimeMultiplier)
+            DebugLog.log("New gamespeed: " .. getGameSpeed() .. " | " .. getGameTime():getMultiplier() .. " | " .. getGameTime():getTrueMultiplier())
+        end
+    end
+
+    local success = original_ISInstallVehiclePart_start(self, ...)
+    --DebugLog.log("ISInstallVehiclePart_start 2: GAMESPEED: " .. getGameSpeed() .. " - " .. getGameTime():getMultiplier() .. " - " .. getGameTime():getTrueMultiplier())
     return success
 end
 
@@ -158,10 +209,36 @@ end
 
 --local original_ISUninstallVehiclePart_start = ISUninstallVehiclePart.start
 --function ISUninstallVehiclePart:start(...)
+--    DebugLog.log("ISUninstallVehiclePart_start: GAMESPEED: " .. getGameSpeed() .. " - " .. getGameTime():getMultiplier())
 --    -- First call the original start function
---    DebugLog.log("ISUninstallVehiclePart:start called")
+--    --DebugLog.log("ISUninstallVehiclePart:start called")
 --    local success = original_ISUninstallVehiclePart_start(self, ...)
---    DebugLog.log("ISUninstallVehiclePart:start done, returned: " .. success)
+--    --DebugLog.log("ISUninstallVehiclePart:start done, returned: " .. success)
+--
+--    return success
+--end
+
+
+--local original_ISPathFindAction_perform = ISPathFindAction.perform
+--function ISPathFindAction:perform(...)
+--    DebugLog.log("ISPathFindAction_perform 1: GAMESPEED: " .. getGameSpeed() .. " - " .. getGameTime():getMultiplier() .. " - " .. getGameTime():getTrueMultiplier())
+--
+--
+--    -- If the game speed or time multiplier got reset for some reason during mechanics training, set it back to the previous value
+--    if BAM.IsCurrentlyTraining then
+--        if getGameSpeed() < BAM.PrevGameSpeed then
+--            DebugLog.log("GAME SPEED GOT RESET!!! DID restoring previous game speed: " .. BAM.PrevGameSpeed .. " +- " .. BAM.PrevTimeMultiplier .. " ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+--            setGameSpeed(BAM.PrevGameSpeed)
+--            getGameTime():setMultiplier(BAM.PrevTimeMultiplier)
+--            DebugLog.log("NEW GAMESPEED: " .. getGameSpeed() .. " - " .. getGameTime():getMultiplier() .. " - " .. getGameTime():getTrueMultiplier())
+--        end
+--    end
+--
+--    -- First call the original perform function
+--    --DebugLog.log("ISPathFindAction:perform called")
+--    local success = original_ISPathFindAction_perform(self, ...)
+--    --DebugLog.log("ISPathFindAction:perform done, returned: " .. success)
+--    DebugLog.log("ISPathFindAction_perform 2: GAMESPEED: " .. getGameSpeed() .. " - " .. getGameTime():getMultiplier() .. " - " .. getGameTime():getTrueMultiplier())
 --
 --    return success
 --end

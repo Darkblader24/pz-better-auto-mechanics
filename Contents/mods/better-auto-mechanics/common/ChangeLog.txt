@@ -62,5 +62,6 @@ link3 = Github = https://steamcommunity.com/linkfilter/?u=https://github.com/Dar
 [ ------ ]
 
 [ 1.11 ]
--
+- Refactored install and uninstall logic to improve compatibility with other vehicle mods
+- Improved game speed handling during mechanics training
 [ ------ ]
