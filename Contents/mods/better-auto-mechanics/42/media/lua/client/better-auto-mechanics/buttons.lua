@@ -4,13 +4,8 @@ BAM = BAM or {}
 -- Add Train Mechanics button to vehicle part context menu
 local original_doPartContextMenu = ISVehicleMechanics.doPartContextMenu
 function ISVehicleMechanics:doPartContextMenu(...)
-    --DebugLog.log("BAM: Adding Better Auto Mechanics button!")
-    --DebugLog.log("BAM: ISVehicleMechanics:doPartContextMenu called")
     local success = original_doPartContextMenu(self, ...)
-    --DebugLog.log("BAM: ISVehicleMechanics:doPartContextMenu done, returned: " .. success)
-
     self:addMechanicsButtons()
-    --DebugLog.log("BAM: Added Better Auto Mechanics button!")
     return success
 end
 

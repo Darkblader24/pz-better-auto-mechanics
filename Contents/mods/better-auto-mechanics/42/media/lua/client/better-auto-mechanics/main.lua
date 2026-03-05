@@ -3,6 +3,7 @@ BAM.IsCurrentlyTraining = false
 BAM.Player = nil
 BAM.Vehicle = nil
 BAM.WorkDelayTimer = 0
+BAM.GameSpeedCheckTimer = 0
 BAM.LastWorkedPart = nil
 BAM.LastWorkedActionType = nil -- 1 = uninstall, 2 = install
 BAM.InaccessibleParts = {}

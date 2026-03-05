@@ -1,5 +1,7 @@
 # Better Auto Mechanics
 
+### [Mod on Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3635856965)
+
 **Train mechanics with a single click. Smarter, more intuitive, and lightweight. Works in Multiplayer and Singleplayer.**
 
 Rewritten from the ground up, **Better Auto Mechanics** is a comprehensive quality-of-life upgrade for the mechanic skill in Project Zomboid. Inspired by the original mod [AutoMechanics](https://steamcommunity.com/sharedfiles/filedetails/?id=3387539308), it improves on several key features while still allowing you to train mechanics on vehicles with a single button. And it actually works in multiplayer!

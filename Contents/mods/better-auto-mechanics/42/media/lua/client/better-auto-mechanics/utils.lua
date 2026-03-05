@@ -307,6 +307,34 @@ function BAM.WouldExceedWeightLimit(player, item)
 end
 
 
+function BAM.WorkOnNextPartInXTicks(ticks)
+    BAM.WorkDelayTimer = ticks
+end
+
+
+function BAM.CheckGameSpeedInXTicks(ticks)
+    BAM.GameSpeedCheckTimer = ticks
+end
+
+
+function BAM.SaveGameSpeed()
+    BAM.PrevGameSpeed = getGameSpeed()
+    BAM.PrevTimeMultiplier = getGameTime():getTrueMultiplier()
+    --DebugLog.log("SAVED GAMESPEED: " .. BAM.PrevGameSpeed .. " - " .. BAM.PrevTimeMultiplier)
+end
+
+
+function BAM.RestoreGameSpeed()
+    -- Check if the game speed got randomly reset by the game and restore it in that case
+    -- Currently this can interfere with the player manually changing the game speed while training
+    if getGameSpeed() < BAM.PrevGameSpeed and getGameSpeed() == 1 then
+        setGameSpeed(BAM.PrevGameSpeed)
+        getGameTime():setMultiplier(BAM.PrevTimeMultiplier)
+        DebugLog.log("Reset gamespeed back to: " .. getGameSpeed() .. " | " .. getGameTime():getMultiplier() .. " | " .. getGameTime():getTrueMultiplier())
+    end
+end
+
+
 function BAM.GetGameVersion()
     -- getCore():getGameVersion()) doesn't return the path, so we extract it from the full version string
     local ver_str = getCore():getVersion()                            -- Returns string like: "42.13.1 1267173a2044ba62aa3d0a0e9899b15e9057de5c 2025-12-18 10:34:47 (ZB)"
