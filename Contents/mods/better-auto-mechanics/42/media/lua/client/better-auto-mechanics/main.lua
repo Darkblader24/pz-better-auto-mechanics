@@ -109,7 +109,8 @@ end
 
 
 function BAM:InstallPart(player, part, item)
-    DebugLog.log("-> Installing item " .. item:getName() .. " into part: " .. part:getId())
+    local successChance = BAM.GetPartSuccessChance(player, part, "install")
+    DebugLog.log("-> Installing part: " .. part:getId() .. " - Success chance: " .. successChance .. "%")
     BAM.LastWorkedPart = part
     BAM.LastWorkedActionType = 2
     BAM.DropBrokenItems(player)  -- Drop broken items before installing
@@ -118,7 +119,8 @@ end
 
 
 function BAM:UninstallPart(player, part)
-    DebugLog.log("-> Uninstalling part: " .. part:getId())
+    local successChance = BAM.GetPartSuccessChance(player, part, "uninstall")
+    DebugLog.log("-> Uninstalling part: " .. part:getId() .. " - Success chance: " .. successChance .. "%")
     BAM.LastWorkedPart = part
     BAM.LastWorkedActionType = 1
     BAM.DropBrokenItems(player)  -- Drop broken items before uninstalling
