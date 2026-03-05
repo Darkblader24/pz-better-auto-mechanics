@@ -15,7 +15,8 @@ description=[*] [b]Smart XP Tracking:[/b] The mod knows exactly when you can't g
 description=[*] [b]Resume Interrupted Training:[/b] If zombies interrupt you (or you cancel an action), you can pick up exactly where you left off. No more starting from scratch and wasting part durability!
 description=[*] [b]Efficiency First:[/b] The mod will never perform an action if it won't yield XP.
 description=[*] [b]Clearer Tooltips:[/b] Know exactly what tools you need and how your skill level, known recipes, and other factors impact the training before you start.
-description=[*] [b]Translated into:[/b] English, German, Russian (credits to [url=https://steamcommunity.com/id/Templarum]Kavinsky[/url]!), French, simple + trad. Chinese, Japanese, and Spanish.
+description=[*] [b]Fast-Forward Supported:[/b] Fully supports speeding up the game in SP, allowing you to breeze through your training sessions. Nearby zombies will still reset the game speed to normal.
+description=[*] [b]Translated into:[/b] English, German, Russian, French, simple + trad. Chinese, Japanese, Spanish, Brazilian Portuguese, and Polish.
 description=[/list]
 description=
 description=[hr][/hr]
@@ -49,7 +50,7 @@ description=[h2]✅ Compatibility & Save Info[/h2]
 description=[list]
 description=[*] [b]Safe to add and remove mid-save.[/b]
 description=[*] [b]Incompatible[/b] with the original "[url=https://steamcommunity.com/sharedfiles/filedetails/?id=3387539308]AutoMechanics[/url]" mod.
-description=[*] [b]Compatible[/b] with "[url=https://steamcommunity.com/sharedfiles/filedetails/?id=2757712197]Vehicle Repair Overhaul[/url]", KI5 Vehicles, and most other vehicle mods.
+description=[*] [b]Compatible[/b] with KI5 Vehicles, "[url=https://steamcommunity.com/sharedfiles/filedetails/?id=2757712197]Vehicle Repair Overhaul[/url]", and most other vehicle mods.
 description=[/list]
 description=
 description=[hr][/hr]
@@ -57,12 +58,15 @@ description=[h2]FEEDBACK & SUPPORT[/h2]
 description=If you find this mod useful:
 description=[list]
 description=[*] ⭐ Rate on Steam Workshop
-description=[*] 💬 Leave comments or [url=https://steamcommunity.com/sharedfiles/filedetails/discussions/3635856965]Feedback[/url] 
+description=[*] 💬 Leave comments or [url=https://steamcommunity.com/sharedfiles/filedetails/discussions/3635856965]Feedback[/url] 
 description=[*] 🐛 Post bug reports in [url=https://steamcommunity.com/sharedfiles/filedetails/discussions/3635856965]Discussions[/url] or on [url=https://github.com/Darkblader24/pz-better-auto-mechanics/issues]Github[/url]
 description=[*] 🚀 Contribute to this mod on [url=https://github.com/Darkblader24/pz-better-auto-mechanics]Github[/url]. Translations are very welcome!
 description=[*] ❤️ Buy me a [url=https://ko-fi.com/hotox]Ko-fi[/url]
 description=[/list]
 description=
 description=[hr][/hr]
+description=
+description=Workshop ID: 3635856965
+description=Mod ID: better-auto-mechanics
 tags=Build 42;Interface;Multiplayer;Vehicles;QoL
 visibility=public

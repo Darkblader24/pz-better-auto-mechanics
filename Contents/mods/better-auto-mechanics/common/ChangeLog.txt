@@ -71,5 +71,10 @@ link3 = Github = https://steamcommunity.com/linkfilter/?u=https://github.com/Dar
 
 [ 1.12 ]
 - Greatly improved keeping the game speed consistent during mechanics training in SP
-  - Now only an approaching zombie will reset the game speed to normal
+  - You can now speed up the game during training without it resetting to normal speed all the time
+  - Only an approaching zombie will reset the game speed to normal
+[ ------ ]
+
+[ 1.13 ]
+-
 [ ------ ]
