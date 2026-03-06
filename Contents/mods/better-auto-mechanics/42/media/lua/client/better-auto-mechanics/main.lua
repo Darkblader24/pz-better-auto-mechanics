@@ -1,6 +1,5 @@
 BAM = BAM or {}
 BAM.IsCurrentlyTraining = false
-BAM.Player = nil
 BAM.Vehicle = nil
 BAM.WorkDelayTimer = 0
 BAM.GameSpeedCheckTimer = 0
@@ -14,7 +13,7 @@ BAM.PrevTimeMultiplier = 1
 function BAM:StartMechanicsTraining(player, vehicle)
     -- Re-entrancy guard: ignore if already training on the same vehicle with the same player
     if BAM.IsCurrentlyTraining then
-        if BAM.Player == player and BAM.Vehicle == vehicle then
+        if BAM.Vehicle == vehicle then
             return
         end
         -- Different session requested, stop the old one first
@@ -24,7 +23,6 @@ function BAM:StartMechanicsTraining(player, vehicle)
     DebugLog.log("=================================")
     DebugLog.log("Starting mechanics training!")
     BAM.IsCurrentlyTraining = true
-    BAM.Player = player
     BAM.Vehicle = vehicle
     BAM.InaccessibleParts = {}
     BAM.workOnNextPart(player, vehicle)
@@ -50,7 +48,7 @@ function BAM.StopMechanicsTraining(player, msgOverride, r, g, b)
     g = g or 255
     b = b or 0
 
-    -- Display a ingame notification to inform the player that training has finished
+    -- Display an in-game notification to inform the player that training has finished
     if player then
         HaloTextHelper.addText(player, msg, "[br/]", r, g, b)
     end
@@ -61,6 +59,12 @@ end
 
 
 function BAM.workOnNextPart(player, vehicle)
+    -- Safety check: ensure player and vehicle are valid
+    if not player or not vehicle then
+        BAM.StopMechanicsTraining(nil)
+        return
+    end
+
     -- First check if we are too far away from the vehicle
     local distanceToCar = player:DistToSquared(vehicle)
     --DebugLog.log("Player distance to vehicle squared: " .. distanceToCar)
@@ -88,7 +92,7 @@ function BAM.workOnNextPart(player, vehicle)
     -- If yes, uninstall those parts first.
     if partInstall then
         local keyvalues = partInstall:getTable("install")
-        if keyvalues.requireInstalled then
+        if keyvalues and keyvalues.requireInstalled then
             local split = keyvalues.requireInstalled:split(";")
             for i, partId in ipairs(split) do
                 DebugLog.log("Part " .. partInstall:getId() .. " requires part " .. partId .. " to be installed first.")

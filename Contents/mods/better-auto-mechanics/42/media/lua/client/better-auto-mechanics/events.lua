@@ -36,7 +36,7 @@ function BAM.OnTick()
         -- When the timer hits exactly 0, execute the delayed action
         if BAM.WorkDelayTimer == 0 then
             --DebugLog.log("Delay finished: executing workOnNextPart...")
-            BAM.workOnNextPart(BAM.Player, BAM.Vehicle)
+            BAM.workOnNextPart(getPlayer(), BAM.Vehicle)
         end
     end
 

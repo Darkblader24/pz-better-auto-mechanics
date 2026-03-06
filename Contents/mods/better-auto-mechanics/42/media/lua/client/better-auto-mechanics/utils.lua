@@ -268,7 +268,7 @@ end
 function BAM.GetPartSuccessChance(player, part, actionType)
     local successChance = 0
     local keyvalues = part:getTable(actionType)
-    if keyvalues then
+    if keyvalues and keyvalues.skills then
         local perks = keyvalues.skills
         local perksTable = VehicleUtils.getPerksTableForChr(perks, player)
         successChance, _ = VehicleUtils.calculateInstallationSuccess(perks, player, perksTable)
