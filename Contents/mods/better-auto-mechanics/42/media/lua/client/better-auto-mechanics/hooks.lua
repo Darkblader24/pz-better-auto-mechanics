@@ -13,7 +13,7 @@ function ISUninstallVehiclePart:complete(...)
     local success = original_ISUninstallVehiclePart_complete(self, ...)
     if BAM.IsCurrentlyTraining then
         BAM.SaveGameSpeed()
-        BAM:workOnNextPart(self.character, self.vehicle)
+        BAM.workOnNextPart(self.character, self.vehicle)
     end
     return success
 end
@@ -24,7 +24,7 @@ function ISInstallVehiclePart:complete(...)
     local success = original_ISInstallVehiclePart_complete(self, ...)
     if BAM.IsCurrentlyTraining then
         BAM.SaveGameSpeed()
-        BAM:workOnNextPart(self.character, self.vehicle)
+        BAM.workOnNextPart(self.character, self.vehicle)
     end
     return success
 end
@@ -38,7 +38,7 @@ function ISUninstallVehiclePart:stop(...)
     local success = original_ISUninstallVehiclePart_stop(self, ...)
     if BAM.IsCurrentlyTraining and not isClient() then
         DebugLog.log("Stopping mechanics training due to uninstall stop...")
-        BAM:StopMechanicsTraining(nil)
+        BAM.StopMechanicsTraining(nil)
     end
     return success
 end
@@ -49,7 +49,7 @@ function ISInstallVehiclePart:stop(...)
     local success = original_ISInstallVehiclePart_stop(self, ...)
     if BAM.IsCurrentlyTraining and not isClient() then
         DebugLog.log("Stopping mechanics training due to install stop...")
-        BAM:StopMechanicsTraining(nil)
+        BAM.StopMechanicsTraining(nil)
     end
     return success
 end
@@ -61,7 +61,7 @@ function ISVehicleMechanics:initParts(...)
     local success = original_ISVehicleMechanics_initParts(self, ...)
     if BAM.IsCurrentlyTraining then
         DebugLog.log("Stopping mechanics training due to vehicle mechanics init...")
-        BAM:StopMechanicsTraining(nil)
+        BAM.StopMechanicsTraining(nil)
     end
     return success
 end
@@ -81,6 +81,8 @@ end
 
 
 function BAM.OnPathFailed()
+    if not BAM.IsCurrentlyTraining or not BAM.LastWorkedPart then return end
+
     local part = BAM.LastWorkedPart
     DebugLog.log("Part " .. part:getId() .. " is inaccessible during mechanics training.")
 

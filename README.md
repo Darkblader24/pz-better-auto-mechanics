@@ -14,7 +14,7 @@ Rewritten from the ground up, **Better Auto Mechanics** is a comprehensive quali
 * **Resume Interrupted Training:** If zombies interrupt you (or you cancel an action), you can pick up exactly where you left off. No more starting from scratch and wasting part durability!
 * **Efficiency First:** The mod will never perform an action if it won't yield XP.
 * **Clearer Tooltips:** Know exactly what tools you need and how your level and recipes impact the training before you start.
-* **Less Confusing:** Instead of confusing options with no description, this mod has no options. It clearly communicates when you should use a disposable car and automatically avoids parts that are way too risky at lower levels.
+* **Simple Options:** A single, well-documented option lets you set the minimum success chance for parts. Server admins can also enforce this setting server-wide via sandbox options.
 * **Lightweight:** Its lightweight codebase makes it less likely to break with future game updates.
 
 ## 🚗 How to Use

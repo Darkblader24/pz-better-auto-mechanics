@@ -12,17 +12,26 @@ BAM.PrevTimeMultiplier = 1
 
 
 function BAM:StartMechanicsTraining(player, vehicle)
+    -- Re-entrancy guard: ignore if already training on the same vehicle with the same player
+    if BAM.IsCurrentlyTraining then
+        if BAM.Player == player and BAM.Vehicle == vehicle then
+            return
+        end
+        -- Different session requested, stop the old one first
+        BAM.StopMechanicsTraining(nil)
+    end
+
     DebugLog.log("=================================")
     DebugLog.log("Starting mechanics training!")
     BAM.IsCurrentlyTraining = true
     BAM.Player = player
     BAM.Vehicle = vehicle
     BAM.InaccessibleParts = {}
-    BAM:workOnNextPart(player, vehicle)
+    BAM.workOnNextPart(player, vehicle)
 end
 
 
-function BAM:StopMechanicsTraining(player, msgOverride, r, g, b)
+function BAM.StopMechanicsTraining(player, msgOverride, r, g, b)
     BAM.IsCurrentlyTraining = false
     BAM.Vehicle = nil
     BAM.WorkDelayTimer = 0
@@ -31,8 +40,10 @@ function BAM:StopMechanicsTraining(player, msgOverride, r, g, b)
     BAM.InaccessibleParts = {}
     BAM.PrevGameSpeed = 1
     BAM.PrevTimeMultiplier = 1
-    setGameSpeed(1)
-    getGameTime():setMultiplier(1)
+    if not isClient() then
+        setGameSpeed(1)
+        getGameTime():setMultiplier(1)
+    end
 
     local msg = msgOverride or getText("UI_BAM_message.car_completed")
     r = r or 0
@@ -49,13 +60,13 @@ function BAM:StopMechanicsTraining(player, msgOverride, r, g, b)
 end
 
 
-function BAM:workOnNextPart(player, vehicle)
+function BAM.workOnNextPart(player, vehicle)
     -- First check if we are too far away from the vehicle
     local distanceToCar = player:DistToSquared(vehicle)
     --DebugLog.log("Player distance to vehicle squared: " .. distanceToCar)
     if distanceToCar > 10 then
         DebugLog.log("Player is too far from vehicle (" .. tostring(distanceToCar) .. " tiles). Stopping training.")
-        BAM:StopMechanicsTraining(nil)
+        BAM.StopMechanicsTraining(nil)
         return
     end
 
@@ -69,7 +80,7 @@ function BAM:workOnNextPart(player, vehicle)
     -- If no parts to install or uninstall, stop training
     if partUninstall == nil and partInstall == nil then
         DebugLog.log("No more parts to work on.")
-        BAM:StopMechanicsTraining(player)
+        BAM.StopMechanicsTraining(player)
         return
     end
 
@@ -82,8 +93,8 @@ function BAM:workOnNextPart(player, vehicle)
             for i, partId in ipairs(split) do
                 DebugLog.log("Part " .. partInstall:getId() .. " requires part " .. partId .. " to be installed first.")
                 local requiredPart = vehicle:getPartById(partId)
-                if BAM.PartCanBeUninstalled(player, vehicle, requiredPart) then
-                    BAM:UninstallPart(player, requiredPart)
+                if requiredPart and BAM.PartCanBeUninstalled(player, vehicle, requiredPart) then
+                    BAM.UninstallPart(player, requiredPart)
                     return
                 end
             end
@@ -92,23 +103,23 @@ function BAM:workOnNextPart(player, vehicle)
 
     -- If we can install any part, do it. We always prioritize installation over uninstallation (except for brakes/suspension above)
     if partInstall and itemInstall then
-        BAM:InstallPart(player, partInstall, itemInstall)
+        BAM.InstallPart(player, partInstall, itemInstall)
         return
     end
 
     -- Otherwise, uninstall the next part
     if partUninstall then
-        BAM:UninstallPart(player, partUninstall)
+        BAM.UninstallPart(player, partUninstall)
         return
     end
 
     -- If we reach here, something went wrong. Probably because we have a part to install but no item for it.
     DebugLog.log("Error: Unable to determine next part to work on.")
-    BAM:StopMechanicsTraining(player)
+    BAM.StopMechanicsTraining(player)
 end
 
 
-function BAM:InstallPart(player, part, item)
+function BAM.InstallPart(player, part, item)
     local successChance = BAM.GetPartSuccessChance(player, part, "install")
     DebugLog.log("-> Installing part: " .. part:getId() .. " - Success chance: " .. successChance .. "%")
     BAM.LastWorkedPart = part
@@ -118,7 +129,7 @@ function BAM:InstallPart(player, part, item)
 end
 
 
-function BAM:UninstallPart(player, part)
+function BAM.UninstallPart(player, part)
     local successChance = BAM.GetPartSuccessChance(player, part, "uninstall")
     DebugLog.log("-> Uninstalling part: " .. part:getId() .. " - Success chance: " .. successChance .. "%")
     BAM.LastWorkedPart = part

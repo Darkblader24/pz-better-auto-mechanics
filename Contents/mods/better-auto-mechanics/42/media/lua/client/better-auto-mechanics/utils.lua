@@ -16,7 +16,7 @@ function BAM.GetNextUninstallablePart(player, vehicle)
     local sortedParts = BAM.SortParts(validParts)
 
     -- Check each part for uninstall possibility and XP eligibility, return the first one found
-    for _, part in pairs(sortedParts) do
+    for _, part in ipairs(sortedParts) do
         if BAM.PartCanBeUninstalled(player, vehicle, part) then
             return part
         end
@@ -37,7 +37,7 @@ function BAM.GetNextInstallablePartAndItem(player, vehicle)
     local sortedParts = BAM.SortParts(validParts)
 
     -- Check each part for install possibility, return the first one found
-    for _, part in pairs(sortedParts) do
+    for _, part in ipairs(sortedParts) do
         local item = BAM.PartCanBeInstalled(player, vehicle, part)
         if item then
             return part, item

@@ -19,7 +19,7 @@ function BAM:OnMechanicActionDone(success)
 
     -- Start a tick countdown, after which 'workOnNextPart' is called to continue the training
     -- This gives the server enough time to update the game state
-    BAM.WorkOnNextPartInXTicks(20)  -- 10 ticks is approx 0.16 seconds
+    BAM.WorkOnNextPartInXTicks(20)  -- 20 ticks is approx 0.33 seconds
     --DebugLog.log("Waiting " .. BAM.WorkDelayTimer .. " ticks before working on next part...")
 end
 
@@ -36,7 +36,7 @@ function BAM.OnTick()
         -- When the timer hits exactly 0, execute the delayed action
         if BAM.WorkDelayTimer == 0 then
             --DebugLog.log("Delay finished: executing workOnNextPart...")
-            BAM:workOnNextPart(BAM.Player, BAM.Vehicle)
+            BAM.workOnNextPart(BAM.Player, BAM.Vehicle)
         end
     end
 
