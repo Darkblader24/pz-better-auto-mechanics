@@ -69,20 +69,18 @@ end
 
 local original_ISPathFindAction_start = ISPathFindAction.start
 function ISPathFindAction:start(...)
-    --DebugLog.log("ISPathFindAction_start 1: GAMESPEED: " .. getGameSpeed() .. " - " .. getGameTime():getMultiplier() .. " - " .. getGameTime():getTrueMultiplier())
     local success = original_ISPathFindAction_start(self, ...)
-    --DebugLog.log("ISPathFindAction_start 2: GAMESPEED: " .. getGameSpeed() .. " - " .. getGameTime():getMultiplier() .. " - " .. getGameTime():getTrueMultiplier())
 
     -- If any pathfinding action fails during mechanics training, mark the part as inaccessible and continue training
     if BAM.IsCurrentlyTraining then
-        self:setOnFail(OnPathFailed)
+        self:setOnFail(BAM.OnPathFailed)
         BAM.CheckGameSpeedInXTicks(10)
     end
     return success
 end
 
 
-function OnPathFailed()
+function BAM.OnPathFailed()
     local part = BAM.LastWorkedPart
     DebugLog.log("Part " .. part:getId() .. " is inaccessible during mechanics training.")
 
@@ -119,103 +117,3 @@ function ISVehicleMechanics:renderPartDetail(part, ...)
 	end
     return success
 end
-
-
----- Only for restoring game speed if it got changed for some reason
---local original_ISInstallVehiclePart_start = ISInstallVehiclePart.start
---function ISInstallVehiclePart:start(...)
---    --DebugLog.log("ISInstallVehiclePart_start 1: GAMESPEED: " .. getGameSpeed() .. " - " .. getGameTime():getMultiplier() .. " - " .. getGameTime():getTrueMultiplier())
---    -- If the game speed or time multiplier got reset for some reason during mechanics training, set it back to the previous value
---    if BAM.IsCurrentlyTraining then
---        if getGameSpeed() < BAM.PrevGameSpeed then
---            DebugLog.log("Gamespeed got reset! Restoring to previous game speed: " .. BAM.PrevGameSpeed .. " | " .. BAM.PrevTimeMultiplier)
---            setGameSpeed(BAM.PrevGameSpeed)
---            getGameTime():setMultiplier(BAM.PrevTimeMultiplier)
---            DebugLog.log("New gamespeed: " .. getGameSpeed() .. " | " .. getGameTime():getMultiplier() .. " | " .. getGameTime():getTrueMultiplier())
---        end
---    end
---
---    local success = original_ISInstallVehiclePart_start(self, ...)
---    --DebugLog.log("ISInstallVehiclePart_start 2: GAMESPEED: " .. getGameSpeed() .. " - " .. getGameTime():getMultiplier() .. " - " .. getGameTime():getTrueMultiplier())
---    return success
---end
---
---
---local original_ISPathFindAction_perform = ISPathFindAction.perform
---function ISPathFindAction:perform(...)
---    --DebugLog.log("ISPathFindAction_perform 1: GAMESPEED: " .. getGameSpeed() .. " - " .. getGameTime():getMultiplier() .. " - " .. getGameTime():getTrueMultiplier())
---
---    -- If the game speed or time multiplier got reset for some reason during mechanics training, set it back to the previous value
---    if BAM.IsCurrentlyTraining then
---        if getGameSpeed() < BAM.PrevGameSpeed then
---            DebugLog.log("Gamespeed got reset during perform! Restoring to previous game speed: " .. BAM.PrevGameSpeed .. " | " .. BAM.PrevTimeMultiplier)
---            setGameSpeed(BAM.PrevGameSpeed)
---            getGameTime():setMultiplier(BAM.PrevTimeMultiplier)
---            DebugLog.log("New gamespeed: " .. getGameSpeed() .. " | " .. getGameTime():getMultiplier() .. " | " .. getGameTime():getTrueMultiplier())
---        end
---    end
---
---    -- First call the original perform function
---    --DebugLog.log("ISPathFindAction:perform called")
---    local success = original_ISPathFindAction_perform(self, ...)
---    --DebugLog.log("ISPathFindAction:perform done, returned: " .. success)
---    --DebugLog.log("ISPathFindAction_perform 2: GAMESPEED: " .. getGameSpeed() .. " - " .. getGameTime():getMultiplier() .. " - " .. getGameTime():getTrueMultiplier())
---
---    return success
---end
-
-
---local original_ISPathFindAction_stop = ISPathFindAction.stop
---function ISPathFindAction:stop(...)
---    DebugLog.log("ISPathFindAction_stop: GAMESPEED: " .. getGameSpeed() .. " - " .. getGameTime():getMultiplier())
---    -- First call the original stop function
---    --DebugLog.log("ISPathFindAction:stop called")
---    local success = original_ISPathFindAction_stop(self, ...)
---    --DebugLog.log("ISPathFindAction:stop done, returned: " .. success)
---
---    return success
---end
-
-
---local original_ISUninstallVehiclePart_perform = ISUninstallVehiclePart.perform
---function ISUninstallVehiclePart:perform(...)
---    -- First call the original perform function
---    DebugLog.log("ISUninstallVehiclePart:perform called")
---    local success = original_ISUninstallVehiclePart_perform(self, ...)
---    DebugLog.log("ISUninstallVehiclePart:perform done, returned: " .. success)
---
---    return success
---end
---
---
---local original_ISUninstallVehiclePart_update = ISUninstallVehiclePart.update
---function ISUninstallVehiclePart:update(...)
---    -- First call the original update function
---    DebugLog.log("ISUninstallVehiclePart:update called")
---    local success = original_ISUninstallVehiclePart_update(self, ...)
---    DebugLog.log("ISUninstallVehiclePart:update done, returned: " .. success)
---
---    return success
---end
-
-
---local original_ISUninstallVehiclePart_start = ISUninstallVehiclePart.start
---function ISUninstallVehiclePart:start(...)
---    DebugLog.log("ISUninstallVehiclePart_start: GAMESPEED: " .. getGameSpeed() .. " - " .. getGameTime():getMultiplier())
---    -- First call the original start function
---    --DebugLog.log("ISUninstallVehiclePart:start called")
---    local success = original_ISUninstallVehiclePart_start(self, ...)
---    --DebugLog.log("ISUninstallVehiclePart:start done, returned: " .. success)
---
---    return success
---end
---
---
---local original_ISUninstallVehiclePart_new = ISUninstallVehiclePart.new
---function ISUninstallVehiclePart:new(character, part, time, ...)
---    DebugLog.log("ISUninstallVehiclePart:new called")
---    local obj = original_ISUninstallVehiclePart_new(self, character, part, time, ...)
---    DebugLog.log("ISUninstallVehiclePart:new done, returned: " .. obj)
---    return obj
---end
-

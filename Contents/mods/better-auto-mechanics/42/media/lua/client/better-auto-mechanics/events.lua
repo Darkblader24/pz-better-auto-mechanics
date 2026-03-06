@@ -2,15 +2,10 @@ BAM = BAM or {}
 
 
 function BAM:OnMechanicActionDone(success)
-    -- This function is only ever called in multiplayer, but if its called in singleplayer, do nothing-- Safety check: Ensure this is only run on the client side
-    if not isClient() then
-        --DebugLog.log("Error: OnMechanicActionDone called on server or singleplayer. Ignoring.")
-        return
-    end
-
-    if not BAM.IsCurrentlyTraining then
-        return
-    end
+    -- OnMechanicActionDone is only ever called in multiplayer, but if its called in singleplayer, do nothing
+    if not isClient() then return end
+    if not BAM.IsCurrentlyTraining then return end
+    if not BAM.Vehicle or not BAM.LastWorkedPart then return end
 
     local player = self
     --DebugLog.log("-> Mechanic action done! Player: " .. tostring(player) .. " " .. BAM.LastWorkedPart:getId() .. " " .. BAM.LastWorkedActionType .. " Success: " .. tostring(success))

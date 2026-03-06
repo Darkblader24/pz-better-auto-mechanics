@@ -2,7 +2,8 @@ BAM = BAM or {}
 
 -- Generates a consistent ID string: "CarID-PartIndex-ActionType" or "PartItemIDCarIDActionType"
 local function getXPKey(vehicle, part, actionType)
-    -- Singleplayer
+    -- Singleplayer: Key always uses "1" (uninstall) because RecordXPAction only tracks
+    -- uninstalls (actionType 2 returns early). This matches the vanilla getMechanicsItem key format.
     if not isClient() then
         return part:getInventoryItem():getID() .. vehicle:getMechanicalID() .. "1"
     end

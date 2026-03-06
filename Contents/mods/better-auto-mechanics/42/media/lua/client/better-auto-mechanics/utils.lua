@@ -335,16 +335,26 @@ function BAM.RestoreGameSpeed()
 end
 
 
+----------------------------------------
+-- CACHED GAME VERSION
+----------------------------------------
+local cachedMajor, cachedMinor, cachedPatch = nil, nil, nil
+
+
 function BAM.GetGameVersion()
+    if cachedMajor then
+        return cachedMajor, cachedMinor, cachedPatch
+    end
+
     -- getCore():getGameVersion()) doesn't return the path, so we extract it from the full version string
     local ver_str = getCore():getVersion()                            -- Returns string like: "42.13.1 1267173a2044ba62aa3d0a0e9899b15e9057de5c 2025-12-18 10:34:47 (ZB)"
     local major, minor, patch = ver_str:match("^(%d+)%.(%d+)%.(%d+)") -- Extract major, minor, patch numbers, here "42", "13", "1"
-    major = tonumber(major)
-    minor = tonumber(minor)
-    patch = tonumber(patch)
-    --DebugLog.log("Detected game version: " .. major .. "." .. minor .. "." .. patch)
+    cachedMajor = tonumber(major)
+    cachedMinor = tonumber(minor)
+    cachedPatch = tonumber(patch)
+    --DebugLog.log("Detected game version: " .. cachedMajor .. "." .. cachedMinor .. "." .. cachedPatch)
 
-    return major, minor, patch
+    return cachedMajor, cachedMinor, cachedPatch
 end
 
 

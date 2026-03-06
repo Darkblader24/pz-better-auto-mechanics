@@ -19,12 +19,12 @@ function ISVehicleMechanics:addMechanicsButtons()
     local trainTooltip = ISToolTip:new()
     trainTooltip:initialise()
     trainTooltip:setVisible(true)
-    trainTooltip.description = GenerateDescription(self.chr, self.vehicle)
+    trainTooltip.description = BAM.GenerateDescription(self.chr, self.vehicle)
     trainButton.toolTip = trainTooltip
 end
 
 
-function GenerateDescription(player, vehicle)
+function BAM.GenerateDescription(player, vehicle)
     local newline = " <LINE>"
     local msg = getText("UI_BAM_button_desc.needs") .. ":"
 
@@ -65,7 +65,7 @@ function GenerateDescription(player, vehicle)
     msg = msg .. newline .. color .. " - " .. nameJack
 
     -- Recipe check v2
-    local requiredRecipes = GetRequiredRecipes(vehicle)
+    local requiredRecipes = BAM.GetRequiredRecipes(vehicle)
     msg = msg .. newline
     msg = msg .. newline .. "<RGB:1,1,1>" .. getText("UI_BAM_button_desc.recipes_required") .. ":"
     for recipe, _ in pairs(requiredRecipes) do
@@ -103,7 +103,7 @@ function GenerateDescription(player, vehicle)
     end
 
     ---- Car Key check
-    if not PlayerHasCarAccess(player, vehicle) then
+    if not BAM.PlayerHasCarAccess(player, vehicle) then
         msg = msg .. newline
         msg = msg .. newline .. "<RGB:1,1,1>" .. getText("UI_BAM_button_desc.no_car_access")
         msg = msg .. newline .. "<ORANGE> - " .. getText("UI_BAM_button_desc.parts_inaccessible")
@@ -124,7 +124,7 @@ function GenerateDescription(player, vehicle)
 end
 
 
-function GetRequiredRecipes(vehicle)
+function BAM.GetRequiredRecipes(vehicle)
     local recipes = {}
     recipes["Basic Mechanics"] = false
     recipes["Intermediate Mechanics"] = false
@@ -149,7 +149,7 @@ function GetRequiredRecipes(vehicle)
 end
 
 
-function PlayerHasCarAccess(player, vehicle)
+function BAM.PlayerHasCarAccess(player, vehicle)
     local needsKey = false
     for i = 0, vehicle:getPartCount() - 1 do
         local part = vehicle:getPartByIndex(i)
