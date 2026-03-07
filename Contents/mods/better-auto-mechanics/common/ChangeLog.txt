@@ -76,5 +76,7 @@ link3 = Github = https://steamcommunity.com/linkfilter/?u=https://github.com/Dar
 [ ------ ]
 
 [ 1.13 ]
--
+- Added "Train Mechanics" button to menu when right-clicking a vehicle
+- Added an icon to the "Train Mechanics" button
+- Improved general stability and mod compatibility
 [ ------ ]

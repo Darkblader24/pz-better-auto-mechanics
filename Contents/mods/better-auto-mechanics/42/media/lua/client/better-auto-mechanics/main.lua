@@ -68,7 +68,7 @@ function BAM.workOnNextPart(player, vehicle)
     -- First check if we are too far away from the vehicle
     local distanceToCar = player:DistToSquared(vehicle)
     --DebugLog.log("Player distance to vehicle squared: " .. distanceToCar)
-    if distanceToCar > 10 then
+    if distanceToCar > 10 and BAM.LastWorkedPart then
         DebugLog.log("Player is too far from vehicle (" .. tostring(distanceToCar) .. " tiles). Stopping training.")
         BAM.StopMechanicsTraining(nil)
         return

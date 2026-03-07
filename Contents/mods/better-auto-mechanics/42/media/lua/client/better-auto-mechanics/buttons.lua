@@ -5,25 +5,69 @@ BAM = BAM or {}
 local original_doPartContextMenu = ISVehicleMechanics.doPartContextMenu
 function ISVehicleMechanics:doPartContextMenu(...)
     local success = original_doPartContextMenu(self, ...)
-    self:addMechanicsButtons()
+    BAM.CreateMechanicsButton(self, self.context, self.chr, self.vehicle, BAM.StartMechanicsTraining)
     return success
 end
 
 -- Create the Train Mechanics button and its tooltip
-function ISVehicleMechanics:addMechanicsButtons()
+function BAM.CreateMechanicsButton(self, context, player, vehicle, functionToCall)
     -- self.context can be nil, so check if it is
-    if not self.context then
-        return
+    if not context then return end
+
+    local trainButton = nil
+    if self then
+        trainButton = context:addOption(getText("UI_BAM_button.title"), self, functionToCall, player, vehicle)
+    else
+        trainButton = context:addOption(getText("UI_BAM_button.title"), player, functionToCall, vehicle)
     end
-    local trainButton = self.context:addOption(getText("UI_BAM_button.title"), self, BAM.StartMechanicsTraining, self.chr, self.vehicle)
+    trainButton.iconTexture = getTexture("Item_Wrench")
+
     local trainTooltip = ISToolTip:new()
     trainTooltip:initialise()
     trainTooltip:setVisible(true)
-    trainTooltip.description = BAM.GenerateDescription(self.chr, self.vehicle)
+    trainTooltip.description = BAM.GenerateDescription(player, vehicle)
     trainButton.toolTip = trainTooltip
 end
 
 
+-- Adds a "Train Mechanics" button to the world context menu when right-clicking on a vehicle in the world
+-- 1. A wrapper function to handle the click from the world
+local function onTrainMechanicsFromWorld(playerObj, vehicle)
+    -- Because BAM.StartMechanicsTraining was originally designed for the UI, it expects (ui, player, vehicle). We pass 'nil' for the UI.
+    BAM.StartMechanicsTraining(nil, playerObj, vehicle)
+end
+
+-- 2. The function that builds the world context menu
+local function BAM_WorldVehicleMenu(player, context, worldobjects, test)
+    DebugLog.log("Called world menu")
+    if test and ISWorldObjectContextMenu.Test then return true end
+
+    -- Loop through what the player clicked on to find the vehicle
+    local vehicle = nil
+    for _, obj in ipairs(worldobjects) do
+        DebugLog.log("Found world object: " .. tostring(obj))
+        if instanceof(obj, "BaseVehicle") then
+            vehicle = obj
+            break
+        elseif obj:getSquare() and obj:getSquare():getVehicleContainer() then
+            vehicle = obj:getSquare():getVehicleContainer()
+            break
+        end
+    end
+
+    -- If we found a vehicle, build the button
+    if vehicle then
+        DebugLog.log("Found vehicle under cursor")
+        local playerObj = getSpecificPlayer(player)
+        BAM.CreateMechanicsButton(nil, context, playerObj, vehicle, onTrainMechanicsFromWorld)
+        DebugLog.log("Added button!")
+    end
+end
+
+Events.OnFillWorldObjectContextMenu.Add(BAM_WorldVehicleMenu)
+
+
+-- ### Button Design ###
 function BAM.GenerateDescription(player, vehicle)
     local newline = " <LINE>"
     local msg = getText("UI_BAM_button_desc.needs") .. ":"
