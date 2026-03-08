@@ -13,10 +13,7 @@ BAM.PrevTimeMultiplier = 1
 function BAM:StartMechanicsTraining(player, vehicle)
     -- Re-entrancy guard: ignore if already training on the same vehicle with the same player
     if BAM.IsCurrentlyTraining then
-        if BAM.Vehicle == vehicle then
-            return
-        end
-        -- Different session requested, stop the old one first
+        ISTimedActionQueue.clear(player)
         BAM.StopMechanicsTraining(nil)
     end
 
@@ -95,9 +92,9 @@ function BAM.workOnNextPart(player, vehicle)
         if keyvalues and keyvalues.requireInstalled then
             local split = keyvalues.requireInstalled:split(";")
             for i, partId in ipairs(split) do
-                DebugLog.log("Part " .. partInstall:getId() .. " requires part " .. partId .. " to be installed first.")
                 local requiredPart = vehicle:getPartById(partId)
                 if requiredPart and BAM.PartCanBeUninstalled(player, vehicle, requiredPart) then
+                    DebugLog.log("Uninstalling " .. partInstall:getId() .. " made part " .. partId .. " available for uninstall.")
                     BAM.UninstallPart(player, requiredPart)
                     return
                 end

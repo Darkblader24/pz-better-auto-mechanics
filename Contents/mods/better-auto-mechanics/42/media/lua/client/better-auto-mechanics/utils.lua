@@ -48,6 +48,7 @@ end
 
 
 function BAM.PartCanBeUninstalled(player, vehicle, part)
+    --DebugLog.log("Checking if part " .. part:getId() .. " can be uninstalled...")
     -- 1. Check if the physical action is possible (tools, location, etc.)
     if not part:getInventoryItem() then
         --DebugLog.log("Part " .. part:getId() .. " has no item installed, cannot uninstall.")
@@ -268,7 +269,7 @@ end
 function BAM.GetPartSuccessChance(player, part, actionType)
     local successChance = 0
     local keyvalues = part:getTable(actionType)
-    if keyvalues and keyvalues.skills then
+    if keyvalues then
         local perks = keyvalues.skills
         local perksTable = VehicleUtils.getPerksTableForChr(perks, player)
         successChance, _ = VehicleUtils.calculateInstallationSuccess(perks, player, perksTable)

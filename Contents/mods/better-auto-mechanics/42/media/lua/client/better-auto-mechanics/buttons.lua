@@ -39,13 +39,11 @@ end
 
 -- 2. The function that builds the world context menu
 local function BAM_WorldVehicleMenu(player, context, worldobjects, test)
-    DebugLog.log("Called world menu")
     if test and ISWorldObjectContextMenu.Test then return true end
 
     -- Loop through what the player clicked on to find the vehicle
     local vehicle = nil
     for _, obj in ipairs(worldobjects) do
-        DebugLog.log("Found world object: " .. tostring(obj))
         if instanceof(obj, "BaseVehicle") then
             vehicle = obj
             break
@@ -57,10 +55,8 @@ local function BAM_WorldVehicleMenu(player, context, worldobjects, test)
 
     -- If we found a vehicle, build the button
     if vehicle then
-        DebugLog.log("Found vehicle under cursor")
         local playerObj = getSpecificPlayer(player)
         BAM.CreateMechanicsButton(nil, context, playerObj, vehicle, onTrainMechanicsFromWorld)
-        DebugLog.log("Added button!")
     end
 end
 
