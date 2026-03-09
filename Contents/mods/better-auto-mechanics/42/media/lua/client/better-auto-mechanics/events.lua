@@ -25,7 +25,7 @@ end
 
 
 -- The Tick Handler: Runs every single frame (approx 60 times/sec)
-function BAM.OnTick()
+local function BAM_OnTick()
     -- Fail fast. If not training, do nothing immediately.
     if not BAM.IsCurrentlyTraining then return end
 
@@ -55,8 +55,35 @@ function BAM.OnTick()
 end
 
 
+-- If the player presses Escape/Cancel or any movement keys, stop the training immediately.
+local function BAM_StopTrainingOnKey(key)
+    if not BAM.IsCurrentlyTraining then return end
+
+    local core = getCore()
+
+    -- 1. Get the current keybindings for Escape/Cancel
+    local cancelKey = core:getKey("CancelAction")
+    local escKey = Keyboard.KEY_ESCAPE
+
+    -- 2. Get the current keybindings for Movement
+    local forwardKey = core:getKey("Forward")
+    local backwardKey = core:getKey("Backward")
+    local leftKey = core:getKey("Left")
+    local rightKey = core:getKey("Right")
+
+    -- 3. Check if the pressed key matches ANY of the above
+    if key == cancelKey or key == escKey or
+       key == forwardKey or key == backwardKey or
+       key == leftKey or key == rightKey then
+        DebugLog.log("BAM: Player pressed an interrupt key! Aborting mechanics training.")
+        BAM.StopMechanicsTraining(nil)
+    end
+end
+
+
 -- Register events
-Events.OnTick.Add(BAM.OnTick)
+Events.OnTick.Add(BAM_OnTick)
+Events.OnKeyStartPressed.Add(BAM_StopTrainingOnKey)
 if isClient() then
     -- Only register this event if we are running in multiplayer
     Events.OnMechanicActionDone.Add(BAM.OnMechanicActionDone)

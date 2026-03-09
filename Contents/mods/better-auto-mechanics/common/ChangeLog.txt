@@ -78,5 +78,7 @@ link3 = Github = https://steamcommunity.com/linkfilter/?u=https://github.com/Dar
 [ 1.13 ]
 - Added "Train Mechanics" button to menu when directly right-clicking a vehicle
 - Added an icon to the "Train Mechanics" button
+- Moving larger distances between vehicle parts now makes the player sneak-run instead of walk
+- Moving or pressing ESC during training now stops the training session
 - Improved general stability and mod compatibility
 [ ------ ]

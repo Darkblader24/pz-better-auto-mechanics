@@ -6,6 +6,7 @@ BAM.GameSpeedCheckTimer = 0
 BAM.LastWorkedPart = nil
 BAM.LastWorkedActionType = nil -- 1 = uninstall, 2 = install
 BAM.InaccessibleParts = {}
+BAM.WorkedParts = {}
 BAM.PrevGameSpeed = 1
 BAM.PrevTimeMultiplier = 1
 
@@ -33,6 +34,7 @@ function BAM.StopMechanicsTraining(player, msgOverride, r, g, b)
     BAM.LastWorkedPart = nil
     BAM.LastWorkedActionType = nil
     BAM.InaccessibleParts = {}
+    BAM.WorkedParts = {}
     BAM.PrevGameSpeed = 1
     BAM.PrevTimeMultiplier = 1
     if not isClient() then
@@ -50,7 +52,14 @@ function BAM.StopMechanicsTraining(player, msgOverride, r, g, b)
         HaloTextHelper.addText(player, msg, "[br/]", r, g, b)
     end
 
+    getPlayer():setSneaking(false)
+
     DebugLog.log("Finished mechanics training!")
+
+    --for i, partInfo in ipairs(BAM.WorkedParts) do
+    --    DebugLog.log(i .. ". " .. partInfo)
+    --end
+
     DebugLog.log("=================================")
 end
 
@@ -125,6 +134,7 @@ function BAM.InstallPart(player, part, item)
     DebugLog.log("-> Installing part: " .. part:getId() .. " - Success chance: " .. successChance .. "%")
     BAM.LastWorkedPart = part
     BAM.LastWorkedActionType = 2
+    table.insert(BAM.WorkedParts, part:getId() .. " - Install")
     BAM.DropBrokenItems(player)  -- Drop broken items before installing
     ISVehiclePartMenu.onInstallPart(player, part, item)  -- Start timed task
 end
@@ -135,6 +145,7 @@ function BAM.UninstallPart(player, part)
     DebugLog.log("-> Uninstalling part: " .. part:getId() .. " - Success chance: " .. successChance .. "%")
     BAM.LastWorkedPart = part
     BAM.LastWorkedActionType = 1
+    table.insert(BAM.WorkedParts, part:getId() .. " - Uninstall")
     BAM.DropBrokenItems(player)  -- Drop broken items before uninstalling
     ISVehiclePartMenu.onUninstallPart(player, part)  -- Start timed task
 end

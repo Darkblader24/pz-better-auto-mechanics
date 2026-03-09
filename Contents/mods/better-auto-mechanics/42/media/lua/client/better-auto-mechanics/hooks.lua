@@ -116,6 +116,54 @@ function ISVehicleMechanics:renderPartDetail(part, ...)
     if getCore():getDebug() then
         self:drawText("DBG: Part ID: " .. part:getId(), 10, 20, 1, 1, 1, 0.5)
         self:drawText("DBG: Can Gain Part XP: " .. tostring(BAM.CanGainXP(getPlayer(), part:getVehicle(), part, 1)), 10, 32, 1, 1, 1, 0.5)
-	end
+    end
     return success
 end
+
+
+local original_ISPathFindAction_start = ISPathFindAction.start
+function ISPathFindAction:start(...)
+    local success = original_ISPathFindAction_start(self, ...)
+
+    -- During training, make the player sneak-run after a couple of ticks of pathfinding
+    if BAM.IsCurrentlyTraining then
+        local endurance = 1
+        if BAM.GameVersionNewerThanOrEqual(42, 13, 0) then
+            endurance = self.character:getStats():get(CharacterStat.ENDURANCE)
+        else
+            endurance = self.character:getStats():getEndurance()
+        end
+
+        --DebugLog.log("Endurance:" .. tostring(endurance))
+        if endurance > 0.5 then  -- Only run if the endurance is above 50%
+            self.BAM_ForceRun = 150
+            -- If the game runs very fast, the character often runs too far and needs to adjust again, resulting in a time loss.
+            if getGameSpeed() >= 3 then
+                 self.BAM_ForceRun = 1000
+            end
+        end
+        self.character:setSneaking(false)
+    end
+    return success
+end
+
+
+local original_ISPathFindAction_update = ISPathFindAction.update
+function ISPathFindAction:update(...)
+    local success = original_ISPathFindAction_update(self, ...)
+    -- During training, make the player sneak-run after a couple of ticks spend pathfinding
+    if BAM.IsCurrentlyTraining then
+        if self.BAM_ForceRun > 0 then
+            --DebugLog.log("Forcerun =" .. tostring(self.BAM_ForceRun))
+            self.BAM_ForceRun = self.BAM_ForceRun - 3 * getGameTime():getMultiplier()
+            if self.BAM_ForceRun <= 0 then
+                DebugLog.log("Starting to run!")
+            end
+        else
+            self.character:setSneaking(true)
+            self.character:setRunning(true)
+        end
+    end
+    return success
+end
+
