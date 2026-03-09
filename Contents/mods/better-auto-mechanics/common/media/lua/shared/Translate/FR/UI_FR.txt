@@ -23,6 +23,11 @@ UI_FR = {
     UI_BAM_button_desc.empty_seats = "Pour travailler sur les sièges, assurez-vous qu'ils soient vides.",
     UI_BAM_button_desc.server_enforce = "Le serveur impose:",
 
+    -- #### Uninstall Menu ####
+    IGUI_BAM_Uninstall_Title = "Désinstaller ...",
+    IGUI_BAM_Uninstall_Everything = "Tout",
+    IGUI_BAM_Uninstall_All = "Tous les %1",
+
     -- #### Other ####
     UI_BAM_message.car_completed = "Ouf ! Cette voiture est finie pour aujourd'hui !",
 

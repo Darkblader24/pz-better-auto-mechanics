@@ -375,3 +375,69 @@ function BAM.GameVersionNewerThanOrEqual(majorReq, minorReq, patchReq)
     return false
 end
 
+
+----------------------------------------
+-- UNINSTALL CATEGORIES
+----------------------------------------
+
+-- Each category maps to an explicit list of part IDs.
+-- "Everything" uses nil to match all parts.
+BAM.UninstallCategories = {
+    {
+        key = "everything",
+        ids = nil,  -- nil means match all parts
+    },
+    {
+        key = "tires",
+        ids = { "TireFrontLeft", "TireFrontRight", "TireRearLeft", "TireRearRight" },
+    },
+    {
+        key = "doors",
+        ids = { "DoorFrontLeft", "DoorFrontRight", "DoorMiddleLeft", "DoorMiddleRight", "DoorRearLeft", "DoorRearRight", "DoorRear", "TrunkDoor" },
+    },
+    {
+        key = "windows",
+        ids = { "WindowFrontLeft", "WindowFrontRight", "WindowMiddleLeft", "WindowMiddleRight", "WindowRearLeft", "WindowRearRight", "Windshield", "WindshieldRear" },
+    },
+    {
+        key = "seats",
+        ids = { "SeatFrontLeft", "SeatFrontRight", "SeatMiddleLeft", "SeatMiddleRight", "SeatRearLeft", "SeatRearRight" },
+    },
+    {
+        key = "lights",
+        ids = { "HeadlightLeft", "HeadlightRight", "HeadlightRearLeft", "HeadlightRearRight" },
+    },
+    {
+        key = "brakes",
+        ids = { "BrakeFrontLeft", "BrakeFrontRight", "BrakeRearLeft", "BrakeRearRight" },
+    },
+    {
+        key = "suspension",
+        ids = { "SuspensionFrontLeft", "SuspensionFrontRight", "SuspensionRearLeft", "SuspensionRearRight" },
+    },
+}
+
+
+--- Returns a list of parts on the vehicle that the player can uninstall, filtered by category.
+-- @param player IsoPlayer
+-- @param vehicle BaseVehicle
+-- @param categoryIds table|nil  A set-like table { ["TireFrontLeft"]=true, ... } or nil for all parts
+-- @return table  List of VehiclePart objects
+function BAM.GetUninstallablePartsByCategory(player, vehicle, categoryIds)
+    local parts = {}
+    for i = 0, vehicle:getPartCount() - 1 do
+        local part = vehicle:getPartByIndex(i)
+        local id = part:getId()
+
+        -- Filter: if categoryIds is provided, only include matching parts
+        if categoryIds == nil or categoryIds[id] then
+            -- Check if this part can actually be uninstalled (has item, game allows it)
+            if part:getInventoryItem() and vehicle:canUninstallPart(player, part) then
+                table.insert(parts, part)
+            end
+        end
+    end
+    return parts
+end
+
+

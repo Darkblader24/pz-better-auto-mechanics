@@ -150,3 +150,31 @@ function BAM.UninstallPart(player, part)
     ISVehiclePartMenu.onUninstallPart(player, part)  -- Start timed task
 end
 
+
+--- Batch-uninstall all parts in a given category.
+-- Stops any active training first, then queues vanilla uninstall actions for each matching part.
+-- @param playerOrSelf  When called from the mechanics UI context menu, this is the ISVehicleMechanics 'self'.
+-- @param player IsoPlayer
+-- @param vehicle BaseVehicle
+-- @param categoryIds table|nil  Set of part ID strings, or nil for "Everything"
+function BAM.UninstallCategory(playerOrSelf, player, vehicle, categoryIds)
+    -- Stop any active training session first
+    if BAM.IsCurrentlyTraining then
+        ISTimedActionQueue.clear(player)
+        BAM.StopMechanicsTraining(nil)
+    end
+
+    local parts = BAM.GetUninstallablePartsByCategory(player, vehicle, categoryIds)
+    if #parts == 0 then return end
+
+    -- Sort parts using the same order as training for consistency
+    parts = BAM.SortParts(parts)
+
+    DebugLog.log("BAM: Batch uninstalling " .. #parts .. " parts...")
+    for _, part in ipairs(parts) do
+        DebugLog.log("  -> Queuing uninstall: " .. part:getId())
+        ISVehiclePartMenu.onUninstallPart(player, part)
+    end
+end
+
+
