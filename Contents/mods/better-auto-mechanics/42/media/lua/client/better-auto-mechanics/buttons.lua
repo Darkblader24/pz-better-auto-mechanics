@@ -36,7 +36,7 @@ end
 -- Create the Uninstall All menu with category sub-options
 -- Translation keys map to vanilla game translation strings where possible
 local uninstallCategoryLabels = {
-    everything  = "IGUI_BAM_Uninstall_Everything",
+    everything  = "UI_BAM_Uninstall_Everything",
     tires       = "IGUI_VehiclePartTire",
     doors       = "IGUI_VehiclePartDoor",
     windows     = "IGUI_VehiclePartWindow",
@@ -50,7 +50,7 @@ function BAM.CreateUninstallAllMenu(self, context, player, vehicle)
     if not context then return end
 
     -- Build a parent option: "Uninstall ..."
-    local parentOption = context:addOption(getText("IGUI_BAM_Uninstall_Title"), nil)
+    local parentOption = context:addOption(getText("UI_BAM_Uninstall_Title"), nil)
     parentOption.iconTexture = getTexture("Item_Wrench")
 
     -- Create the submenu
@@ -76,7 +76,7 @@ function BAM.CreateUninstallAllMenu(self, context, player, vehicle)
         -- Build the label: "All Tires (3)" or "Everything (12)"
         local label = getText(uninstallCategoryLabels[category.key] or category.key)
         if category.key ~= "everything" then
-            label = getText("IGUI_BAM_Uninstall_All", label)
+            label = getText("UI_BAM_Uninstall_All", label)
         end
         label = label .. " (" .. tostring(count) .. ")"
 
