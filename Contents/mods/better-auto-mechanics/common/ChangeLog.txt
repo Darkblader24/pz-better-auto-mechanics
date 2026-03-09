@@ -80,5 +80,6 @@ link3 = Github = https://steamcommunity.com/linkfilter/?u=https://github.com/Dar
 - Added an icon to the "Train Mechanics" button
 - Moving larger distances between vehicle parts now makes the player sneak-run instead of walk
 - Moving or pressing ESC during training now stops the training session
+- The "Train Mechanics" button now gets hidden once you reach level 10 in mechanics, but it's always visible in Debug mode
 - Improved general stability and mod compatibility
 [ ------ ]

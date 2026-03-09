@@ -11,8 +11,11 @@ end
 
 -- Create the Train Mechanics button and its tooltip
 function BAM.CreateMechanicsButton(self, context, player, vehicle, functionToCall)
-    -- self.context can be nil, so check if it is
     if not context then return end
+
+    -- Don't show the button if the player is already max level in mechanics, always show in debug mode
+    local skillLevel = player:getPerkLevel(Perks.Mechanics)
+    if skillLevel >= 10 and not getCore():getDebug() then return end
 
     local trainButton = nil
     if self then
