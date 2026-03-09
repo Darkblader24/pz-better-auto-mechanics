@@ -6,7 +6,7 @@ local original_doPartContextMenu = ISVehicleMechanics.doPartContextMenu
 function ISVehicleMechanics:doPartContextMenu(...)
     local success = original_doPartContextMenu(self, ...)
     BAM.CreateMechanicsButton(self, self.context, self.chr, self.vehicle, BAM.StartMechanicsTraining)
-    BAM.CreateUninstallAllMenu(self, self.context, self.chr, self.vehicle)
+    --BAM.CreateUninstallAllMenu(self, self.context, self.chr, self.vehicle)
     return success
 end
 
@@ -37,13 +37,13 @@ end
 -- Translation keys map to vanilla game translation strings where possible
 local uninstallCategoryLabels = {
     everything  = "UI_BAM_Uninstall_Everything",
-    tires       = "IGUI_VehiclePartTire",
-    doors       = "IGUI_VehiclePartDoor",
-    windows     = "IGUI_VehiclePartWindow",
-    seats       = "IGUI_VehiclePartSeat",
-    lights      = "IGUI_VehiclePartHeadlight",
-    brakes      = "IGUI_VehiclePartBrake",
-    suspension  = "IGUI_VehiclePartSuspension",
+    tires       = "IGUI_VehiclePartCattire",
+    doors       = "IGUI_VehiclePartCatdoor",
+    windows     = "IGUI_VehiclePartWindow",  -- todo
+    seats       = "IGUI_VehiclePartCatseat",
+    lights      = "IGUI_VehiclePartCatlights",
+    brakes      = "IGUI_VehiclePartCatbrakes",
+    suspension  = "IGUI_VehiclePartCatsuspension",
 }
 
 function BAM.CreateUninstallAllMenu(self, context, player, vehicle)

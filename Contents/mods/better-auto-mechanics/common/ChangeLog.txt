@@ -85,5 +85,5 @@ link3 = Github = https://steamcommunity.com/linkfilter/?u=https://github.com/Dar
 [ ------ ]
 
 [ 1.14 ]
--
+- Added compatibility for B42.15
 [ ------ ]
