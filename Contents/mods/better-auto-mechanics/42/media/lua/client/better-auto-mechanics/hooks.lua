@@ -172,7 +172,7 @@ local original_ISTimedActionQueue_resetQueue = ISTimedActionQueue.resetQueue
 function ISTimedActionQueue:resetQueue(...)
     local success = original_ISTimedActionQueue_resetQueue(self, ...)
 
-    if BAM.IsCurrentlyTraining then
+    if BAM.IsCurrentlyTraining and BAM.LastWorkedPart then
         local part = BAM.LastWorkedPart
         DebugLog.log("Part " .. part:getId() .. " is bugged during mechanics training. Skipping it.")
 
