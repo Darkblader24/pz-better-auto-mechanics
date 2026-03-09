@@ -1,72 +1,72 @@
 version=1
 id=3635856965
 title=Better Auto Mechanics [B42.14+ MP+SP]
-description=[h1]Better Auto Mechanics[/h1]
-description=[b]Train mechanics with a single click. Smarter, more intuitive, and lightweight. In Multiplayer and Singleplayer.[/b]
-description=
-description=Rewritten from the ground up, [b]Better Auto Mechanics[/b] is a comprehensive quality-of-life upgrade for the mechanic skill. Inspired by the original mod "[url=https://steamcommunity.com/sharedfiles/filedetails/?id=3387539308]AutoMechanics[/url]", it improves on several key features while still allowing you to train mechanics on vehicles with a single button. And it actually works in multiplayer!
-description=
-description=Compatible with all B42 versions!
-description=
-description=[hr][/hr]
-description=[h2]🔧 Key Features[/h2]
-description=[list]
-description=[*] [b]Smart XP Tracking:[/b] The mod knows exactly when you can't gain XP from a specific car anymore. It will alert you if a vehicle isn't worth training on, so you never waste time.
-description=[*] [b]Resume Interrupted Training:[/b] If zombies interrupt you (or you cancel an action), you can pick up exactly where you left off. No more starting from scratch and wasting part durability!
-description=[*] [b]Efficiency First:[/b] The mod will never perform an action if it won't yield XP.
-description=[*] [b]Clearer Tooltips:[/b] Know exactly what tools you need and how your skill level, known recipes, and other factors impact the training before you start.
-description=[*] [b]Fast-Forward Supported:[/b] Fully supports speeding up the game in SP, allowing you to breeze through your training sessions. Nearby zombies will still reset the game speed to normal.
-description=[*] [b]Translated into:[/b] English, German, Russian, French, simple + trad. Chinese, Japanese, Spanish, Brazilian Portuguese, and Polish.
-description=[/list]
-description=
-description=[hr][/hr]
-description=[h2]🚗 How to Use[/h2]
-description=[olist]
-description=[*] Open the mechanics window on any vehicle.
-description=[*] Right-click any part.
-description=[*] Select [b]"Train Mechanics"[/b].
-description=[*] Watch the levels go up!
-description=[/olist]
-description=[quote][b]Note:[/b] Pathfinding can sometimes impact the training session. Please ensure your character has some walking space around the car.[/quote]
-description=
-description=[hr][/hr]
-description=[h2]⚙️ Mod Settings[/h2]
-description=You can customize the [b]"Minimum Vehicle Part Success Chance"[/b] in the options. This value determines the safety threshold for installing/uninstalling parts; any part with a success chance below this value will be skipped during training.
-description=[list]
-description=[*] [b]0 (Risky):[/b] All parts will be worked on. Be careful—parts [i]will[/i] break or lose condition at lower skill levels.
-description=[*] [b]30 (Default):[/b] A good balance. Parts with a very low success chance are skipped to prevent excessive damage, while still allowing for decent XP gain.
-description=[*] [b]100 (Safe Mode):[/b] Only parts that are guaranteed to succeed will be worked on. This is completely safe at all skill levels, though training may be slower as fewer parts are eligible.
-description=[/list]
-description=
-description=[b]Multiplayer / Server Admins:[/b]
-description=Server owners can enforce this setting via Sandbox Options.
-description=[list]
-description=[*] [b]-1 (Default):[/b] The setting is [b]not enforced[/b]. Players are free to use their own local Mod Option setting.
-description=[*] [b]0 to 100:[/b] The setting is [b]enforced server-wide[/b]. Any value greater than -1 will override individual player choices. The value set by the server will be visible in the button tooltip.
-description=[/list]
-description=
-description=[hr][/hr]
-description=[h2]✅ Compatibility & Save Info[/h2]
-description=[list]
-description=[*] [b]Safe to add and remove mid-save.[/b]
-description=[*] [b]Incompatible[/b] with the original "[url=https://steamcommunity.com/sharedfiles/filedetails/?id=3387539308]AutoMechanics[/url]" mod.
-description=[*] [b]Compatible[/b] with KI5 Vehicles, "[url=https://steamcommunity.com/sharedfiles/filedetails/?id=2757712197]Vehicle Repair Overhaul[/url]", and most other vehicle mods.
-description=[/list]
-description=
-description=[hr][/hr]
-description=[h2]FEEDBACK & SUPPORT[/h2]
-description=If you find this mod useful:
-description=[list]
-description=[*] ⭐ Rate on Steam Workshop
-description=[*] 💬 Leave comments or [url=https://steamcommunity.com/sharedfiles/filedetails/discussions/3635856965]Feedback[/url] 
-description=[*] 🐛 Post bug reports in [url=https://steamcommunity.com/sharedfiles/filedetails/discussions/3635856965]Discussions[/url] or on [url=https://github.com/Darkblader24/pz-better-auto-mechanics/issues]Github[/url]
-description=[*] 🚀 Contribute to this mod on [url=https://github.com/Darkblader24/pz-better-auto-mechanics]Github[/url]. Translations are very welcome!
-description=[*] ❤️ Buy me a [url=https://ko-fi.com/hotox]Ko-fi[/url]
-description=[/list]
-description=
-description=[hr][/hr]
-description=
-description=Workshop ID: 3635856965
+description=[h1]Better Auto Mechanics[/h1]
+description=[b]Train mechanics with a single click. Smarter, more intuitive, and lightweight. In Multiplayer and Singleplayer.[/b]
+description=
+description=Rewritten from the ground up, [b]Better Auto Mechanics[/b] is a comprehensive quality-of-life upgrade for the mechanic skill. Inspired by the original mod "[url=https://steamcommunity.com/sharedfiles/filedetails/?id=3387539308]AutoMechanics[/url]", it improves on several key features while still allowing you to train mechanics on vehicles with a single button. And it actually works in multiplayer!
+description=
+description=Compatible with all B42 versions!
+description=
+description=[hr][/hr]
+description=[h2]🔧 Key Features[/h2]
+description=[list]
+description=[*] [b]Smart XP Tracking:[/b] The mod knows exactly when you can't gain XP from a specific car anymore. It will alert you if a vehicle isn't worth training on, so you never waste time.
+description=[*] [b]Resume Interrupted Training:[/b] If zombies interrupt you (or you cancel an action), you can pick up exactly where you left off. No more starting from scratch and wasting part durability!
+description=[*] [b]Efficiency First:[/b] The mod will never perform an action if it won't yield XP.
+description=[*] [b]Clearer Tooltips:[/b] Know exactly what tools you need and how your skill level, known recipes, and other factors impact the training before you start.
+description=[*] [b]Fast-Forward Supported:[/b] Fully supports speeding up the game in SP, allowing you to breeze through your training sessions. Nearby zombies will still reset the game speed to normal.
+description=[*] [b]Translated into:[/b] English, German, Russian, French, simple + trad. Chinese, Japanese, Spanish, Brazilian Portuguese, and Polish.
+description=[/list]
+description=
+description=[hr][/hr]
+description=[h2]🚗 How to Use[/h2]
+description=[olist]
+description=[*] Open the mechanics window on any vehicle.
+description=[*] Right-click any part.
+description=[*] Select [b]"Train Mechanics"[/b].
+description=[*] Watch the levels go up!
+description=[/olist]
+description=[quote][b]Note:[/b] Pathfinding can sometimes impact the training session. Please ensure your character has some walking space around the car.[/quote]
+description=
+description=[hr][/hr]
+description=[h2]⚙️ Mod Settings[/h2]
+description=You can customize the [b]"Minimum Vehicle Part Success Chance"[/b] in the options. This value determines the safety threshold for installing/uninstalling parts; any part with a success chance below this value will be skipped during training.
+description=[list]
+description=[*] [b]0 (Risky):[/b] All parts will be worked on. Be careful—parts [i]will[/i] break or lose condition at lower skill levels.
+description=[*] [b]30 (Default):[/b] A good balance. Parts with a very low success chance are skipped to prevent excessive damage, while still allowing for decent XP gain.
+description=[*] [b]100 (Safe Mode):[/b] Only parts that are guaranteed to succeed will be worked on. This is completely safe at all skill levels, though training may be slower as fewer parts are eligible.
+description=[/list]
+description=
+description=[b]Multiplayer / Server Admins:[/b]
+description=Server owners can enforce this setting via Sandbox Options.
+description=[list]
+description=[*] [b]-1 (Default):[/b] The setting is [b]not enforced[/b]. Players are free to use their own local Mod Option setting.
+description=[*] [b]0 to 100:[/b] The setting is [b]enforced server-wide[/b]. Any value greater than -1 will override individual player choices. The value set by the server will be visible in the button tooltip.
+description=[/list]
+description=
+description=[hr][/hr]
+description=[h2]✅ Compatibility & Save Info[/h2]
+description=[list]
+description=[*] [b]Safe to add and remove mid-save.[/b]
+description=[*] [b]Incompatible[/b] with the original "[url=https://steamcommunity.com/sharedfiles/filedetails/?id=3387539308]AutoMechanics[/url]" mod.
+description=[*] [b]Compatible[/b] with KI5 Vehicles, "[url=https://steamcommunity.com/sharedfiles/filedetails/?id=2757712197]Vehicle Repair Overhaul[/url]", and most other vehicle mods.
+description=[/list]
+description=
+description=[hr][/hr]
+description=[h2]FEEDBACK & SUPPORT[/h2]
+description=If you find this mod useful:
+description=[list]
+description=[*] ⭐ Rate on Steam Workshop
+description=[*] 💬 Leave comments or [url=https://steamcommunity.com/sharedfiles/filedetails/discussions/3635856965]Feedback[/url]
+description=[*] 🐛 Post bug reports in [url=https://steamcommunity.com/sharedfiles/filedetails/discussions/3635856965]Discussions[/url] or on [url=https://github.com/Darkblader24/pz-better-auto-mechanics/issues]Github[/url]
+description=[*] 🚀 Contribute to this mod on [url=https://github.com/Darkblader24/pz-better-auto-mechanics]Github[/url]. Translations are very welcome!
+description=[*] ❤️ Buy me a [url=https://ko-fi.com/hotox]Ko-fi[/url]
+description=[/list]
+description=
+description=[hr][/hr]
+description=
+description=Workshop ID: 3635856965
 description=Mod ID: better-auto-mechanics
 tags=Build 42;Interface;Multiplayer;Vehicles;QoL
 visibility=public
