@@ -167,3 +167,20 @@ function ISPathFindAction:update(...)
     return success
 end
 
+
+local original_ISTimedActionQueue_resetQueue = ISTimedActionQueue.resetQueue
+function ISTimedActionQueue:resetQueue(...)
+    local success = original_ISTimedActionQueue_resetQueue(self, ...)
+
+    if BAM.IsCurrentlyTraining then
+        local part = BAM.LastWorkedPart
+        DebugLog.log("Part " .. part:getId() .. " is bugged during mechanics training. Skipping it.")
+
+        BAM.InaccessibleParts[part:getId()] = true
+        BAM.WorkOnNextPartInXTicks(10)
+        BAM.CheckGameSpeedInXTicks(20)
+    end
+
+    return success
+end
+
