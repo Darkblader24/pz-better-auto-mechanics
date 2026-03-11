@@ -1,0 +1,21 @@
+{
+    "$schema": "https://raw.githubusercontent.com/EmmyLuaLs/emmylua-analyzer-rust/refs/heads/main/crates/emmylua_code_analysis/resources/schema.json",
+    "workspace": {
+        "library": [
+            "E:\\Development\\Mods\\pz-Umbrella\\library"
+        ]
+    },
+    "runtime.version": "Lua 5.1",
+    "runtime.path": [
+        "shared/?.lua",
+        "client/?.lua",
+        "server/?.lua"
+    ],
+    "completion.requireSeparator": "/",
+    "workspace.preloadFileSize": 800,
+    "runtime.builtin": {
+        "debug": "disable",
+        "io": "disable",
+        "package": "disable"
+    }
+}

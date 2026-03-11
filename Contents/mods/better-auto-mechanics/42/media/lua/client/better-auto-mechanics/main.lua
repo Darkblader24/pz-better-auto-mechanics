@@ -97,16 +97,12 @@ function BAM.workOnNextPart(player, vehicle)
     -- Before we install any part, check if it requires other parts to be installed first.
     -- If yes, uninstall those parts first.
     if partInstall then
-        local keyvalues = partInstall:getTable("install")
-        if keyvalues and keyvalues.requireInstalled then
-            local split = keyvalues.requireInstalled:split(";")
-            for i, partId in ipairs(split) do
-                local requiredPart = vehicle:getPartById(partId)
-                if requiredPart and BAM.PartCanBeUninstalled(player, vehicle, requiredPart) then
-                    DebugLog.log("Uninstalling " .. partInstall:getId() .. " made part " .. partId .. " available for uninstall.")
-                    BAM.UninstallPart(player, requiredPart)
-                    return
-                end
+        local requiredParts = BAM.GetRequiredInstalledPartsForPart(partInstall)
+        for _, requiredPart in ipairs(requiredParts) do
+            if BAM.PartCanBeUninstalled(player, vehicle, requiredPart) then
+                DebugLog.log("Uninstalling " .. partInstall:getId() .. " made part " .. requiredPart:getId() .. " available for uninstall.")
+                BAM.UninstallPart(player, requiredPart)
+                return
             end
         end
     end
@@ -149,32 +145,3 @@ function BAM.UninstallPart(player, part)
     BAM.DropBrokenItems(player)  -- Drop broken items before uninstalling
     ISVehiclePartMenu.onUninstallPart(player, part)  -- Start timed task
 end
-
-
---- Batch-uninstall all parts in a given category.
--- Stops any active training first, then queues vanilla uninstall actions for each matching part.
--- @param playerOrSelf  When called from the mechanics UI context menu, this is the ISVehicleMechanics 'self'.
--- @param player IsoPlayer
--- @param vehicle BaseVehicle
--- @param categoryIds table|nil  Set of part ID strings, or nil for "Everything"
-function BAM.UninstallCategory(playerOrSelf, player, vehicle, categoryIds)
-    -- Stop any active training session first
-    if BAM.IsCurrentlyTraining then
-        ISTimedActionQueue.clear(player)
-        BAM.StopMechanicsTraining(nil)
-    end
-
-    local parts = BAM.GetUninstallablePartsByCategory(player, vehicle, categoryIds)
-    if #parts == 0 then return end
-
-    -- Sort parts using the same order as training for consistency
-    parts = BAM.SortParts(parts)
-
-    DebugLog.log("BAM: Batch uninstalling " .. #parts .. " parts...")
-    for _, part in ipairs(parts) do
-        DebugLog.log("  -> Queuing uninstall: " .. part:getId())
-        ISVehiclePartMenu.onUninstallPart(player, part)
-    end
-end
-
-

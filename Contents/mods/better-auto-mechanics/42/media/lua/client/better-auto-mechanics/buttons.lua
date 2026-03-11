@@ -6,7 +6,7 @@ local original_doPartContextMenu = ISVehicleMechanics.doPartContextMenu
 function ISVehicleMechanics:doPartContextMenu(...)
     local success = original_doPartContextMenu(self, ...)
     BAM.CreateMechanicsButton(self, self.context, self.chr, self.vehicle, BAM.StartMechanicsTraining)
-    --BAM.CreateUninstallAllMenu(self, self.context, self.chr, self.vehicle)
+    BAM.CreateUninstallAllMenu(self, self.context, self.chr, self.vehicle)
     return success
 end
 
@@ -18,7 +18,7 @@ function BAM.CreateMechanicsButton(self, context, player, vehicle, functionToCal
     local skillLevel = player:getPerkLevel(Perks.Mechanics)
     if skillLevel >= 10 and not getCore():getDebug() then return end
 
-    local trainButton = nil
+    local trainButton
     if self then
         trainButton = context:addOption(getText("UI_BAM_button.title"), self, functionToCall, player, vehicle)
     else
@@ -31,68 +31,6 @@ function BAM.CreateMechanicsButton(self, context, player, vehicle, functionToCal
     trainTooltip:setVisible(true)
     trainTooltip.description = BAM.GenerateDescription(player, vehicle)
     trainButton.toolTip = trainTooltip
-end
-
--- Create the Uninstall All menu with category sub-options
--- Translation keys map to vanilla game translation strings where possible
-local uninstallCategoryLabels = {
-    everything  = "UI_BAM_Uninstall_Everything",
-    tires       = "IGUI_VehiclePartCattire",
-    doors       = "IGUI_VehiclePartCatdoor",
-    windows     = "IGUI_VehiclePartWindow",  -- todo
-    seats       = "IGUI_VehiclePartCatseat",
-    lights      = "IGUI_VehiclePartCatlights",
-    brakes      = "IGUI_VehiclePartCatbrakes",
-    suspension  = "IGUI_VehiclePartCatsuspension",
-}
-
-function BAM.CreateUninstallAllMenu(self, context, player, vehicle)
-    if not context then return end
-
-    -- Build a parent option: "Uninstall ..."
-    local parentOption = context:addOption(getText("UI_BAM_Uninstall_Title"), nil)
-    parentOption.iconTexture = getTexture("Item_Wrench")
-
-    -- Create the submenu
-    local subMenu = context:getNew(context)
-    context:addSubMenu(parentOption, subMenu)
-
-    local anyEnabled = false
-
-    for _, category in ipairs(BAM.UninstallCategories) do
-        -- Build a set-like table from the category ids list (or nil for "everything")
-        local categoryIds = nil
-        if category.ids then
-            categoryIds = {}
-            for _, id in ipairs(category.ids) do
-                categoryIds[id] = true
-            end
-        end
-
-        -- Check how many parts can actually be uninstalled in this category
-        local parts = BAM.GetUninstallablePartsByCategory(player, vehicle, categoryIds)
-        local count = #parts
-
-        -- Build the label: "All Tires (3)" or "Everything (12)"
-        local label = getText(uninstallCategoryLabels[category.key] or category.key)
-        if category.key ~= "everything" then
-            label = getText("UI_BAM_Uninstall_All", label)
-        end
-        label = label .. " (" .. tostring(count) .. ")"
-
-        local option = subMenu:addOption(label, self, BAM.UninstallCategory, player, vehicle, categoryIds)
-
-        if count == 0 then
-            option.notAvailable = true
-        else
-            anyEnabled = true
-        end
-    end
-
-    -- If no category has any uninstallable parts, grey out the parent option too
-    if not anyEnabled then
-        parentOption.notAvailable = true
-    end
 end
 
 

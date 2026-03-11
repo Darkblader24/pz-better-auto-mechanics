@@ -1,6 +1,6 @@
 {
   "$schema": "https://raw.githubusercontent.com/LuaLS/vscode-lua/master/setting/schema.json",
-  "workspace.library": ["E:\\Development\\Mods\\UmbrellaAddon-Unstable-main\\library"],
+  "workspace.library": ["E:\\Development\\Mods\\pz-Umbrella\\library"],
   "runtime.version": "Lua 5.1",
   "runtime.path": [
     "shared/?.lua",

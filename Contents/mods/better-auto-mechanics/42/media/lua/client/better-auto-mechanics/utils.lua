@@ -376,68 +376,48 @@ function BAM.GameVersionNewerThanOrEqual(majorReq, minorReq, patchReq)
 end
 
 
-----------------------------------------
--- UNINSTALL CATEGORIES
-----------------------------------------
-
--- Each category maps to an explicit list of part IDs.
--- "Everything" uses nil to match all parts.
-BAM.UninstallCategories = {
-    {
-        key = "everything",
-        ids = nil,  -- nil means match all parts
-    },
-    {
-        key = "tires",
-        ids = { "TireFrontLeft", "TireFrontRight", "TireRearLeft", "TireRearRight" },
-    },
-    {
-        key = "doors",
-        ids = { "DoorFrontLeft", "DoorFrontRight", "DoorMiddleLeft", "DoorMiddleRight", "DoorRearLeft", "DoorRearRight", "DoorRear", "TrunkDoor" },
-    },
-    {
-        key = "windows",
-        ids = { "WindowFrontLeft", "WindowFrontRight", "WindowMiddleLeft", "WindowMiddleRight", "WindowRearLeft", "WindowRearRight", "Windshield", "WindshieldRear" },
-    },
-    {
-        key = "seats",
-        ids = { "SeatFrontLeft", "SeatFrontRight", "SeatMiddleLeft", "SeatMiddleRight", "SeatRearLeft", "SeatRearRight" },
-    },
-    {
-        key = "lights",
-        ids = { "HeadlightLeft", "HeadlightRight", "HeadlightRearLeft", "HeadlightRearRight" },
-    },
-    {
-        key = "brakes",
-        ids = { "BrakeFrontLeft", "BrakeFrontRight", "BrakeRearLeft", "BrakeRearRight" },
-    },
-    {
-        key = "suspension",
-        ids = { "SuspensionFrontLeft", "SuspensionFrontRight", "SuspensionRearLeft", "SuspensionRearRight" },
-    },
-}
-
-
---- Returns a list of parts on the vehicle that the player can uninstall, filtered by category.
--- @param player IsoPlayer
--- @param vehicle BaseVehicle
--- @param categoryIds table|nil  A set-like table { ["TireFrontLeft"]=true, ... } or nil for all parts
--- @return table  List of VehiclePart objects
-function BAM.GetUninstallablePartsByCategory(player, vehicle, categoryIds)
-    local parts = {}
-    for i = 0, vehicle:getPartCount() - 1 do
-        local part = vehicle:getPartByIndex(i)
-        local id = part:getId()
-
-        -- Filter: if categoryIds is provided, only include matching parts
-        if categoryIds == nil or categoryIds[id] then
-            -- Check if this part can actually be uninstalled (has item, game allows it)
-            if part:getInventoryItem() and vehicle:canUninstallPart(player, part) then
-                table.insert(parts, part)
+function BAM.GetRequiredInstalledPartsForPart(part)
+    local requiredParts = {}
+    local vehicle = part:getVehicle()
+    local keyvalues = part:getTable("install")
+    if keyvalues and keyvalues.requireInstalled then
+        local split = keyvalues.requireInstalled:split(";")
+        for _, partId in ipairs(split) do
+            local requiredPart = vehicle:getPartById(partId)
+            if requiredPart then
+                table.insert(requiredParts, requiredPart)
             end
         end
     end
-    return parts
+    return requiredParts
+end
+
+
+function BAM.GetRequiredUninstalledPartsForPart(part)
+    local requiredParts = {}
+    local vehicle = part:getVehicle()
+    local keyvalues = part:getTable("uninstall")
+    DebugLog.log("Checking required uninstalled parts for part " .. part:getId())
+    if keyvalues and keyvalues.requireUninstalled then
+        DebugLog.log(keyvalues.requireUninstalled)
+        local split = keyvalues.requireUninstalled:split(";")
+        for _, partId in ipairs(split) do
+            local requiredPart = vehicle:getPartById(partId)
+            if requiredPart and part:getInventoryItem() then
+                DebugLog.log("Found part: " .. requiredPart:getId())
+                local requiredPartsTmp = BAM.GetRequiredUninstalledPartsForPart(requiredPart)
+                for _, requiredPartTmp in ipairs(requiredPartsTmp) do
+                    if part:getInventoryItem() then
+                        DebugLog.log("Found required part: " .. requiredPartTmp:getId())
+                        table.insert(requiredParts, requiredPartTmp)
+
+                    end
+                end
+                table.insert(requiredParts, requiredPart)
+            end
+        end
+    end
+    return requiredParts
 end
 
 
