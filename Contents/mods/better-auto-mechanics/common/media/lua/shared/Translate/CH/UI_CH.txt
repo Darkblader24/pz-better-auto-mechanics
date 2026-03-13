@@ -1,7 +1,7 @@
 UI_CH = {
     -- #### Button ####
     UI_BAM_button.title = "訓練技工技能",
-    UI_BAM_button_desc.needs = "訓練需求",
+    UI_BAM_button_desc.needs = "所需工具",
 
     -- Skill Check
     UI_BAM_button_desc.mechanics_level = "當前技工等級",

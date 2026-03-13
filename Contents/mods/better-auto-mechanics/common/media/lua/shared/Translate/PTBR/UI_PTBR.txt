@@ -1,7 +1,7 @@
 UI_PTBR = {
     -- #### Button ####
     UI_BAM_button.title = "Treinar Mecânica",
-    UI_BAM_button_desc.needs = "Necessidades do treinamento",
+    UI_BAM_button_desc.needs = "Ferramentas necessárias",
 
     -- Skill Check
     UI_BAM_button_desc.mechanics_level = "Nível atual de Mecânica",

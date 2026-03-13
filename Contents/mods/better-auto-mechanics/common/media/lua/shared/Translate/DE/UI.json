@@ -1,6 +1,6 @@
 {
     "UI_BAM_button.title": "Kfz-Mechanik trainieren",
-    "UI_BAM_button_desc.needs": "Benötigt für Training",
+    "UI_BAM_button_desc.needs": "Benötigte Werkzeuge",
     "UI_BAM_button_desc.mechanics_level": "Aktuelle Kfz-Mechanik Stufe",
     "UI_BAM_button_desc.parts_will_break": "Teile werden wahrscheinlich beschädigt",
     "UI_BAM_button_desc.use_disposable_vehicles": "Nutze entbehrliche Fahrzeuge",

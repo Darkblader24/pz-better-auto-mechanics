@@ -1,6 +1,6 @@
 {
     "UI_BAM_button.title": "Train Mechanics",
-    "UI_BAM_button_desc.needs": "Training needs",
+    "UI_BAM_button_desc.needs": "Required tools",
     "UI_BAM_button_desc.mechanics_level": "Current Mechanics Level",
     "UI_BAM_button_desc.parts_will_break": "Parts will likely break",
     "UI_BAM_button_desc.use_disposable_vehicles": "Use disposable vehicles",

@@ -1,7 +1,7 @@
 UI_RU = {
     -- #### Button ####
     UI_BAM_button.title = "Тренировать Автомеханику",
-    UI_BAM_button_desc.needs = "Для тренировки нужно",
+    UI_BAM_button_desc.needs = "Необходимые инструменты",
 
     -- Skill Check
     UI_BAM_button_desc.mechanics_level = "Текущий уровень Автомеханики",

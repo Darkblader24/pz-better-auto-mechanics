@@ -1,7 +1,7 @@
 UI_FR = {
     -- #### Button ####
     UI_BAM_button.title = "Entraîner la Mécanique",
-    UI_BAM_button_desc.needs = "Requis pour l'entraînement",
+    UI_BAM_button_desc.needs = "Outils requis",
 
     -- Skill Check
     UI_BAM_button_desc.mechanics_level = "Niveau actuel en Mécanique",

@@ -1,6 +1,6 @@
 {
     "UI_BAM_button.title": "训练技工技能",
-    "UI_BAM_button_desc.needs": "训练需求",
+    "UI_BAM_button_desc.needs": "所需工具",
     "UI_BAM_button_desc.mechanics_level": "当前技工等级",
     "UI_BAM_button_desc.parts_will_break": "零件很可能会损坏",
     "UI_BAM_button_desc.use_disposable_vehicles": "请使用废弃车辆",

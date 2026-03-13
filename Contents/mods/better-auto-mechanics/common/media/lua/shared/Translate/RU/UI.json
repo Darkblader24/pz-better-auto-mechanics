@@ -1,6 +1,6 @@
 {
     "UI_BAM_button.title": "Тренировать Автомеханику",
-    "UI_BAM_button_desc.needs": "Для тренировки нужно",
+    "UI_BAM_button_desc.needs": "Необходимые инструменты",
     "UI_BAM_button_desc.mechanics_level": "Текущий уровень Автомеханики",
     "UI_BAM_button_desc.parts_will_break": "Детали, скорее всего, сломаются",
     "UI_BAM_button_desc.use_disposable_vehicles": "Используйте ненужные автомобили",

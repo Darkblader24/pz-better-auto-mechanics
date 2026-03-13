@@ -1,7 +1,7 @@
 UI_JP = {
     -- #### Button ####
     UI_BAM_button.title = "車両整備のトレーニング",
-    UI_BAM_button_desc.needs = "トレーニング要件",
+    UI_BAM_button_desc.needs = "必要な工具",
 
     -- Skill Check
     UI_BAM_button_desc.mechanics_level = "現在の車両整備レベル",

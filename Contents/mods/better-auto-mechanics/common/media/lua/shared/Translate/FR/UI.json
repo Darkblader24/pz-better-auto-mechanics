@@ -1,6 +1,6 @@
 {
     "UI_BAM_button.title": "Entraîner la Mécanique",
-    "UI_BAM_button_desc.needs": "Requis pour l'entraînement",
+    "UI_BAM_button_desc.needs": "Outils requis",
     "UI_BAM_button_desc.mechanics_level": "Niveau actuel en Mécanique",
     "UI_BAM_button_desc.parts_will_break": "Des pièces risquent de casser",
     "UI_BAM_button_desc.use_disposable_vehicles": "Utilisez des véhicules sacrifiables",

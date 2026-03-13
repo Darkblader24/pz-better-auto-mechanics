@@ -1,6 +1,6 @@
 {
     "UI_BAM_button.title": "Trenuj mechanikę",
-    "UI_BAM_button_desc.needs": "Wymagania treningu",
+    "UI_BAM_button_desc.needs": "Wymagane narzędzia",
     "UI_BAM_button_desc.mechanics_level": "Aktualny poziom mechaniki",
     "UI_BAM_button_desc.parts_will_break": "Części prawdopodobnie się uszkodzą",
     "UI_BAM_button_desc.use_disposable_vehicles": "Używaj pojazdów jednorazowych",
