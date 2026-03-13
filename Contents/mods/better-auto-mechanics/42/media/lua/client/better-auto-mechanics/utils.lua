@@ -397,21 +397,18 @@ function BAM.GetRequiredUninstalledPartsForPart(part)
     local requiredParts = {}
     local vehicle = part:getVehicle()
     local keyvalues = part:getTable("uninstall")
-    DebugLog.log("Checking required uninstalled parts for part " .. part:getId())
+    --DebugLog.log("Checking required uninstalled parts for part " .. part:getId())
     if keyvalues and keyvalues.requireUninstalled then
-        DebugLog.log(keyvalues.requireUninstalled)
+        --DebugLog.log(keyvalues.requireUninstalled)
         local split = keyvalues.requireUninstalled:split(";")
         for _, partId in ipairs(split) do
             local requiredPart = vehicle:getPartById(partId)
-            if requiredPart and part:getInventoryItem() then
-                DebugLog.log("Found part: " .. requiredPart:getId())
+            if requiredPart then
+                --DebugLog.log("Found part: " .. requiredPart:getId())
                 local requiredPartsTmp = BAM.GetRequiredUninstalledPartsForPart(requiredPart)
                 for _, requiredPartTmp in ipairs(requiredPartsTmp) do
-                    if part:getInventoryItem() then
-                        DebugLog.log("Found required part: " .. requiredPartTmp:getId())
-                        table.insert(requiredParts, requiredPartTmp)
-
-                    end
+                    --DebugLog.log("Found required part: " .. requiredPartTmp:getId())
+                    table.insert(requiredParts, requiredPartTmp)
                 end
                 table.insert(requiredParts, requiredPart)
             end

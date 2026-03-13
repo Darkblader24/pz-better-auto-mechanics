@@ -4,7 +4,7 @@ BAM = BAM or {}
 function BAM:OnMechanicActionDone(success)
     -- OnMechanicActionDone is only ever called in multiplayer, but if its called in singleplayer, do nothing
     if not isClient() then return end
-    if not BAM.IsCurrentlyTraining then return end
+    if not BAM.IsCurrentlyWorking() then return end
     if not BAM.Vehicle or not BAM.LastWorkedPart then return end
 
     local player = self
@@ -17,7 +17,7 @@ function BAM:OnMechanicActionDone(success)
         --DebugLog.log("BAM: XP Cooldown saved for part " .. BAM.LastWorkedPart:getId())
     end
 
-    -- Start a tick countdown, after which 'workOnNextPart' is called to continue the training
+    -- Start a tick countdown, after which the continuation function is called
     -- This gives the server enough time to update the game state
     BAM.WorkOnNextPartInXTicks(20)  -- 20 ticks is approx 0.33 seconds
     --DebugLog.log("Waiting " .. BAM.WorkDelayTimer .. " ticks before working on next part...")
@@ -26,8 +26,15 @@ end
 
 -- The Tick Handler: Runs every single frame (approx 60 times/sec)
 local function BAM_OnTick()
-    -- Fail fast. If not training, do nothing immediately.
-    if not BAM.IsCurrentlyTraining then return end
+    -- Fail fast. If not doing any mechanics work, do nothing immediately.
+    if not BAM.IsCurrentlyWorking() then return end
+
+    -- Check every tick if the ESC key is pressed, in order to correctly cancel the mechanics work
+    if isKeyDown(Keyboard.KEY_ESCAPE) or isKeyDown(getCore():getKey("CancelAction")) then
+        DebugLog.log("BAM: Player intentionally interrupted the action. Stopping training.")
+        BAM.StopMechanicsWork(nil)
+        return
+    end
 
     -- Only run logic if the WorkDelayTimer is active (greater than 0)
     if BAM.WorkDelayTimer > 0 then
@@ -35,15 +42,14 @@ local function BAM_OnTick()
 
         -- When the timer hits exactly 0, execute the delayed action
         if BAM.WorkDelayTimer == 0 then
-            --DebugLog.log("Delay finished: executing workOnNextPart...")
-            BAM.workOnNextPart(getPlayer(), BAM.Vehicle)
+            BAM.ContinueWork(getPlayer(), BAM.Vehicle)
         end
     end
 
     -- Stop here if in MP
     if isClient() then return end
 
-    -- Only run logic if the WorkDelayTimer is active (greater than 0)
+    -- Only run logic if the GameSpeedCheckTimer is active (greater than 0)
     if BAM.GameSpeedCheckTimer > 0 then
         BAM.GameSpeedCheckTimer = BAM.GameSpeedCheckTimer - 1
 
@@ -55,9 +61,9 @@ local function BAM_OnTick()
 end
 
 
--- If the player presses Escape/Cancel or any movement keys, stop the training immediately.
+-- If the player presses Escape/Cancel or any movement keys, stop any active mechanics work immediately.
 local function BAM_StopTrainingOnKey(key)
-    if not BAM.IsCurrentlyTraining then return end
+    if not BAM.IsCurrentlyWorking() then return end
 
     local core = getCore()
 
@@ -75,8 +81,8 @@ local function BAM_StopTrainingOnKey(key)
     if key == cancelKey or key == escKey or
        key == forwardKey or key == backwardKey or
        key == leftKey or key == rightKey then
-        DebugLog.log("BAM: Player pressed an interrupt key! Aborting mechanics training.")
-        BAM.StopMechanicsTraining(nil)
+        DebugLog.log("BAM: Player pressed an interrupt key! Aborting mechanics work.")
+        BAM.StopMechanicsWork(nil)
     end
 end
 

@@ -1,5 +1,7 @@
 BAM = BAM or {}
 BAM.IsCurrentlyTraining = false
+BAM.IsCurrentlyBatchUninstalling = false
+BAM.BatchUninstallCategoryIds = nil  -- nil = everything, or a set-like table of part IDs
 BAM.Vehicle = nil
 BAM.WorkDelayTimer = 0
 BAM.GameSpeedCheckTimer = 0
@@ -11,32 +13,49 @@ BAM.PrevGameSpeed = 1
 BAM.PrevTimeMultiplier = 1
 
 
-function BAM:StartMechanicsTraining(player, vehicle)
-    -- Re-entrancy guard: ignore if already training on the same vehicle with the same player
+--- Returns true if the player is currently doing any automated BAM work (training or batch uninstalling).
+function BAM.IsCurrentlyWorking()
+    return BAM.IsCurrentlyTraining or BAM.IsCurrentlyBatchUninstalling
+end
+
+
+--- Dispatches to the correct "work on next part" function depending on which mode is active.
+function BAM.ContinueWork(player, vehicle)
     if BAM.IsCurrentlyTraining then
-        ISTimedActionQueue.clear(player)
-        BAM.StopMechanicsTraining(nil)
+        BAM.workOnNextPart(player, vehicle)
+    elseif BAM.IsCurrentlyBatchUninstalling then
+        BAM.workOnNextUninstallPart(player, vehicle)
+    else
+        DebugLog.log("Error: ContinueWork called but no active BAM work in progress.")
+        BAM.StopMechanicsWork(nil)
     end
+end
+
+
+function BAM:StartMechanicsTraining(player, vehicle)
+    -- Stop any active training or batch uninstall first
+    ISTimedActionQueue.clear(player)
+    BAM.StopMechanicsWork(nil)
 
     DebugLog.log("=================================")
     DebugLog.log("Starting mechanics training!")
     BAM.IsCurrentlyTraining = true
     BAM.Vehicle = vehicle
-    BAM.InaccessibleParts = {}
     BAM.workOnNextPart(player, vehicle)
 end
 
 
-function BAM.StopMechanicsTraining(player, msgOverride, r, g, b)
-    BAM.IsCurrentlyTraining = false
-    BAM.Vehicle = nil
-    BAM.WorkDelayTimer = 0
-    BAM.LastWorkedPart = nil
-    BAM.LastWorkedActionType = nil
-    BAM.InaccessibleParts = {}
-    BAM.WorkedParts = {}
-    BAM.PrevGameSpeed = 1
-    BAM.PrevTimeMultiplier = 1
+function BAM.StopMechanicsWork(player, msgOverride, r, g, b)
+    if BAM.IsCurrentlyTraining then
+        DebugLog.log("Finished mechanics training!")
+    elseif BAM.IsCurrentlyBatchUninstalling then
+        DebugLog.log("Finished batch uninstall!")
+    else
+        BAM.ResetState()
+        return
+    end
+
+    BAM.ResetState()
     if not isClient() then
         setGameSpeed(1)
         getGameTime():setMultiplier(1)
@@ -54,8 +73,6 @@ function BAM.StopMechanicsTraining(player, msgOverride, r, g, b)
 
     getPlayer():setSneaking(false)
 
-    DebugLog.log("Finished mechanics training!")
-
     --for i, partInfo in ipairs(BAM.WorkedParts) do
     --    DebugLog.log(i .. ". " .. partInfo)
     --end
@@ -64,10 +81,25 @@ function BAM.StopMechanicsTraining(player, msgOverride, r, g, b)
 end
 
 
+function BAM.ResetState()
+    BAM.IsCurrentlyTraining = false
+    BAM.IsCurrentlyBatchUninstalling = false
+    BAM.BatchUninstallCategoryIds = nil
+    BAM.Vehicle = nil
+    BAM.WorkDelayTimer = 0
+    BAM.LastWorkedPart = nil
+    BAM.LastWorkedActionType = nil
+    BAM.InaccessibleParts = {}
+    BAM.WorkedParts = {}
+    BAM.PrevGameSpeed = 1
+    BAM.PrevTimeMultiplier = 1
+end
+
+
 function BAM.workOnNextPart(player, vehicle)
     -- Safety check: ensure player and vehicle are valid
     if not player or not vehicle then
-        BAM.StopMechanicsTraining(nil)
+        BAM.StopMechanicsWork(nil)
         return
     end
 
@@ -76,7 +108,7 @@ function BAM.workOnNextPart(player, vehicle)
     --DebugLog.log("Player distance to vehicle squared: " .. distanceToCar)
     if distanceToCar > 10 and BAM.LastWorkedPart then
         DebugLog.log("Player is too far from vehicle (" .. tostring(distanceToCar) .. " tiles). Stopping training.")
-        BAM.StopMechanicsTraining(nil)
+        BAM.StopMechanicsWork(nil)
         return
     end
 
@@ -90,7 +122,7 @@ function BAM.workOnNextPart(player, vehicle)
     -- If no parts to install or uninstall, stop training
     if partUninstall == nil and partInstall == nil then
         DebugLog.log("No more parts to work on.")
-        BAM.StopMechanicsTraining(player)
+        BAM.StopMechanicsWork(player)
         return
     end
 
@@ -121,7 +153,7 @@ function BAM.workOnNextPart(player, vehicle)
 
     -- If we reach here, something went wrong. Probably because we have a part to install but no item for it.
     DebugLog.log("Error: Unable to determine next part to work on.")
-    BAM.StopMechanicsTraining(player)
+    BAM.StopMechanicsWork(player)
 end
 
 
