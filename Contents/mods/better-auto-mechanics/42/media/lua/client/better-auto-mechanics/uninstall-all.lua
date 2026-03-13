@@ -65,6 +65,7 @@ function BAM.CreateUninstallAllMenu(self, context, player, vehicle)
     local anyEnabled = false
 
     for _, category in ipairs(BAM.UninstallCategories) do
+        --DebugLog.log("Creating uninstall option for category: " .. category.key)
         -- Build a set-like table from the category ids list (or nil for "everything")
         local categoryIds
         if category.ids then
@@ -98,13 +99,128 @@ function BAM.CreateUninstallAllMenu(self, context, player, vehicle)
             option.notAvailable = true
         else
             anyEnabled = true
+
+            -- Add the tooltip only if there are uninstallable parts in this category
+            local optionTooltip = ISToolTip:new()
+            optionTooltip:initialise()
+            optionTooltip:setVisible(not option.notAvailable)
+            optionTooltip.description = BAM.GenerateUninstallDescription(player, vehicle, parts)
+            option.toolTip = optionTooltip
         end
+
     end
 
     -- If no category has any uninstallable parts, grey out the parent option too
     if not anyEnabled then
         parentOption.notAvailable = true
     end
+end
+
+
+-- ### Button Design ###
+function BAM.GenerateUninstallDescription(player, vehicle, parts)
+    local newline = " <LINE>"
+    local msg = getText("UI_BAM_button_desc.needs") .. ":"
+
+    local requiredTools = BAM.GetRequiredToolsForParts(parts, "uninstall")
+
+    -- 1. Figure out which tool categories are actually required
+    local needsScrewdriver = false
+    local needsWrench = false
+    local needsLugWrench = false
+    local needsJack = false
+
+    -- We loop through the required tools dictionary and check the ID/Tag
+    for toolID, _ in pairs(requiredTools) do
+        local lowerID = string.lower(toolID)
+
+        -- string.find makes this bulletproof against both B41 Items and B42 Tags
+        if string.find(lowerID, "screwdriver") then
+            needsScrewdriver = true
+        elseif string.find(lowerID, "lug") then
+            needsLugWrench = true
+        elseif string.find(lowerID, "wrench") then
+            needsWrench = true
+        elseif string.find(lowerID, "jack") then
+            needsJack = true
+        end
+    end
+
+    -- 2. Inventory Check (Optimized to only search for what we need!)
+    local hasScrewdriver = false
+    local hasWrench = false
+    local hasLugWrench = false
+    local hasJack = false
+
+    if BAM.GameVersionNewerThanOrEqual(42, 13, 0) then
+        if needsScrewdriver then hasScrewdriver = player:getInventory():getFirstTagRecurse(ItemTag.SCREWDRIVER) end
+        if needsWrench then hasWrench = player:getInventory():getFirstTagRecurse(ItemTag.WRENCH) end
+        if needsLugWrench then hasLugWrench = player:getInventory():getFirstTagRecurse(ItemTag.LUG_WRENCH) end
+    else
+        if needsScrewdriver then hasScrewdriver = player:getInventory():getFirstTagRecurse("Screwdriver") end
+        if needsWrench then hasWrench = player:getInventory():getFirstTagRecurse("Wrench") end
+        if needsLugWrench then hasLugWrench = player:getInventory():getFirstTagRecurse("LugWrench") end
+    end
+    if needsJack then hasJack = player:getInventory():getFirstTypeRecurse("Jack") end
+
+    -- 3. Build the Tooltip Strings Dynamically
+    local nameScrewdriver = getScriptManager():getItem("Base.Screwdriver"):getDisplayName()
+    local nameMultitool = getScriptManager():getItem("Base.Multitool"):getDisplayName()
+    local nameHandiknife = getScriptManager():getItem("Base.Handiknife"):getDisplayName()
+    local nameWrench = getScriptManager():getItem("Base.Wrench"):getDisplayName()
+    local nameRatchetWrench = getScriptManager():getItem("Base.Ratchet"):getDisplayName()
+    local nameLugWrench = getScriptManager():getItem("Base.LugWrench"):getDisplayName()
+    local nameTireIron = getScriptManager():getItem("Base.TireIron"):getDisplayName()
+    local nameJack = getScriptManager():getItem("Base.Jack"):getDisplayName()
+
+    local color
+    if needsScrewdriver then
+        color = hasScrewdriver and "<GREEN>" or "<RED>"
+        msg = msg .. newline .. color .. " - " .. nameScrewdriver .. " / " .. nameMultitool .. " / " .. nameHandiknife
+    end
+    if needsWrench then
+        color = hasWrench and "<GREEN>" or "<RED>"
+        msg = msg .. newline .. color .. " - " .. nameWrench .. " / " .. nameRatchetWrench
+    end
+    if needsLugWrench then
+        color = hasLugWrench and "<GREEN>" or "<RED>"
+        msg = msg .. newline .. color .. " - " .. nameLugWrench .. " / " .. nameTireIron
+    end
+    if needsJack then
+        color = hasJack and "<GREEN>" or "<RED>"
+        msg = msg .. newline .. color .. " - " .. nameJack
+    end
+
+    -- 4. Recipe check
+    local requiredRecipes = BAM.GetRequiredRecipes(vehicle, parts)
+
+    -- Only add the "Recipes Required:" header if there are actually recipes needed
+    local hasRecipes = false
+    for _ in pairs(requiredRecipes) do hasRecipes = true; break end
+
+    if hasRecipes then
+        msg = msg .. newline
+        msg = msg .. newline .. "<RGB:1,1,1>" .. getText("UI_BAM_button_desc.recipes_required") .. ":"
+        for recipe, _ in pairs(requiredRecipes) do
+            local recipeDisplayName = getText("Tooltip_vehicle_requireRecipe", getRecipeDisplayName(recipe))
+            local knowsRecipe = player:isRecipeKnown(recipe, true)
+            color = knowsRecipe and "<GREEN>" or "<RED>"
+            msg = msg .. newline .. color .. " - " .. recipeDisplayName
+        end
+    end
+
+    -- Car Key check
+    if not BAM.PlayerHasCarAccess(player, vehicle) then
+        msg = msg .. newline
+        msg = msg .. newline .. "<RGB:1,1,1>" .. getText("UI_BAM_button_desc.no_car_access")
+        msg = msg .. newline .. "<ORANGE> - " .. getText("UI_BAM_button_desc.parts_inaccessible")
+    end
+
+    -- Notes
+    msg = msg .. newline
+    msg = msg .. newline .. "<RGB:1,1,1>" .. getText("UI_BAM_button_desc.empty_seats")
+
+    return msg
 end
 
 
@@ -247,5 +363,83 @@ function BAM.PartCanBeBatchUninstalled(player, vehicle, part)
     end
 
     return true
+end
+
+
+function BAM.GetRequiredToolsForParts(partsList, actionType)
+    local requiredTools = {}
+
+    for _, part in ipairs(partsList) do
+        local keyvalues = part:getTable(actionType)
+
+        if keyvalues and keyvalues.items then
+            local itemsTable = {}
+            if type(keyvalues.items) == "string" then
+                itemsTable = keyvalues.items:split(";")
+            elseif type(keyvalues.items) == "table" then
+                itemsTable = keyvalues.items
+            end
+
+            for _, toolDef in pairs(itemsTable) do
+                -- 1. If it's a rich table, check for TYPE or TAGS
+                if type(toolDef) == "table" then
+
+                    --BAM.PrintTable(toolDef, part:getId())
+
+                    if toolDef.type then
+                        local toolID = string.gsub(toolDef.type, "%s+", "")
+                        if not string.find(toolID, "%.") then toolID = "Base." .. toolID end
+                        -- Store it and mark that it is NOT a tag
+                        requiredTools[toolID] = { isTag = false }
+
+                    elseif toolDef.tags then
+                        local tagID = string.gsub(toolDef.tags, "%s+", "")
+                        -- Store it and mark that it IS a tag
+                        requiredTools[tagID] = { isTag = true }
+                    end
+
+                -- 2. Fallback for raw strings
+                elseif type(toolDef) == "string" then
+                    local toolID = string.gsub(toolDef:split("=")[1], "%s+", "")
+                    if not string.find(toolID, "%.") then toolID = "Base." .. toolID end
+                    requiredTools[toolID] = { isTag = false }
+                end
+            end
+        end
+    end
+
+    -- Convert our dictionary into a neat table containing the Display Names
+    local toolsList = {}
+    local scriptManager = getScriptManager()
+
+    for id, info in pairs(requiredTools) do
+        if info.isTag then
+            -- Format the tag so it looks good in the UI
+            -- e.g., "base:wrench" -> "wrench"
+            local cleanTag = id
+            if string.find(cleanTag, ":") then
+                cleanTag = cleanTag:split(":")[2]
+            end
+
+            -- Capitalize the first letter (wrench -> Wrench)
+            cleanTag = cleanTag:gsub("^%l", string.upper)
+            -- Replace underscores with spaces just in case (lug_wrench -> Lug Wrench)
+            cleanTag = cleanTag:gsub("_", " ")
+
+            -- Add an indicator so the player knows it's a category, not a specific item
+            toolsList[id] = cleanTag .. " (Any)"
+        else
+            -- Process standard items exactly like before
+            local itemScript = scriptManager:getItem(id)
+            if itemScript then
+                toolsList[id] = itemScript:getDisplayName()
+            else
+                toolsList[id] = id
+            end
+        end
+        --DebugLog.log("-> Required tool: " .. toolsList[id] .. " (ID: " .. id .. ")")
+    end
+
+    return toolsList
 end
 

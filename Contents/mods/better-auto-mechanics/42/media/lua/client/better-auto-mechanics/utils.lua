@@ -418,3 +418,34 @@ function BAM.GetRequiredUninstalledPartsForPart(part)
 end
 
 
+--- DEBUG ONLY: Recursively prints the contents of a table to the console
+-- @param node The table to print
+-- @param name (Optional) The name of the table for the log output
+-- @param indent (Optional) Used internally for formatting nested tables
+function BAM.PrintTable(node, name, indent)
+    indent = indent or ""
+    name = name or "Table"
+
+    -- If it's not a table, just print the value directly
+    if type(node) ~= "table" then
+        DebugLog.log(indent .. name .. " = " .. tostring(node))
+        return
+    end
+
+    DebugLog.log(indent .. name .. " = {")
+
+    for k, v in pairs(node) do
+        local keyString = tostring(k)
+
+        -- If the value is another table, call this function again recursively!
+        if type(v) == "table" then
+            BAM.PrintTable(v, keyString, indent .. "  ")
+        else
+            -- Otherwise, just print the key and the value
+            -- We use tostring(v) so booleans and numbers don't crash the log
+            DebugLog.log(indent .. "  " .. keyString .. " = " .. tostring(v))
+        end
+    end
+
+    DebugLog.log(indent .. "}")
+end

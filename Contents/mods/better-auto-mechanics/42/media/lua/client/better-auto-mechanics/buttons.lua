@@ -109,7 +109,7 @@ function BAM.GenerateDescription(player, vehicle)
     msg = msg .. newline .. color .. " - " .. nameJack
 
     -- Recipe check v2
-    local requiredRecipes = BAM.GetRequiredRecipes(vehicle)
+    local requiredRecipes = BAM.GetRequiredRecipes(vehicle, nil)
     msg = msg .. newline
     msg = msg .. newline .. "<RGB:1,1,1>" .. getText("UI_BAM_button_desc.recipes_required") .. ":"
     for recipe, _ in pairs(requiredRecipes) do
@@ -168,14 +168,21 @@ function BAM.GenerateDescription(player, vehicle)
 end
 
 
-function BAM.GetRequiredRecipes(vehicle)
+function BAM.GetRequiredRecipes(vehicle, parts)
     local recipes = {}
     recipes["Basic Mechanics"] = false
     recipes["Intermediate Mechanics"] = false
     recipes["Advanced Mechanics"] = false
 
-    for i = 0, vehicle:getPartCount() - 1 do
-        local part = vehicle:getPartByIndex(i)
+    -- If no parts were provided, check all parts of the vehicle
+    if not parts then
+         parts = {}
+         for i = 0, vehicle:getPartCount() - 1 do
+            table.insert(parts, vehicle:getPartByIndex(i))
+         end
+    end
+
+    for _, part in ipairs(parts) do
         local keyvalues = part:getTable("uninstall")
         if keyvalues and keyvalues.recipes and keyvalues.recipes ~= "" then
             for _, recipe in ipairs(keyvalues.recipes:split(";")) do

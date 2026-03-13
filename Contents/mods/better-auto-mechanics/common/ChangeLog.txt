@@ -89,5 +89,6 @@ link3 = Github = https://steamcommunity.com/linkfilter/?u=https://github.com/Dar
 [ ------ ]
 
 [ 1.15 ]
--
+- Added Batch Uninstall button to the mechanics window
+  - This allows you to uninstall all parts or specific categories of parts in one go
 [ ------ ]
